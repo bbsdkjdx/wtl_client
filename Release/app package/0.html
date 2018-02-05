@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+         .loginInput {
+            border: 1px solid #D2D9dC;
+            border-radius: 2px;
+            color: rgb(190, 30, 30);
+            font: 12px 'Microsoft YaHei', '微软雅黑';
+            padding: 8px 14px;
+            margin-bottom: 8px;
+            width: 310px;
+        }
+        
+         .loginInput:FOCUS {
+            border: 2px solid rgb(36, 136, 212);
+        }
+        
+         .loginBtn {
+            background-image: -moz-linear-gradient(to bottom, blue, #85CFEE);
+            border: 1px solid #98CCE7;
+
+            color: #444;
+            /*登录*/
+            cursor: pointer;
+           
+            font: bold 13px Arial;
+            padding: 10px 50px;
+        }
+        
+
+    </style>
+</head>
+<body onkeydown="if(event.keyCode==13){login()}">
+<div align='left'>
+    <p><label >ip：</label></p><p><input type="text" id="usr" name="text" class="loginInput" autofocus="autofocus" value="" /></p>
+    <p><label >result：</label></p><p><input type="text" id="pwd" name="password" class="loginInput" value="" /></p>
+    <p><button class="loginBtn" onclick="login()">登录</button></p>
+</div>
+<script type="text/javascript">
+function login(){window.parent.ExtFun('autorun.f0_ping',usr.value);}
+window.parent.ExtFun('exe.maindlg.set_size',375,330,0)
+//window.parent.ExtFun('exe.maindlg.set_title','环翠国土电子档案查询系统')
+usr.focus() 
+function test(){alert('test');}
+function show(s){pwd.value=s;}
+</script>
+</body>
+</html>
+
+
