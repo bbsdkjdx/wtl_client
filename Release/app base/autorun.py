@@ -8,6 +8,8 @@ import ping
 
 # fixed code, do not change if possible.
 #####################################################################################################################################
+
+#disable context menu and back.
 extra_js='''<script>
 document.oncontextmenu=function(){event.returnValue=event.srcElement.nodeName=='INPUT';};
 document.onkeydown=function(){event.returnValue=!(event.keyCode==8 && event.srcElement.nodeName!='INPUT');}
@@ -39,11 +41,3 @@ def OnHotkey():
 	_id=__main__.stack['hotkey']
 	__main__.js.alert(['hotkey'],_id)
 #####################################################################################################################################
-
-
-pn=ping.CPing(5,lambda x:__main__.js.ifrf.show(str(x)),0,0)
-
-def f0_ping(ip):
-	__main__.js.ifrf.show('no result')
-	pn.send_ping(ip)
-
