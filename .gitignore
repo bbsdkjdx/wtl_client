@@ -8,3 +8,4 @@
 /Release/__pycache__/packer.cpython-34.pyc
 /Release/DLLs/testabi.pyd
 *.ipch
+/Release/ip.p

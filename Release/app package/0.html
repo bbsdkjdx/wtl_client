@@ -35,36 +35,26 @@
 
     
     <script>
-    function get_color(vl)
-    {
-      if(vl>0.75) return '#17f803';
-      if(vl>0.50) return '#f8f403';
-      if(vl>0.25) return '#f87103';
-      return '#f80303';
-    }
     function setvalue(vls)
     {
-      p0.style.width=(vls[0]*100).toString()+'%';p0.style.background=get_color(vls[0]);
-      p1.style.width=(vls[1]*100).toString()+'%';p1.style.background=get_color(vls[1]);
-      p2.style.width=(vls[2]*100).toString()+'%';p2.style.background=get_color(vls[2]);
-      p3.style.width=(vls[3]*100).toString()+'%';p3.style.background=get_color(vls[3]);
-      p4.style.width=(vls[4]*100).toString()+'%';p4.style.background=get_color(vls[4]);
-      p5.style.width=(vls[5]*100).toString()+'%';p5.style.background=get_color(vls[5]);
-      p6.style.width=(vls[6]*100).toString()+'%';p6.style.background=get_color(vls[6]);
-      p7.style.width=(vls[7]*100).toString()+'%';p7.style.background=get_color(vls[7]);
-      names=window.parent.ExtFun('autorun.f0_get_name_ip')
-      l0.innerHTML=names[0]
-      l1.innerHTML=names[1]
-      l2.innerHTML=names[2]
-      l3.innerHTML=names[3]
-      l4.innerHTML=names[4]
-      l5.innerHTML=names[5]
-      l6.innerHTML=names[6]
-      l7.innerHTML=names[7]
-    }
-    
+      vls=vls[0]
+      p0.style.width=vls[0][0];p0.style.background=vls[0][1];
+      p1.style.width=vls[1][0];p1.style.background=vls[1][1];
+      p2.style.width=vls[2][0];p2.style.background=vls[2][1];
+      p3.style.width=vls[3][0];p3.style.background=vls[3][1];
+      p4.style.width=vls[4][0];p4.style.background=vls[4][1];
+      p5.style.width=vls[5][0];p5.style.background=vls[5][1];
+      p6.style.width=vls[6][0];p6.style.background=vls[6][1];
+      p7.style.width=vls[7][0];p7.style.background=vls[7][1];
+      l0.innerHTML=vls[0][2];l0.style.color=vls[0][3];
+      l1.innerHTML=vls[1][2];l1.style.color=vls[1][3];
+      l2.innerHTML=vls[2][2];l2.style.color=vls[2][3];
+      l3.innerHTML=vls[3][2];l3.style.color=vls[3][3];
+      l4.innerHTML=vls[4][2];l4.style.color=vls[4][3];
+      l5.innerHTML=vls[5][2];l5.style.color=vls[5][3];
+      l6.innerHTML=vls[6][2];l6.style.color=vls[6][3];
+      l7.innerHTML=vls[7][2];l7.style.color=vls[7][3];
 
-    vls=window.parent.ExtFun('autorun.f0_get_values')
-    setvalue(vls)
-    window.parent.ExtFun('exe.maindlg.set_size',1000,800,0)
+    }
+    window.parent.ExtFun('exe.maindlg.set_size',1200,900,0)
     </script>

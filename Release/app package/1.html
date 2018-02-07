@@ -36,15 +36,18 @@
 <div align='left'>
     <p><label >目标名称：</label></p><p><input type="text" id="usr"  class="loginInput" value="" /></p>
     <p><label >目标ip：</label></p><p><input type="text" id="pwd"  class="loginInput" value="" /></p>
+    <label>报警条件：<select id="cond"><option value="0" >无</option><option value="1">断网</option><option value="-1">联网</option></select></label>
+    
     <p><button class="loginBtn" onclick="login()">确定</button><button class="loginBtn" onclick="unchange()">取消</button></p>
 </div>
 <script type="text/javascript">
-function login(){window.parent.ExtFun('autorun.f1_set_name_ip',usr.value,pwd.value);}
-function unchange(){window.parent.ExtFun('autorun.f1_set_name_ip',0,0);}
-window.parent.ExtFun('exe.maindlg.set_size',375,330,0)
+function login(){window.parent.ExtFun('autorun.f1_set_name_ip',usr.value,pwd.value,cond.value);}
+function unchange(){window.parent.ExtFun('autorun.f1_set_name_ip',0,0,0);}
+window.parent.ExtFun('exe.maindlg.set_size',375,370,0)
 nmip=window.parent.ExtFun('autorun.f1_get_name_ip')
 usr.value=nmip[0]
 pwd.value=nmip[1]
+cond.value=nmip[3]
 //window.parent.ExtFun('exe.maindlg.set_title','环翠国土电子档案查询系统')
 usr.focus() 
 function test(){alert('test');}
