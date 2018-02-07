@@ -52,8 +52,8 @@ void set_size(int x, int y, int z)
 	if (x == -1 || y == -1)flag |= SWP_NOSIZE;
 	HWND wnd_after = z == 1 ? HWND(-1) : HWND(-2);
 
-	gpMainFrame->SetWindowPos(wnd_after, 0, 0, x, y, flag);
 	gpMainFrame->ShowWindow(SW_NORMAL);
+	gpMainFrame->SetWindowPos(wnd_after, 0, 0, x, y, flag);
 	gpMainFrame->CenterWindow();
 }
 void set_timer(int ms, bool enable)
