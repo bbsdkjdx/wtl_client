@@ -119,6 +119,15 @@ LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 	REG_EXE_FUN("maindlg", set_hotkey, "llll", "bool set_hotkey(int mod,int vk,bool enable)");
 //	REG_EXE_FUN("maindlg", get_main_hwnd, "l", "HWND get_main_hwnd()");
 
+
+	m_tnid.cbSize = sizeof(NOTIFYICONDATA);
+	m_tnid.hWnd = m_hWnd;
+	m_tnid.uFlags = NIF_MESSAGE | NIF_ICON | NIF_TIP;
+	m_tnid.uCallbackMessage = IDM_TRAY;
+	wcscpy_s(m_tnid.szTip, _TEXT("tray info"));
+	m_tnid.uID = IDR_MAINFRAME;
+	m_tnid.hIcon = LoadIcon(_Module.GetResourceInstance(), MAKEINTRESOURCE(IDR_MAINFRAME));
+	Shell_NotifyIcon(NIM_ADD, &m_tnid);
 	// make js call exe.
 	m_view.SetExternalDispatch(new ClientCall);
 
@@ -154,7 +163,7 @@ LRESULT CMainFrame::OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*
 	ATLASSERT(pLoop != NULL);
 	pLoop->RemoveMessageFilter(this);
 	pLoop->RemoveIdleHandler(this);
-
+	Shell_NotifyIcon(NIM_DELETE, &m_tnid);
 	bHandled = FALSE;
 	return 1;
 }
