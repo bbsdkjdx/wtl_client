@@ -10,6 +10,7 @@
 #include "python_support.h"
 
 
+
 class ClientCall :public IDispatch
 {
 	long _refNum;
@@ -141,6 +142,7 @@ LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 	pLoop->AddMessageFilter(this);
 	pLoop->AddIdleHandler(this);
 
+
 	//test
 	return 0;
 }
@@ -160,11 +162,13 @@ LRESULT CMainFrame::OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*
 
 BOOL CMainFrame::PreTranslateMessage(MSG* pMsg)
 {
-	if (pMsg->message == 256 && pMsg->wParam == 123 && GetAsyncKeyState(0x11) & 0x8000)//Ctrl+F12 pressed.
+	//Ctrl+F12 pressed.
+	if (pMsg->message == 256 && pMsg->wParam == 123 && GetAsyncKeyState(0x11) & 0x8000)
 	{
 		InteractInConsole(m_hWnd, false);
 	}
 
+	//filte default hotkey.
 	if (pMsg && pMsg->message == WM_KEYDOWN)
 	{
 		bool bCtrl = (0x80 == (0x80 & GetKeyState(VK_CONTROL)));
@@ -174,6 +178,8 @@ BOOL CMainFrame::PreTranslateMessage(MSG* pMsg)
 		// prevent F5,escape.
 		if (wp == VK_F5 || wp == VK_ESCAPE)return S_OK;  //|| wp==VK_RETURN || wp==VK_BACK
 	}
+
+//	if (pMsg->message == WM_TaskbarRestart)MessageBoxW(_T("restart explorer"));
 
 	if (CFrameWindowImpl<CMainFrame>::PreTranslateMessage(pMsg))	return TRUE;
 	if (m_view.PreTranslateMessage(pMsg))return TRUE;
@@ -203,5 +209,11 @@ LRESULT CMainFrame::OnHotkey(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BO
 {
 	PySetInt(wParam, "hotkey");
 	bHandled = PyExecA("autorun.OnHotkey()");
+	return S_OK;
+}
+
+LRESULT CMainFrame::OnTaskBarReboot(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
+{
+	MessageBoxW(_T("task bar reboot."));
 	return S_OK;
 }
