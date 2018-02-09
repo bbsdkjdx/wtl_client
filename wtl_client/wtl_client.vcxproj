@@ -128,6 +128,7 @@
     <ResourceCompile Include="wtl_client.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="res\idr_main.ico" />
     <Image Include="res\toolbar.bmp" />
     <Image Include="res\wtl_client.ico" />
   </ItemGroup>

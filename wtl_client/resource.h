@@ -3,6 +3,8 @@
 // π© wtl_client.rc  π”√
 //
 #define IDR_MAINFRAME                   128
+#define IDR_MAINFRAME1                  129
+#define IDR_MAINFRAME2                  129
 #define IDR_HTML1                       201
 
 // Next default values for new objects

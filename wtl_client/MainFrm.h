@@ -6,7 +6,6 @@
 
 //restart task bar message.
 const UINT WM_TaskbarRestart = RegisterWindowMessage(TEXT("TaskbarCreated"));
-
 //sys tray message.
 const UINT IDM_TRAY = WM_USER + 100;
 
@@ -20,6 +19,7 @@ public:
 
 	CView m_view;
 	NOTIFYICONDATA m_tnid;
+	bool m_has_tray;
 	CComPtr<IWebBrowser2> m_pWb2;
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
 	virtual BOOL OnIdle();
@@ -32,6 +32,7 @@ public:
 		MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
 		MESSAGE_HANDLER(WM_TIMER, OnTimer)
 		MESSAGE_HANDLER(WM_HOTKEY, OnHotkey)
+		MESSAGE_HANDLER(IDM_TRAY, OnTray)
 		MESSAGE_HANDLER(WM_TaskbarRestart, OnTaskBarReboot)
 		CHAIN_MSG_MAP(CUpdateUI<CMainFrame>)
 		CHAIN_MSG_MAP(CFrameWindowImpl<CMainFrame>)
@@ -46,4 +47,5 @@ public:
 	LRESULT OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/);
 	LRESULT OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled);
 	LRESULT OnTaskBarReboot(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled);
+	LRESULT OnTray(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled);
 };

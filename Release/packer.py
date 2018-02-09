@@ -26,14 +26,17 @@ def pack():
 
 	print('ok.')
 
+def pic2code():
+	fn=list(clipboard.cb2fn())[0]
+	tp=fn[fn.rfind('.')+1:]
+	s=base64.b64encode(open(fn,'rb').read())
+	ans="\"data:image/%s;base64,%s\""%(tp,s.decode('utf-8'))
+	clipboard.s2cb(ans)
+
 def work():
 	sel=input('1:pack\n2.pic to txt\n:')
 	if sel=='2':
-		fn=list(clipboard.cb2fn())[0]
-		tp=fn[fn.rfind('.')+1:]
-		s=base64.b64encode(open(fn,'rb').read())
-		ans="\"data:image/%s;base64,%s\""%(tp,s.decode('utf-8'))
-		clipboard.s2cb(ans)
+		pic2code()
 	else:
 		pack()
 

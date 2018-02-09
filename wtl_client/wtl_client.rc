@@ -69,6 +69,7 @@ END
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 IDR_MAINFRAME           ICON                    "res\\wtl_client.ico"
+IDR_MAINFRAME2          ICON                    "res\\idr_main.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -90,14 +91,15 @@ VS_VERSION_INFO VERSIONINFO
 BEGIN
     BLOCK "StringFileInfo"
     BEGIN
-        BLOCK "040904B0"
+        BLOCK "040904b0"
         BEGIN
+            VALUE "CompanyName", "????????"
             VALUE "FileDescription", "wtl_client Module"
             VALUE "FileVersion", "1, 0, 0, 1"
-            VALUE "InternalName", "wtl_client"
+            VALUE "InternalName", "hcgt"
             VALUE "LegalCopyright", "Copyright 2018"
             VALUE "OriginalFilename", "wtl_client.exe"
-            VALUE "ProductName", "wtl_client Module"
+            VALUE "ProductName", "hcgt"
             VALUE "ProductVersion", "1, 0, 0, 1"
         END
     END

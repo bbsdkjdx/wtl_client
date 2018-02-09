@@ -72,7 +72,7 @@ void set_timer(int ms, bool enable)
 bool set_hotkey(int mod,int vk, bool enable)
 {
 	if (!gpMainFrame)return false;
-	int _id = vk << 16 | mod;
+	int _id = vk << 16 | mod; 
 	if (enable)
 	{
 		return RegisterHotKey(gpMainFrame->m_hWnd, _id, mod, vk);
@@ -96,10 +96,21 @@ UINT get_browser_hwnd()
 	return 0;
 }
 //HWND get_main_hwnd(){ return gpMainFrame ? gpMainFrame->m_hWnd : 0; }
+void set_tray(WCHAR *tip,DWORD ico_id)
+{
+	if (gpMainFrame)
+	{
+		if (tip)wcscpy_s(gpMainFrame->m_tnid.szTip, tip);
+		if (ico_id)gpMainFrame->m_tnid.hIcon=LoadIcon(_Module.GetResourceInstance(), MAKEINTRESOURCE(ico_id==1?IDR_MAINFRAME:IDR_MAINFRAME2));
+		Shell_NotifyIcon(gpMainFrame->m_has_tray?NIM_MODIFY:NIM_ADD, &gpMainFrame->m_tnid);
+		gpMainFrame->m_has_tray = true;
+	}
+}
 
 LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 {
 	gpMainFrame = this;
+	m_has_tray = false;
 	//load resource html.
 	if (!PyExecA("import apploader as _apploader;import os as _os;autorun,htmls=_apploader.load_app(_os.getcwd()+'\\dlls\\\\testabi.pyd')"))
 	{
@@ -117,17 +128,18 @@ LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 	REG_EXE_FUN("maindlg", set_size, "#uuu", "set_size(int x,int y,int z)");
 	REG_EXE_FUN("maindlg", set_timer, "#ll", "set_timer(int ms,bool enable)");
 	REG_EXE_FUN("maindlg", set_hotkey, "llll", "bool set_hotkey(int mod,int vk,bool enable)");
-//	REG_EXE_FUN("maindlg", get_main_hwnd, "l", "HWND get_main_hwnd()");
+	REG_EXE_FUN("maindlg", set_tray, "#Su", "void set_tray(WCHAR *info,DWORD ico_id)");
+	//	REG_EXE_FUN("maindlg", get_main_hwnd, "l", "HWND get_main_hwnd()");
 
 
 	m_tnid.cbSize = sizeof(NOTIFYICONDATA);
 	m_tnid.hWnd = m_hWnd;
 	m_tnid.uFlags = NIF_MESSAGE | NIF_ICON | NIF_TIP;
+	wcscpy_s(gpMainFrame->m_tnid.szTip, _T(""));
 	m_tnid.uCallbackMessage = IDM_TRAY;
-	wcscpy_s(m_tnid.szTip, _TEXT("tray info"));
 	m_tnid.uID = IDR_MAINFRAME;
 	m_tnid.hIcon = LoadIcon(_Module.GetResourceInstance(), MAKEINTRESOURCE(IDR_MAINFRAME));
-	Shell_NotifyIcon(NIM_ADD, &m_tnid);
+//	Shell_NotifyIcon(NIM_ADD, &m_tnid);
 	// make js call exe.
 	m_view.SetExternalDispatch(new ClientCall);
 
@@ -163,7 +175,7 @@ LRESULT CMainFrame::OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*
 	ATLASSERT(pLoop != NULL);
 	pLoop->RemoveMessageFilter(this);
 	pLoop->RemoveIdleHandler(this);
-	Shell_NotifyIcon(NIM_DELETE, &m_tnid);
+	if(m_has_tray)Shell_NotifyIcon(NIM_DELETE, &m_tnid);
 	bHandled = FALSE;
 	return 1;
 }
@@ -223,6 +235,28 @@ LRESULT CMainFrame::OnHotkey(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BO
 
 LRESULT CMainFrame::OnTaskBarReboot(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
 {
-	MessageBoxW(_T("task bar reboot."));
+	if(m_has_tray)Shell_NotifyIcon(NIM_ADD, &m_tnid);
+	return S_OK;
+}
+
+LRESULT CMainFrame::OnTray(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& bHandled)
+{
+	switch (lParam)
+	{
+	case  WM_LBUTTONDOWN:
+		PyExecA("autorun.OnTray('l_down')");
+		break;
+	case  WM_LBUTTONDBLCLK:
+		PyExecA("autorun.OnTray('l_dbclk')");
+		break;
+	case  WM_RBUTTONDOWN:
+		PyExecA("autorun.OnTray('r_down')");
+		break;
+	case  WM_RBUTTONDBLCLK:
+		PyExecA("autorun.OnTray('r_dbclk')");
+		break;
+	default:
+		break;
+	}
 	return S_OK;
 }
