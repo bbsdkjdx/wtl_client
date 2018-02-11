@@ -95,7 +95,7 @@ UINT get_browser_hwnd()
 	}
 	return 0;
 }
-//HWND get_main_hwnd(){ return gpMainFrame ? gpMainFrame->m_hWnd : 0; }
+HWND get_main_hwnd(){ return gpMainFrame ? gpMainFrame->m_hWnd : 0; }
 void set_tray(WCHAR *tip,DWORD ico_id)
 {
 	if (gpMainFrame)
@@ -106,6 +106,8 @@ void set_tray(WCHAR *tip,DWORD ico_id)
 		gpMainFrame->m_has_tray = true;
 	}
 }
+void show(int sh) { if (gpMainFrame)gpMainFrame->ShowWindow(sh ? SW_SHOW : SW_HIDE); }
+void close_wnd() { if (gpMainFrame)gpMainFrame->PostMessageW(WM_CLOSE,0,0); }
 
 LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 {
@@ -129,9 +131,11 @@ LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 	REG_EXE_FUN("maindlg", set_timer, "#ll", "set_timer(int ms,bool enable)");
 	REG_EXE_FUN("maindlg", set_hotkey, "llll", "bool set_hotkey(int mod,int vk,bool enable)");
 	REG_EXE_FUN("maindlg", set_tray, "#Su", "void set_tray(WCHAR *info,DWORD ico_id)");
-	//	REG_EXE_FUN("maindlg", get_main_hwnd, "l", "HWND get_main_hwnd()");
+	REG_EXE_FUN("maindlg", get_main_hwnd, "l", "HWND get_main_hwnd()");
+	REG_EXE_FUN("maindlg", show, "#l", "void show(int sh)");
+	REG_EXE_FUN("maindlg", close_wnd, "#", "void close_wnd()");
 
-
+	//set tray information.
 	m_tnid.cbSize = sizeof(NOTIFYICONDATA);
 	m_tnid.hWnd = m_hWnd;
 	m_tnid.uFlags = NIF_MESSAGE | NIF_ICON | NIF_TIP;
@@ -139,7 +143,8 @@ LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 	m_tnid.uCallbackMessage = IDM_TRAY;
 	m_tnid.uID = IDR_MAINFRAME;
 	m_tnid.hIcon = LoadIcon(_Module.GetResourceInstance(), MAKEINTRESOURCE(IDR_MAINFRAME));
-//	Shell_NotifyIcon(NIM_ADD, &m_tnid);
+	//Shell_NotifyIcon(NIM_ADD, &m_tnid);
+
 	// make js call exe.
 	m_view.SetExternalDispatch(new ClientCall);
 
@@ -180,7 +185,6 @@ LRESULT CMainFrame::OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*
 	return 1;
 }
 
-
 BOOL CMainFrame::PreTranslateMessage(MSG* pMsg)
 {
 	//Ctrl+F12 pressed.
@@ -200,22 +204,14 @@ BOOL CMainFrame::PreTranslateMessage(MSG* pMsg)
 		if (wp == VK_F5 || wp == VK_ESCAPE)return S_OK;  //|| wp==VK_RETURN || wp==VK_BACK
 	}
 
-//	if (pMsg->message == WM_TaskbarRestart)MessageBoxW(_T("restart explorer"));
-
 	if (CFrameWindowImpl<CMainFrame>::PreTranslateMessage(pMsg))	return TRUE;
 	if (m_view.PreTranslateMessage(pMsg))return TRUE;
 	return FALSE;
 }
 
-
 BOOL CMainFrame::OnIdle()
 {
-	static bool checked = false;
-	if (!checked)
-	{
-		PyExecA("autorun.upgrade()");
-		checked = true;
-	}
+		PyExecA("autorun.OnIdle()");
 	return FALSE;
 }
 
@@ -239,7 +235,7 @@ LRESULT CMainFrame::OnTaskBarReboot(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*l
 	return S_OK;
 }
 
-LRESULT CMainFrame::OnTray(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL& bHandled)
+LRESULT CMainFrame::OnTray(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled)
 {
 	switch (lParam)
 	{
@@ -260,3 +256,15 @@ LRESULT CMainFrame::OnTray(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM lParam, BOOL
 	}
 	return S_OK;
 }
+
+LRESULT CMainFrame::OnClose(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
+{
+	if (!PyEvalA("autorun.OnClose()"))
+	{
+		bHandled = FALSE;
+		return S_OK;
+	}
+	bHandled = PyGetInt();
+	return S_OK;
+}
+

@@ -4,7 +4,7 @@ import arbinrpc
 import win32tools
 import binascii
 import sys
-import ping
+import ctypes
 
 # fixed code, do not change if possible.
 #####################################################################################################################################
@@ -14,11 +14,27 @@ document.oncontextmenu=function(){event.returnValue=event.srcElement.nodeName=='
 document.onkeydown=function(){event.returnValue=!(event.keyCode==8 && event.srcElement.nodeName!='INPUT');}
 </script>'''
 
+def _show_menu(li,x=None, y=None):
+	if x==None or y==None:
+		pos = (ctypes.c_uint32*2)()
+		ctypes.windll.user32.GetCursorPos(ctypes.byref(pos))
+		x,y=pos
+	menu = ctypes.windll.user32.CreatePopupMenu()
+	for n in range(len(li)):
+		ctypes.windll.user32.AppendMenuW(menu, 0x10, n+1, li[n])
+	hwn = __main__.exe.maindlg.get_main_hwnd()
+	ctypes.windll.user32.SetForegroundWindow(hwn)
+	select = ctypes.windll.user32.TrackPopupMenuEx(menu, 0x1a3, x, y, hwn, 0)
+	ctypes.windll.user32.DestroyMenu(menu)
+	if select == 0:
+		return ''
+	return li[select-1]
+
 def _load_htmls(k):
 	__main__.js.set_html(__main__.htmls[k].decode('utf-8')+extra_js)
 
 # the template of upgrade function.
-def upgrade():
+def _upgrade():
 	return#todo
 	fn='.\\dlls\\testabi.pyd'
 	crc=binascii.crc32(open(fn,'rb').read())
@@ -29,10 +45,18 @@ def upgrade():
 		win32tools.shell_execute(sys.argv[0],0,0)
 		exit()
 
+_upgraded=False
+def OnIdle():
+	global _upgraded
+	if not _upgraded:
+		_upgrade()
+		_upgraded=True
+
 #called when the top html ready. Use as OnInitiaDialog().
-def on_html_ready():
+def OnHtmlReady():
 	_load_htmls('0.html')
 	__main__.exe.maindlg.set_timer(1000,1)
+	__main__.exe.maindlg.set_tray('ping.',1)
 #	__main__.exe.maindlg.set_hotkey(2,49,1)
 
 # define _on_timer() yourself below.
@@ -50,6 +74,13 @@ def OnHotkey():
 # tp: 'l_down' 'l_dbclk' 'r_down' 'r_dbclk'
 def OnTray(tp):
 	_on_tray(tp)
+
+allow_close=False
+def OnClose():
+	if allow_close:
+		return 0
+	__main__.exe.maindlg.show(0)
+	return 1
 #####################################################################################################################################
 
 #load settings.
@@ -61,6 +92,7 @@ except:
 cur_set=0
 
 #ping handler
+import ping
 def on_ping_echo(para):
 	tm=para[1]
 	if tm>1:
@@ -117,6 +149,9 @@ def _on_timer(_id):
 		if x[1]:
 			pn.send_ping(x[1])
 
+def f0_get_values():
+	return [ prepare_value(*x) for x in names]
+
 def f0_set_name_ip(x):
 	global cur_set
 	cur_set=x
@@ -133,3 +168,18 @@ def f1_set_name_ip(nm,ip,cond):
 
 def f1_get_name_ip():
 	return names[cur_set]
+
+
+
+def _on_tray(tp):
+	global allow_close
+	if tp=='l_dbclk':
+		__main__.exe.maindlg.show(1)
+	if tp=='r_down':
+		sel = _show_menu(['主窗口', '退出'])
+		if sel=='退出':
+			allow_close=True
+			__main__.exe.maindlg.close_wnd()
+		if sel=='主窗口':
+			__main__.exe.maindlg.show(1)
+
