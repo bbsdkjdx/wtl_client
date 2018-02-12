@@ -6,14 +6,20 @@ import binascii
 import sys
 import ctypes
 
-# fixed code, do not change if possible.
-#####################################################################################################################################
+
+######################## fixed code, do not change if possible.##############################################################################################################
+
 #disable contextmenu and backspace to goback.
 extra_js='''<script>
 document.oncontextmenu=function(){event.returnValue=event.srcElement.nodeName=='INPUT';};
 document.onkeydown=function(){event.returnValue=!(event.keyCode==8 && event.srcElement.nodeName!='INPUT');}
 </script>'''
 
+#switch pages
+def _load_htmls(k):
+	__main__.js.set_html(__main__.htmls[k].decode('utf-8')+extra_js)
+
+#menu support
 def _show_menu(li,x=None, y=None):
 	if x==None or y==None:
 		pos = (ctypes.c_uint32*2)()
@@ -30,8 +36,7 @@ def _show_menu(li,x=None, y=None):
 		return ''
 	return li[select-1]
 
-def _load_htmls(k):
-	__main__.js.set_html(__main__.htmls[k].decode('utf-8')+extra_js)
+######################## pre-config code, modify it to fit your app.##############################################################################################################
 
 # the template of upgrade function.
 def _upgrade():
@@ -46,6 +51,7 @@ def _upgrade():
 		exit()
 
 _upgraded=False
+# called when app is on idle.
 def OnIdle():
 	global _upgraded
 	if not _upgraded:
@@ -54,9 +60,10 @@ def OnIdle():
 
 #called when the top html ready. Use as OnInitiaDialog().
 def OnHtmlReady():
-	_load_htmls('0.html')
-	__main__.exe.maindlg.set_timer(1000,1)
-	__main__.exe.maindlg.set_tray('ping.',1)
+	pass
+#	_load_htmls('0.html')
+#	__main__.exe.maindlg.set_timer(1000,1)
+#	__main__.exe.maindlg.set_tray('网络运行监测终端',1)
 #	__main__.exe.maindlg.set_hotkey(2,49,1)
 
 # define _on_timer() yourself below.
@@ -81,4 +88,8 @@ def OnClose():
 		return 0
 	__main__.exe.maindlg.show(0)
 	return 1
+
+#app will allow only one instance if mutex_token is specified.
+mutex_token="wtl_ping"
+
 #####################################################################################################################################

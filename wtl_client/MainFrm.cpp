@@ -113,11 +113,7 @@ LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 {
 	gpMainFrame = this;
 	m_has_tray = false;
-	//load resource html.
-	if (!PyExecA("import apploader as _apploader;import os as _os;autorun,htmls=_apploader.load_app(_os.getcwd()+'\\dlls\\\\testabi.pyd')"))
-	{
-		MessageBoxW(PyGetStr(), 0, 0);
-	}
+
 	PyExecA("import sys as _sys");
 	PyEvalA("r'res://%s/201'%(_sys.argv[0])");
 	WCHAR *url = PyGetStr();

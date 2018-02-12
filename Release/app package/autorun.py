@@ -14,6 +14,11 @@ document.oncontextmenu=function(){event.returnValue=event.srcElement.nodeName=='
 document.onkeydown=function(){event.returnValue=!(event.keyCode==8 && event.srcElement.nodeName!='INPUT');}
 </script>'''
 
+#switch pages
+def _load_htmls(k):
+	__main__.js.set_html(__main__.htmls[k].decode('utf-8')+extra_js)
+
+#menu support
 def _show_menu(li,x=None, y=None):
 	if x==None or y==None:
 		pos = (ctypes.c_uint32*2)()
@@ -29,9 +34,6 @@ def _show_menu(li,x=None, y=None):
 	if select == 0:
 		return ''
 	return li[select-1]
-
-def _load_htmls(k):
-	__main__.js.set_html(__main__.htmls[k].decode('utf-8')+extra_js)
 
 # the template of upgrade function.
 def _upgrade():
@@ -56,7 +58,7 @@ def OnIdle():
 def OnHtmlReady():
 	_load_htmls('0.html')
 	__main__.exe.maindlg.set_timer(1000,1)
-	__main__.exe.maindlg.set_tray('ping.',1)
+	__main__.exe.maindlg.set_tray('网络运行监测终端',1)
 #	__main__.exe.maindlg.set_hotkey(2,49,1)
 
 # define _on_timer() yourself below.
@@ -81,6 +83,10 @@ def OnClose():
 		return 0
 	__main__.exe.maindlg.show(0)
 	return 1
+
+#app will allow only one instance if mutex_token is specified.
+mutex_token="wtl_ping"
+
 #####################################################################################################################################
 
 #load settings.
