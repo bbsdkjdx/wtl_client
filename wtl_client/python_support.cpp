@@ -289,13 +289,10 @@ void reg_exe_fun(char *mod,char *fnn, char *fmt, void *pfn,char *doc)
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-struct ThreadParameter
-{
-	HWND hwn_parent;
-};
+
 HANDLE h_con_thd = NULL;
 
-void _InteractInConsole(void *para)
+unsigned int _stdcall _InteractInConsole(void *para)
 {
 	for (;;)
 	{
@@ -330,36 +327,22 @@ void _InteractInConsole(void *para)
 
 
 			ShowWindow(hwn, SW_HIDE);
-			ThreadParameter *p = (ThreadParameter*)para;
-			if (p->hwn_parent)
-			{
-				SetForegroundWindow(p->hwn_parent);
-			}
 		}//release GIL,or other thread may be locked.
 		SuspendThread(h_con_thd);
 	}
-
+	return 0;
 }
 
 
 void InteractInConsole(HWND parent_wnd, bool block)
 {
-	static ThreadParameter tp;
-	tp.hwn_parent = parent_wnd;
 	if (block)
 	{
-		_InteractInConsole(&tp);
+		_InteractInConsole(0);
 	}
 	else
 	{
-		if (!h_con_thd)
-		{
-			h_con_thd=(HANDLE)_beginthread(_InteractInConsole, 0, &tp);
-		}
-		else
-		{
-			ResumeThread(h_con_thd);
-		}
+		ResumeThread(h_con_thd);
 	}
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -371,10 +354,10 @@ public:
 	PY_INITIALIZER()
 	{
 		_init_python();
+		h_con_thd = (HANDLE)_beginthreadex(0, 0, _InteractInConsole, 0, CREATE_SUSPENDED, 0);
 	}
 	~PY_INITIALIZER()
 	{
-		//MessageBoxA(GetForegroundWindow(), "quit", "", 0);
 		TerminateProcess(GetCurrentProcess(), 0);
 	}
 } g_py_initializer;
