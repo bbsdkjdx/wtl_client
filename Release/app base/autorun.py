@@ -6,9 +6,8 @@ import binascii
 import sys
 import ctypes
 
-
-######################## fixed code, do not change if possible.##############################################################################################################
-
+# fixed code, do not change if possible.
+#####################################################################################################################################
 #disable contextmenu and backspace to goback.
 extra_js='''<script>
 document.oncontextmenu=function(){event.returnValue=event.srcElement.nodeName=='INPUT';};
@@ -36,8 +35,6 @@ def _show_menu(li,x=None, y=None):
 		return ''
 	return li[select-1]
 
-######################## pre-config code, modify it to fit your app.##############################################################################################################
-
 # the template of upgrade function.
 def _upgrade():
 	return#todo
@@ -50,20 +47,11 @@ def _upgrade():
 		win32tools.shell_execute(sys.argv[0],0,0)
 		exit()
 
-_upgraded=False
-# called when app is on idle.
-def OnIdle():
-	global _upgraded
-	if not _upgraded:
-		_upgrade()
-		_upgraded=True
-
 #called when the top html ready. Use as OnInitiaDialog().
 def OnHtmlReady():
-	pass
-#	_load_htmls('0.html')
-#	__main__.exe.maindlg.set_timer(1000,1)
-#	__main__.exe.maindlg.set_tray('网络运行监测终端',1)
+	_load_htmls('0.html')
+	__main__.exe.maindlg.set_timer(1000,1)
+	__main__.exe.maindlg.set_tray('网络运行监测终端',1)
 #	__main__.exe.maindlg.set_hotkey(2,49,1)
 
 # define _on_timer() yourself below.

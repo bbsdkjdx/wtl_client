@@ -205,7 +205,7 @@ BOOL CMainFrame::PreTranslateMessage(MSG* pMsg)
 
 BOOL CMainFrame::OnIdle()
 {
-		PyExecA("autorun.OnIdle()");
+		//PyExecA("autorun.OnIdle()");
 	return FALSE;
 }
 

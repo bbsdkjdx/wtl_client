@@ -47,13 +47,6 @@ def _upgrade():
 		win32tools.shell_execute(sys.argv[0],0,0)
 		exit()
 
-_upgraded=False
-def OnIdle():
-	global _upgraded
-	if not _upgraded:
-		_upgrade()
-		_upgraded=True
-
 #called when the top html ready. Use as OnInitiaDialog().
 def OnHtmlReady():
 	_load_htmls('0.html')
