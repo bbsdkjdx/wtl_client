@@ -113,7 +113,6 @@ LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 {
 	gpMainFrame = this;
 	m_has_tray = false;
-
 	PyExecA("import sys as _sys");
 	PyEvalA("r'res://%s/201'%(_sys.argv[0])");
 	WCHAR *url = PyGetStr();
@@ -163,7 +162,6 @@ LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 	ATLASSERT(pLoop != NULL);
 	pLoop->AddMessageFilter(this);
 	pLoop->AddIdleHandler(this);
-
 
 	//test
 	return 0;
