@@ -47,6 +47,20 @@ def _upgrade():
 		win32tools.shell_execute(sys.argv[0],0,0)
 		exit()
 
+#set autorun in registry,specify item name by 'name',set if enable else delete.
+def _set_autorun(name,enable):
+	import win32api,win32con,sys,os
+	mk=win32con.HKEY_LOCAL_MACHINE
+	sk='SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run'
+	fn=sys.argv[0]
+	if '\\' not in fn:
+		fn=os.getcwd()+'\\'+fn
+	k=win32api.RegOpenKey(mk,sk,0,win32con.KEY_ALL_ACCESS)
+	if enable:
+		win32api.RegSetValueEx(k,name,0,win32con.REG_SZ,fn)
+	else:
+		win32api.RegDeleteValue(k,name)
+
 #called when the top html ready. Use as OnInitiaDialog().
 def OnHtmlReady():
 	_load_htmls('0.html')
