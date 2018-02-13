@@ -11,6 +11,8 @@ char *pre_code =
 "import traceback as _traceback\n"
 "import ctypes as _ctypes\n"
 "import json as _json\n"
+"import sys as _sys\n"
+"import os as _os\n"
 "from threading import get_ident as _get_thd_id\n"
 
 //stack to transform parameters between exe and python.
@@ -89,6 +91,36 @@ char *pre_code =
 "        return _call_js('.'.join(self.name),args)\n"
 "js=CJs()\n"
 
+//add secure import functionality.
+"import zipfile as _zipfile\n"
+"class _decryptor:\n"
+"    def __init__(self,fn):\n"
+"        self.fn=fn\n"
+"    def __enter__(self):\n"
+"        self.encrypt()\n"
+"    def __exit__(self,t,v,b):\n"
+"        open(self.fn,'wb').write(self.data0)\n"
+"    def encrypt(self):\n"
+"        byte=_ctypes.c_char\n"
+"        self.data0=open(self.fn,'rb').read()\n"
+"        buf=_ctypes.create_string_buffer(self.data0,len(self.data0))\n"
+"        for x in range(len(buf)):\n"
+"            buf[x]=byte(ord(buf[x])^(x%255))\n"
+"        open(self.fn,'wb').write(buf.raw)\n"
+"def _load_app(fn):\n"
+"    _sys.path.append(fn)\n"
+"    with _decryptor(fn):\n"
+"        import autorun #load autorun\n"
+"        html_dic=dict()\n"
+"        zf=_zipfile.ZipFile(fn,'r')\n"
+"        for x in zf.namelist():#load htmls\n"
+"            if '.py' in x:\n"
+"                continue\n"
+"            if '.html' in x:\n"
+"                html_dic[x]=zf.read(x)\n"
+"                continue\n"
+"            #open(autorun._html_base+x,'wb').write(zf.read(x))\n"
+"    return autorun,html_dic\n"
 ;
 
 

@@ -35,7 +35,7 @@ int Run(LPTSTR /*lpstrCmdLine*/ = NULL, int nCmdShow = SW_SHOWDEFAULT)
 int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lpstrCmdLine, int nCmdShow)
 {
 	//load resource html.
-	if (!PyExecA("import apploader as _apploader;import os as _os;autorun,htmls=_apploader.load_app(_os.getcwd()+'\\dlls\\\\testabi.pyd')"))
+	if (!PyExecA("autorun,htmls=_load_app(_os.getcwd()+'\\dlls\\\\testabi.pyd')"))
 	{
 		MessageBoxW(GetForegroundWindow(),PyGetStr(), 0, 0);
 	}
