@@ -8,15 +8,22 @@ import ctypes
 
 # fixed code, do not change if possible.
 #####################################################################################################################################
+
+#app will allow only one instance if mutex_token is specified.
+mutex_token="wtl_ping"
+
+#set to html's <base> tag.
+_html_base=os.getcwd()+'\\dlls\\'
+
 #disable contextmenu and backspace to goback.
-extra_js='''<script>
+extra_js='''<base href="%s" /><script>
 document.oncontextmenu=function(){event.returnValue=event.srcElement.nodeName=='INPUT';};
 document.onkeydown=function(){event.returnValue=!(event.keyCode==8 && event.srcElement.nodeName!='INPUT');}
-</script>'''
+</script>''' % (_html_base)
 
 #switch pages
 def _load_htmls(k):
-	__main__.js.set_html(__main__.htmls[k].decode('utf-8')+extra_js)
+	__main__.js.set_html(extra_js+__main__.htmls[k].decode('utf-8'))
 
 #menu support
 def _show_menu(li,x=None, y=None):
@@ -91,8 +98,6 @@ def OnClose():
 	__main__.exe.maindlg.show(0)
 	return 1
 
-#app will allow only one instance if mutex_token is specified.
-mutex_token="wtl_ping"
 
 #####################################################################################################################################
 
