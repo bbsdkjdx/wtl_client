@@ -16,14 +16,15 @@ mutex_token="wtl_ping"
 _html_base=os.getcwd()+'\\dlls\\'
 
 #disable contextmenu and backspace to goback.
-extra_js='''<base href="%s" /><script>
+extra_js='''<!doctype html><base href="%s" /><script>
 document.oncontextmenu=function(){event.returnValue=event.srcElement.nodeName=='INPUT';};
 document.onkeydown=function(){event.returnValue=!(event.keyCode==8 && event.srcElement.nodeName!='INPUT');}
 </script>''' % (_html_base)
 
 #switch pages
 def _load_htmls(k):
-	__main__.js.set_html(extra_js+__main__.htmls[k].decode('utf-8'))
+	s_html=__main__.htmls[k].decode('utf-8').strip()
+	__main__.js.set_html(extra_js+s_html)
 
 #menu support
 def _show_menu(li,x=None, y=None):
