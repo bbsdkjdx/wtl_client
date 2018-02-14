@@ -17,7 +17,7 @@ class decryptor:
 		self.data0=open(self.fn,'rb').read()
 		buf=ctypes.create_string_buffer(self.data0,len(self.data0))
 		for x in range(len(buf)):
-			buf[x]=byte(ord(buf[x])^(x%255))
+			buf[x]=byte(ord(buf[x])^(x&0xff))
 		open(self.fn,'wb').write(buf.raw)
 
 def pack():

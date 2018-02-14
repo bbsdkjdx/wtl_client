@@ -8,119 +8,128 @@ PyObject  *pModule = nullptr;
 
 
 char *pre_code =
-"import traceback as _traceback\n"
-"import ctypes as _ctypes\n"
-"import json as _json\n"
-"import sys as _sys\n"
-"import os as _os\n"
-"from threading import get_ident as _get_thd_id\n"
-
-//stack to transform parameters between exe and python.
-"stack=dict()\n"
+R"(
+import traceback as _traceback
+import ctypes as _ctypes
+import json as _json
+import sys as _sys
+import os as _os
+from threading import get_ident as _get_thd_id
+stack=dict()
+)"
 
 //show message box before foreground window.
-"def msgbox(s,title=''):\n"
-" _ctypes.windll.user32.MessageBoxW(_ctypes.windll.user32.GetForegroundWindow(),str(s),title,0x40)\n"
+R"(
+def msgbox(s,title=''):
+ _ctypes.windll.user32.MessageBoxW(_ctypes.windll.user32.GetForegroundWindow(),str(s),title,0x40)
+)"
 
 //define exe funciton management class,exe is the object,type it can see all functions.
-"class CAnything(object):\n"
-"    def __repr__(self):\n"
-"        dic=self.__dict__\n"
-"        return '\\n**************************************************\\n'.join((x+'\\n'+dic[x].__dict__.get('__doc__','') for x in dic))\n"
-"exe=CAnything()\n"
-"def _build_exe_fun__(mod,fnn, fmt, adr,doc):\n"
-"    dic = {'#': '_ctypes.c_void_p', \n"
-"           's':'_ctypes.c_char_p','S': '_ctypes.c_wchar_p',\n"
-"           'l': '_ctypes.c_int32', 'u': '_ctypes.c_uint32',\n"
-"           'L': '_ctypes.c_int64', 'U': '_ctypes.c_uint64',\n"
-"           'f': '_ctypes.c_float', 'F': '_ctypes.c_double'}\n"
-"    cmd = '_ctypes.CFUNCTYPE('\n"
-"    cmd += ','.join(map(lambda x: dic[x], fmt))\n"
-"    cmd += ')('+str(adr)+')'\n"
-"    if not mod:\n"
-"        exe.__dict__[fnn]=eval(cmd)\n"
-"        exe.__dict__[fnn].__doc__=doc\n"
-"        return\n"
-"    if mod not in exe.__dict__:exe.__dict__[mod]=CAnything()\n"
-"    exe.__dict__[mod].__dict__[fnn] = eval(cmd)\n"
-"    exe.__dict__[mod].__dict__[fnn].__doc__=doc\n"
+R"(
+class CAnything(object):
+    def __repr__(self):
+        dic=self.__dict__
+        return '\n\n'.join((x+'\n'+dic[x].__dict__.get('__doc__','') for x in dic))
+exe=CAnything()
+def _build_exe_fun__(mod,fnn, fmt, adr,doc):
+    dic = {'#': _ctypes.c_void_p,'s':_ctypes.c_char_p,'S': _ctypes.c_wchar_p,'l':_ctypes.c_int32, 
+           'u': _ctypes.c_uint32,'L':_ctypes.c_int64, 'U': _ctypes.c_uint64,'f':_ctypes.c_float, 'F': _ctypes.c_double}
+    _fun=_ctypes.CFUNCTYPE( *(dic[x] for x in fmt) )(adr)
+    _fun.__doc__=doc
+    if not mod:
+        exe.__dict__[fnn]=_fun
+        return
+    if mod not in exe.__dict__:exe.__dict__[mod]=CAnything()
+    exe.__dict__[mod].__dict__[fnn] = _fun
+)"
 
 
-
-"_thd_dict=dict()\n"
 //two caller in html to call back and forth.
-"def _get_caller():\n"
-"    import htmldoc\n"
-"    wnd=exe.maindlg.get_browser_hwnd()\n"
-"    doc=htmldoc.wnd2htmldoc(wnd)\n"
-"    dic=dict()\n"
-"    dic['_exe_caller']=doc.getElementById('execaller')\n"
-"    dic['_js_caller']=doc.getElementById('jscaller')\n"
-"    _thd_dict[_get_thd_id()]=dic\n"
+R"(
+_thd_dict=dict()
+def _get_caller():
+    import htmldoc
+    wnd=exe.maindlg.get_browser_hwnd()
+    doc=htmldoc.wnd2htmldoc(wnd)
+    dic=dict()
+    dic['_exe_caller']=doc.getElementById('execaller')
+    dic['_js_caller']=doc.getElementById('jscaller')
+    _thd_dict[_get_thd_id()]=dic
+)"
 
 //treate js call exe,
-"def _ext_fun():\n"
-"    if _get_thd_id() not in _thd_dict:\n"
-"        _get_caller()\n"
-"    _exe_caller=_thd_dict[_get_thd_id()]['_exe_caller']\n"
-"    fun,*para=_json.loads(_exe_caller.value)\n"
-"    try:\n"
-"        fun=eval(fun)\n"
-"        _exe_caller.value= _json.dumps(fun(*para))\n"
-"    except Exception as exp:\n"
-"        _exe_caller.value= _json.dumps(str(exp))\n"
+R"(
+def _ext_fun():
+    if _get_thd_id() not in _thd_dict:
+        _get_caller()
+    _exe_caller=_thd_dict[_get_thd_id()]['_exe_caller']
+    fun,*para=_json.loads(_exe_caller.value)
+    try:
+        fun=eval(fun)
+        _exe_caller.value= _json.dumps(fun(*para))
+    except Exception as exp:
+        _exe_caller.value= _json.dumps(str(exp))
+)"
 
 
 //treat exe call js.
-"def _call_js(fun_name,paras):\n"
-"    s1=_json.dumps([fun_name,paras])\n"
-"    if _get_thd_id() not in _thd_dict:\n"
-"        _get_caller()\n"
-"    _js_caller=_thd_dict[_get_thd_id()]['_js_caller']\n"
-"    _js_caller.value=s1\n"
-"    _js_caller.click()\n"
-"    s2=_js_caller.value\n"
-"    return _json.loads(s2)\n"
+R"(
+def _call_js(fun_name,paras):
+    s1=_json.dumps([fun_name,paras])
+    if _get_thd_id() not in _thd_dict:
+        _get_caller()
+    _js_caller=_thd_dict[_get_thd_id()]['_js_caller']
+    _js_caller.value=s1
+    _js_caller.click()
+    s2=_js_caller.value
+    return _json.loads(s2)
+)"
+
 //the wrapper of exe call js.
-"class CJs(object):\n"
-"    def __init__(self, name = None):\n"
-"        self.name = name if name else[]\n"
-"    def __getattr__(self, name):\n"
-"        return CJs(self.name + [name])\n"
-"    def __call__(self, *args):\n"
-"        return _call_js('.'.join(self.name),args)\n"
-"js=CJs()\n"
+R"(
+class CJs(object):
+    def __init__(self, name = None):
+        self.name = name if name else[]
+    def __getattr__(self, name):
+        return CJs(self.name + [name])
+    def __call__(self, *args):
+        return _call_js('.'.join(self.name),args)
+js=CJs()
+)"
 
 //add secure import functionality.
-"import zipfile as _zipfile\n"
-"class _decryptor:\n"
-"    def __init__(self,fn):\n"
-"        self.fn=fn\n"
-"    def __enter__(self):\n"
-"        self.encrypt()\n"
-"    def __exit__(self,t,v,b):\n"
-"        open(self.fn,'wb').write(self.data0)\n"
-"    def encrypt(self):\n"
-"        byte=_ctypes.c_char\n"
-"        self.data0=open(self.fn,'rb').read()\n"
-"        buf=_ctypes.create_string_buffer(self.data0,len(self.data0))\n"
-"        for x in range(len(buf)):\n"
-"            buf[x]=byte(ord(buf[x])^(x%255))\n"
-"        open(self.fn,'wb').write(buf.raw)\n"
-"def _load_app(fn):\n"
-"    _sys.path.append(fn)\n"
-"    with _decryptor(fn):\n"
-"        import autorun\n"
-"        html_dic=dict()\n"
-"        zf=_zipfile.ZipFile(fn,'r')\n"
-"        for x in zf.namelist():\n"
-"            if '.py' in x:\n"
-"                continue\n"
-"            if '.html' in x:\n"
-"                html_dic[x]=zf.read(x)\n"
-"                continue\n"
-"            open(autorun._html_base+x,'wb').write(zf.read(x))\n"
-"    return autorun,html_dic\n"
+R"(
+import zipfile as _zipfile
+class _decryptor:
+    def __init__(self,fn):
+        self.fn=fn
+    def __enter__(self):
+        self.encrypt()
+    def __exit__(self,t,v,b):
+        open(self.fn,'wb').write(self.data0)
+    def encrypt(self):
+        byte=_ctypes.c_char
+        self.data0=open(self.fn,'rb').read()
+        buf=_ctypes.create_string_buffer(self.data0,len(self.data0))
+        for x in range(len(buf)):
+            buf[x]=byte(ord(buf[x])^(x&0xff))
+        open(self.fn,'wb').write(buf.raw)
+def _load_app(fn):
+    _sys.path.append(fn)
+    with _decryptor(fn):
+        import autorun
+        html_dic=dict()
+        zf=_zipfile.ZipFile(fn,'r')
+        for x in zf.namelist():
+            if '.py' in x:
+                continue
+            if '.html' in x:
+                html_dic[x]=zf.read(x)
+                continue
+            open(autorun._html_base+x,'wb').write(zf.read(x))
+    return autorun,html_dic
+    )"
+
 ;
 
 

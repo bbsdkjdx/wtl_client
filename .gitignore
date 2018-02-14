@@ -9,3 +9,4 @@
 /Release/DLLs/testabi.pyd
 *.ipch
 /Release/ip.p
+/Release/DLLs/*
