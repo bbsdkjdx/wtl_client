@@ -44,7 +44,7 @@ CMainFrame *gpMainFrame = nullptr;
 
 void set_title(WCHAR *s) { if (gpMainFrame)gpMainFrame->SetWindowTextW(s); }
 void set_maxmize(){ if (gpMainFrame)gpMainFrame->ShowWindow(SW_MAXIMIZE); }
-void set_size(int x, int y, int z,bool fixed_size)
+void set_size(int x, int y, int z,bool fixed_size,bool closable)
 {
 	if (!gpMainFrame)return;
 
@@ -62,6 +62,14 @@ void set_size(int x, int y, int z,bool fixed_size)
 	else
 	{
 		style |= WS_SIZEBOX|WS_MAXIMIZEBOX;
+	}
+	if (closable)
+	{
+		style |= WS_SYSMENU;
+	}
+	else
+	{
+		style &= ~WS_SYSMENU;
 	}
 	::SetWindowLong(gpMainFrame->m_hWnd, GWL_STYLE, style);
 
@@ -133,7 +141,7 @@ LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 	REG_EXE_FUN("maindlg", get_browser_hwnd, "u", "get_browser_hwnd()");
 	REG_EXE_FUN("maindlg", set_maxmize, "#", "set_maximize()");
 	REG_EXE_FUN("maindlg", set_title, "#S", "set_title(WCHAR *str)");
-	REG_EXE_FUN("maindlg", set_size, "#uuuu", "set_size(int x,int y,int z,bool fixed_size)");
+	REG_EXE_FUN("maindlg", set_size, "#uuuuu", "set_size(int x,int y,int z,bool fixed_size,bool closable)");
 	REG_EXE_FUN("maindlg", set_timer, "#ll", "set_timer(int ms,bool enable)");
 	REG_EXE_FUN("maindlg", set_hotkey, "llll", "bool set_hotkey(int mod,int vk,bool enable)");
 	REG_EXE_FUN("maindlg", set_tray, "#Su", "void set_tray(WCHAR *info,DWORD ico_id)");
