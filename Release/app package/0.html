@@ -1,64 +1,17 @@
+<html>
+<head>
+    <meta charset="utf-8">
+</head>
+<body background="bg._jpg" onkeydown="if(event.keyCode==13){login()}" >
+<div align='left'>
+    <p><label >用户名：<input type="text" id="usr"  class="loginInput" value="" /></label></p>
+    <p><label >密 码 ：<input type="password" id="pwd"  class="loginInput" value="" /></label></p>
+    <p><button class="loginBtn" onclick="login()">登录</button>
+</div>
+<script type="text/javascript">
+window.parent.ExtFun('exe.maindlg.set_size',744,540,0,1,1)
+usr.focus() 
+</script>
+</body>
+</html>
 
-<body background='a._gif'>
-<style type="text/css">
-    * {box-sizing: border-box}
-    
-    .container {
-      width: 100%;
-      background-color: #a6aca5;
-    }
-    
-    .skills {
-      text-align: right;
-      padding-right: 20px;
-      line-height: 40px;
-      height: 30px;
-    }
-
-    </style>
-    <h1 align="center">网络运行监测系统</h1>
-    <h2 align="right">国土环翠分局.信息中心</h2>
-    <p id="l0" ondblclick="window.parent.ExtFun('autorun.f0_set_name_ip',0)"></p>
-    <div class="container"><div class="skills " id="p0"></div></div>
-    <p id="l1" ondblclick="window.parent.ExtFun('autorun.f0_set_name_ip',1)"></p>
-    <div class="container"><div class="skills " id="p1"></div></div>
-    <p id="l2" ondblclick="window.parent.ExtFun('autorun.f0_set_name_ip',2)"></p>
-    <div class="container"><div class="skills " id="p2"></div></div>
-    <p id="l3" ondblclick="window.parent.ExtFun('autorun.f0_set_name_ip',3)"></p>
-    <div class="container"><div class="skills " id="p3"></div></div>
-    <p id="l4" ondblclick="window.parent.ExtFun('autorun.f0_set_name_ip',4)"></p>
-    <div class="container"><div class="skills " id="p4"></div></div>
-    <p id="l5" ondblclick="window.parent.ExtFun('autorun.f0_set_name_ip',5)"></p>
-    <div class="container"><div class="skills " id="p5"></div></div>
-    <p id="l6" ondblclick="window.parent.ExtFun('autorun.f0_set_name_ip',6)"></p>
-    <div class="container"><div class="skills " id="p6"></div></div>
-    <p id="l7" ondblclick="window.parent.ExtFun('autorun.f0_set_name_ip',7)"></p>
-    <div class="container"><div class="skills " id="p7"></div></div>
-
-    
-    <script>
-    function setvalue(vls)
-    {
-      vls=vls[0]
-      p0.style.width=vls[0][0];p0.style.background=vls[0][1];
-      p1.style.width=vls[1][0];p1.style.background=vls[1][1];
-      p2.style.width=vls[2][0];p2.style.background=vls[2][1];
-      p3.style.width=vls[3][0];p3.style.background=vls[3][1];
-      p4.style.width=vls[4][0];p4.style.background=vls[4][1];
-      p5.style.width=vls[5][0];p5.style.background=vls[5][1];
-      p6.style.width=vls[6][0];p6.style.background=vls[6][1];
-      p7.style.width=vls[7][0];p7.style.background=vls[7][1];
-      l0.innerHTML=vls[0][2];l0.style.color=vls[0][3];
-      l1.innerHTML=vls[1][2];l1.style.color=vls[1][3];
-      l2.innerHTML=vls[2][2];l2.style.color=vls[2][3];
-      l3.innerHTML=vls[3][2];l3.style.color=vls[3][3];
-      l4.innerHTML=vls[4][2];l4.style.color=vls[4][3];
-      l5.innerHTML=vls[5][2];l5.style.color=vls[5][3];
-      l6.innerHTML=vls[6][2];l6.style.color=vls[6][3];
-      l7.innerHTML=vls[7][2];l7.style.color=vls[7][3];
-
-    }
-    window.parent.ExtFun('exe.maindlg.set_size',1200,900,0,0,1)
-    setvalue([window.parent.ExtFun('autorun.f0_get_values')])
-    </script>
-    </body>
