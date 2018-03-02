@@ -1,0 +1,94 @@
+
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <style>
+        html {
+            background-color: #B5DEF2;
+        }
+        .loginBox {
+            background-color: #F0F4F6;
+            /*上divcolor*/
+            border: 1px solid #BfD6E1;
+            color: #444;
+            font: 14px 'Microsoft YaHei', '微软雅黑';
+            margin: 0 auto;
+            width: 388px
+        }
+        
+        .loginBox .loginBoxCenter {
+            border-bottom: 1px solid #DDE0E8;
+            padding: 24px;
+        }
+
+        .loginBox .loginBoxButtons {
+            /*background-color: #F0F4F6;*/
+            /*下divcolor*/
+            border-top: 0px solid #FFF;
+            line-height: 28px;
+            overflow: hidden;
+            padding: 20px 24px;
+            vertical-align: center;
+
+        }
+        
+        .loginBox .loginInput {
+            border: 1px solid #D2D9dC;
+            color: #444;
+            font: 12px 'Microsoft YaHei', '微软雅黑';
+            padding: 8px 14px;
+            margin-bottom: 8px;
+            width: 310px;
+        }
+
+        .loginBox .loginBtn {
+            background-image: -moz-linear-gradient(to bottom, blue, #85CFEE);
+            border: 1px solid #98CCE7;
+            color: #444;
+            /*登录*/
+            cursor: pointer;
+            float: right;
+            font: bold 13px Arial;
+            padding: 10px 50px;
+            width: 110px;
+        }
+
+
+
+    </style>
+</head>
+<body>
+
+            <div class="loginBox" >
+                <div class="loginBoxCenter">
+                    <p><label for="username">用户名：</label></p>
+                    <p><input type="text" id="user_name" name="text" class="loginInput"  autocomplete="off"  value="" /></p>
+                    <p><label for="password">密码：</label></p>
+                    <p><input type="password" id="password" name="password" class="loginInput"  value="" /></p>
+                </div>
+                <div class="loginBoxButtons">
+                    <button class="loginBtn" onclick="on_close()">返回</button>
+                    <button class="loginBtn" onclick="on_login()">登录</button>
+                </div>
+            </div>
+
+</body>
+<script type="text/javascript">
+
+user_name.focus()
+
+
+window.parent.ExtFun('exe.maindlg.set_size',430,430,0,1,0)
+window.parent.ExtFun('exe.maindlg.set_title','环翠国土信息平台登录')
+
+function on_login(){window.parent.ExtFun('autorun.login_login',user_name.value,password.value);}
+function on_close(){window.parent.ExtFun('autorun.login_back');}
+
+u_p=window.parent.ExtFun('autorun.login_get_user_pwd')
+user_name.value=u_p[0]
+password.value=u_p[1]
+user_name.select()
+//window.parent.ExtFun('exe.maindlg.set_maxmize')
+</script>
+</html>

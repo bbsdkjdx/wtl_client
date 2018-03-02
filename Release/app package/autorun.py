@@ -71,9 +71,10 @@ def _set_autorun(name,enable):
 
 #called when the top html ready. Use as OnInitiaDialog().
 def OnHtmlReady():
-	_load_htmls('0.html')
+	#_load_htmls('0.html')#call twice to make focus() work normal.
+	_load_htmls('main.html')
 #	__main__.exe.maindlg.set_timer(1000,1)
-	__main__.exe.maindlg.set_tray('环翠国土信息终端',1)
+	__main__.exe.maindlg.set_tray('环翠国土信息平台',1)
 #	__main__.exe.maindlg.set_hotkey(2,49,1)
 
 # define _on_timer() yourself below.
@@ -102,6 +103,12 @@ def OnClose():
 
 #####################################################################################################################################
 
+class CEverythig(object):
+	pass
+
+usr_info=CEverythig()
+usr_info.usr='未登录'
+usr_info.pwd=''
 
 def _on_tray(tp):
 	global allow_close
@@ -115,3 +122,24 @@ def _on_tray(tp):
 		if sel=='主窗口':
 			__main__.exe.maindlg.show(1)
 
+def main_login():
+	_load_htmls('login.html')
+
+def main_get_user_info():
+	return '当前用户：%s'%(usr_info.usr)
+
+def login_get_user_pwd():
+	return usr_info.usr,usr_info.pwd
+
+def login_login(usr,pwd):
+	#check usr,pwd
+	usr_info.usr=usr
+	usr_info.pwd=pwd
+	usr_info.token=usr
+	_load_htmls('main.html')
+
+def login_back():
+	_load_htmls('main.html')
+
+def close_wnd():
+	__main__.exe.maindlg.close_wnd()

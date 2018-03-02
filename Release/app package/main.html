@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<style>
+    .jumbotron
+    {
+        background-color: rgb(189, 205, 216);
+        margin: auto;
+        padding: 15px;
+        width: auto;
+        height: auto;
+        top:5px;
+        left:5px;
+        right:5px;
+        border: 1px solid black;
+        font-family: '微软雅黑'
+    }
+    .col-md-4 {
+        background-color: rgb(236, 146, 151);
+        margin:10px 15px 0px;
+        padding: 10px;
+        width: auto;
+        height: auto;
+        border: 1px solid black;
+        cursor: pointer;
+    }
+</style>
+
+<body topmargin='0' leftmargin='0'>
+
+    <div class="container">
+        <div class="jumbotron">
+            <h1 align='center'>环翠国土信息服务平台</h1>
+            <p align='right'>威海市国土资源局 · 环翠分局 · 信息中心</p>
+            <p align='right'>技术支持：5273031</p>
+        </div>
+        <div class="row">
+            <div class="col-md-4" onclick="login()">
+                <h2>登录</h2>
+                <p id='user_info'>当前用户：未登录</p>
+                <p>登录系统，在用户名所授予的权限内完成相应的操作。</p>
+            </div>
+            <div class="col-md-4" style="background-color:rgb(35, 223, 176)">
+                <h2>出图服务</h2>
+                <p>信息中心根据业务科室自身业务需要，提供图纸。</p>
+            </div>
+            <div class="col-md-4" style="background-color:rgb(35, 132, 223) ">
+                <h2>信息查询</h2>
+                <p>信息中心面向各科室提供的数据查询服务。</p>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+
+        window.parent.ExtFun('exe.maindlg.set_size', 375, 370, 0, 0, 1)
+        window.parent.ExtFun('exe.maindlg.set_maxmize')
+        window.parent.ExtFun('exe.maindlg.set_title', '环翠国土信息平台')
+        user_info.innerHTML = window.parent.ExtFun('autorun.main_get_user_info')
+        function login() { window.parent.ExtFun('autorun.main_login'); }
+        function test() { alert('test'); }
+    </script>
+</body>
+
+</html>
