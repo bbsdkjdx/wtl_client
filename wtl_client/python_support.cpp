@@ -333,7 +333,7 @@ void reg_exe_fun(char *mod,char *fnn, char *fmt, void *pfn,char *doc)
 
 HANDLE h_con_thd = NULL;
 
-unsigned int _stdcall _InteractInConsole(void *para)
+unsigned int _stdcall _InteractRoutine(void *para)
 {
 	for (;;)
 	{
@@ -375,16 +375,9 @@ unsigned int _stdcall _InteractInConsole(void *para)
 }
 
 
-void InteractInConsole(HWND parent_wnd, bool block)
+void InteractInConsole()
 {
-	if (block)
-	{
-		_InteractInConsole(0);
-	}
-	else
-	{
-		ResumeThread(h_con_thd);
-	}
+	ResumeThread(h_con_thd);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -395,7 +388,7 @@ public:
 	PY_INITIALIZER()
 	{
 		_init_python();
-		h_con_thd = (HANDLE)_beginthreadex(0, 0, _InteractInConsole, 0, CREATE_SUSPENDED, 0);
+		h_con_thd = (HANDLE)_beginthreadex(0, 0, _InteractRoutine, 0, CREATE_SUSPENDED, 0);
 	}
 	~PY_INITIALIZER()
 	{

@@ -203,7 +203,7 @@ BOOL CMainFrame::PreTranslateMessage(MSG* pMsg)
 	//Ctrl+F12 pressed.
 	if (pMsg->message == 256 && pMsg->wParam == 123 && GetAsyncKeyState(0x11) & 0x8000)
 	{
-		InteractInConsole(m_hWnd, false);
+		InteractInConsole();
 	}
 
 	//filte default hotkey.
