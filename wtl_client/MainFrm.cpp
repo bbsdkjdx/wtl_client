@@ -180,7 +180,7 @@ LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 	CMessageLoop* pLoop = _Module.GetMessageLoop();
 	ATLASSERT(pLoop != NULL);
 	pLoop->AddMessageFilter(this);
-	pLoop->AddIdleHandler(this);
+	//pLoop->AddIdleHandler(this);
 
 	//test
 	return 0;

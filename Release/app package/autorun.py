@@ -13,7 +13,8 @@ import ctypes
 mutex_token="hc_xxzd"
 
 #if tray_txt not None,show tray,and only can closed by tray.
-tray_txt='环翠国土信息平台'
+tray_txt=''
+#tray_txt='环翠国土信息平台'
 
 #set to html's <base> tag.
 _html_base=os.getcwd()+'\\dlls\\'
