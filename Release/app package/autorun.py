@@ -12,6 +12,9 @@ import ctypes
 #app will allow only one instance if mutex_token is specified.
 mutex_token="hc_xxzd"
 
+#if tray_txt not None,show tray,and only can closed by tray.
+tray_txt='环翠国土信息平台'
+
 #set to html's <base> tag.
 _html_base=os.getcwd()+'\\dlls\\'
 
@@ -74,7 +77,8 @@ def OnHtmlReady():
 	#_load_htmls('0.html')#call twice to make focus() work normal.
 	_load_htmls('main.html')
 #	__main__.exe.maindlg.set_timer(1000,1)
-	__main__.exe.maindlg.set_tray('环翠国土信息平台',1)
+	if tray_txt:
+		__main__.exe.maindlg.set_tray(tray_txt,1)
 #	__main__.exe.maindlg.set_hotkey(2,49,1)
 
 # define _on_timer() yourself below.
@@ -93,12 +97,13 @@ def OnHotkey():
 def OnTray(tp):
 	_on_tray(tp)
 
-allow_close=False
+allow_close= not tray_txt
 def OnClose():
-	if allow_close:
+	if allow_close:#close directly if no tray.
 		return 0
-	__main__.exe.maindlg.show(0)
-	return 1
+	else:#hide main window.
+		__main__.exe.maindlg.show(0)
+		return 1
 
 
 #####################################################################################################################################
