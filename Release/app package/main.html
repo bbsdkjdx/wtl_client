@@ -44,11 +44,11 @@
             <div class="col-md-4" onclick="login()">
                 <h2>登录</h2>
                 <p id='user_info'>当前用户：未登录</p>
-                <p>登录系统，在用户名所授予的权限内完成相应的操作。</p>
+                <p>登录系统，在用户名所授予的权限内使用相应的平台功能。</p>
             </div>
             <div class="col-md-4" style="background-color:rgb(35, 223, 176)">
-                <h2>出图服务</h2>
-                <p>信息中心根据业务科室自身业务需要，提供图纸。</p>
+                <h2>作图申请</h2>
+                <p>信息中心根据业务科室自身业务需要，协调签约测绘公司，提供作图服务。</p>
             </div>
             <div class="col-md-4" style="background-color:rgb(35, 132, 223) ">
                 <h2>信息查询</h2>
@@ -65,6 +65,8 @@
         user_info.innerHTML = window.parent.ExtFun('autorun.main_get_user_info')
         function login() { window.parent.ExtFun('autorun.main_login'); }
         function test() { alert('test'); }
+        function fun_jc(n){if (n<1)return 1;return window.parent.ExtFun('autorun.fun_jc',n-1)*n;}
+        function set_log_info(s){user_info.innerHTML=s;}
     </script>
 </body>
 

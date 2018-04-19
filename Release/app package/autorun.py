@@ -77,7 +77,7 @@ def _set_autorun(name,enable):
 def OnHtmlReady():
 	#_load_htmls('0.html')#call twice to make focus() work normal.
 	_load_htmls('main.html')
-#	__main__.exe.maindlg.set_timer(1000,1)
+	__main__.exe.maindlg.set_timer(1,1)
 	if tray_txt:
 		__main__.exe.maindlg.set_tray(tray_txt,1)
 #	__main__.exe.maindlg.set_hotkey(2,49,1)
@@ -149,3 +149,16 @@ def login_back():
 
 def close_wnd():
 	__main__.exe.maindlg.close_wnd()
+
+_cnt=0
+def _on_timer(_id):
+	global _cnt
+	import time
+	__main__.js.ifrf.set_log_info(str(_cnt))
+	_cnt+=1
+
+def fun_jc(n):
+	print('in autorun. n:',n)
+	if n<1:
+		return 1
+	return __main__.js.ifrf.fun_jc(n-1)*n
