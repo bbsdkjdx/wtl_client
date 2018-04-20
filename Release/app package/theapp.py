@@ -6,15 +6,8 @@ import binascii
 import sys
 import ctypes
 
-# fixed code, do not change if possible.
 #####################################################################################################################################
-
-#app will allow only one instance if mutex_token is specified.
-mutex_token="hc_xxzd"
-
-#if tray_txt not None,show tray,and only can closed by tray.
-tray_txt=''
-#tray_txt='环翠国土信息平台'
+# fixed code, do not change if possible.
 
 #set to html's <base> tag.
 _html_base=os.getcwd()+'\\dlls\\'
@@ -73,8 +66,17 @@ def _set_autorun(name,enable):
 	else:
 		win32api.RegDeleteValue(k,name)
 
-#called when the top html ready. Use as OnInitiaDialog().
-def OnHtmlReady():
+#####################################################################################	
+
+#app will allow only one instance if mutex_token is specified.
+mutex_token="hc_xxzd"
+
+#if tray_txt not None,show tray,and only can closed by tray.
+tray_txt=''
+#tray_txt='环翠国土信息平台'
+
+#called when the frame html ready. Use as OnInitiaDialog().
+def OnInitApp():
 	#_load_htmls('0.html')#call twice to make focus() work normal.
 	_load_htmls('main.html')
 	__main__.exe.maindlg.set_timer(1000,1)
