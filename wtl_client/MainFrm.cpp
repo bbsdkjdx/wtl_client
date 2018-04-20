@@ -224,21 +224,21 @@ BOOL CMainFrame::PreTranslateMessage(MSG* pMsg)
 
 BOOL CMainFrame::OnIdle()
 {
-		//PyExecA("autorun.OnIdle()");
+		//PyExecA("theapp.OnIdle()");
 	return FALSE;
 }
 
 LRESULT CMainFrame::OnTimer(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& bHandled)
 {
 	PySetInt(wParam, "timer");
-	bHandled=PyExecA("autorun.OnTimer()");
+	bHandled=PyExecA("theapp.OnTimer()");
 	return S_OK;
 }
 
 LRESULT CMainFrame::OnHotkey(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& bHandled)
 {
 	PySetInt(wParam, "hotkey");
-	bHandled = PyExecA("autorun.OnHotkey()");
+	bHandled = PyExecA("theapp.OnHotkey()");
 	return S_OK;
 }
 
@@ -253,16 +253,16 @@ LRESULT CMainFrame::OnTray(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandl
 	switch (lParam)
 	{
 	case  WM_LBUTTONDOWN:
-		PyExecA("autorun.OnTray('l_down')");
+		PyExecA("theapp.OnTray('l_down')");
 		break;
 	case  WM_LBUTTONDBLCLK:
-		PyExecA("autorun.OnTray('l_dbclk')");
+		PyExecA("theapp.OnTray('l_dbclk')");
 		break;
 	case  WM_RBUTTONDOWN:
-		PyExecA("autorun.OnTray('r_down')");
+		PyExecA("theapp.OnTray('r_down')");
 		break;
 	case  WM_RBUTTONDBLCLK:
-		PyExecA("autorun.OnTray('r_dbclk')");
+		PyExecA("theapp.OnTray('r_dbclk')");
 		break;
 	default:
 		break;
@@ -272,7 +272,7 @@ LRESULT CMainFrame::OnTray(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandl
 
 LRESULT CMainFrame::OnClose(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
 {
-	if (!PyEvalA("autorun.OnClose()"))
+	if (!PyEvalA("theapp.OnClose()"))
 	{
 		bHandled = FALSE;
 		return S_OK;

@@ -35,13 +35,13 @@ int Run(LPTSTR /*lpstrCmdLine*/ = NULL, int nCmdShow = SW_SHOWDEFAULT)
 int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lpstrCmdLine, int nCmdShow)
 {
 	//load resource html.
-	if (!PyExecA("autorun,htmls=_load_app(_os.getcwd()+'\\dlls\\\\testabi.pyd')"))
+	if (!PyExecA("theapp,htmls=_load_app(_os.getcwd()+'\\dlls\\\\testabi.pyd')"))
 	{
 		MessageBoxW(GetForegroundWindow(),PyGetStr(), 0, 0);
 	}
 
 	//check if only single instance.
-	if (PyEvalA("autorun.mutex_token"))
+	if (PyEvalA("theapp.mutex_token"))
 	{
 		CreateMutexW(NULL, NULL, PyGetStr());
 		if (GetLastError() == ERROR_ALREADY_EXISTS) return 0;

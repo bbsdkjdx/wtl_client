@@ -117,7 +117,7 @@ class _decryptor:
 def _load_app(fn):
     _sys.path.append(fn)
     with _decryptor(fn):
-        import autorun
+        import theapp
         html_dic=dict()
         zf=_zipfile.ZipFile(fn,'r')
         for x in zf.namelist():
@@ -126,8 +126,8 @@ def _load_app(fn):
             if '.html' in x:
                 html_dic[x]=zf.read(x)
                 continue
-            open(autorun._html_base+x,'wb').write(zf.read(x))
-    return autorun,html_dic
+            open(theapp._html_base+x,'wb').write(zf.read(x))
+    return theapp,html_dic
     )"
 
 ;
@@ -338,10 +338,10 @@ unsigned int _stdcall _InteractRoutine(void *para)
 	//init interactive thread.
 	CoInitializeEx(0, 0);
 	AllocConsole();
-	HWND hwn = ::GetConsoleWindow();
-	RECT _rect;
 
 	//hide console,move out of screen first to avoid flash.
+	HWND hwn = ::GetConsoleWindow();
+	RECT _rect;
 	::GetWindowRect(hwn, &_rect);
 	::MoveWindow(hwn, -_rect.right, -_rect.bottom, _rect.right - _rect.left, _rect.bottom - _rect.top, FALSE);
 	ShowWindow(hwn, SW_HIDE);

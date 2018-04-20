@@ -82,10 +82,10 @@ user_name.focus()
 window.parent.ExtFun('exe.maindlg.set_size',430,430,0,1,0)
 window.parent.ExtFun('exe.maindlg.set_title','环翠国土信息平台登录')
 
-function on_login(){window.parent.ExtFun('autorun.login_login',user_name.value,password.value);}
-function on_close(){window.parent.ExtFun('autorun.login_back');}
+function on_login(){window.parent.ExtFun('theapp.login_login',user_name.value,password.value);}
+function on_close(){window.parent.ExtFun('theapp.login_back');}
 
-u_p=window.parent.ExtFun('autorun.login_get_user_pwd')
+u_p=window.parent.ExtFun('theapp.login_get_user_pwd')
 user_name.value=u_p[0]
 password.value=u_p[1]
 user_name.select()

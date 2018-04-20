@@ -62,10 +62,10 @@
         window.parent.ExtFun('exe.maindlg.set_size', 375, 370, 0, 0, 1)
         window.parent.ExtFun('exe.maindlg.set_maxmize')
         window.parent.ExtFun('exe.maindlg.set_title', '环翠国土信息平台')
-        user_info.innerHTML = window.parent.ExtFun('autorun.main_get_user_info')
-        function login() { window.parent.ExtFun('autorun.main_login'); }
+        user_info.innerHTML = window.parent.ExtFun('theapp.main_get_user_info')
+        function login() { window.parent.ExtFun('theapp.main_login'); }
         function test() { alert('test'); }
-        function fun_jc(n){if (n<1)return 1;return window.parent.ExtFun('autorun.fun_jc',n-1)*n;}
+        function fun_jc(n){if (n<1)return 1;return window.parent.ExtFun('theapp.fun_jc',n-1)*n;}
         function set_log_info(s){user_info.innerHTML=s;}
     </script>
 </body>
