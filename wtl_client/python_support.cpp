@@ -336,30 +336,26 @@ HANDLE h_con_thd = NULL;
 unsigned int _stdcall _InteractRoutine(void *para)
 {
 	//init interactive thread.
+
 	CoInitializeEx(0, 0);
 	AllocConsole();
-
-	//hide console,move out of screen first to avoid flash.
+	//set title
 	HWND hwn = ::GetConsoleWindow();
-	RECT _rect;
-	::GetWindowRect(hwn, &_rect);
-	::MoveWindow(hwn, -_rect.right, -_rect.bottom, _rect.right - _rect.left, _rect.bottom - _rect.top, FALSE);
-	ShowWindow(hwn, SW_HIDE);
-
 	SetConsoleTitleA("press Ctrl+C to quit.");
+	//delete menu
 	HMENU mn = ::GetSystemMenu(hwn, FALSE);
 	if (mn)DeleteMenu(mn, SC_CLOSE, MF_BYCOMMAND);
+	//set text color.
 	HANDLE hdlWrite = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute((HANDLE)hdlWrite, FOREGROUND_GREEN | FOREGROUND_INTENSITY);
-	SetConsoleCtrlHandler(0, true);//handle Ctrl+C.
-
+	//handle Ctrl+C.
+	SetConsoleCtrlHandler(0, true);
+	//make python stdio availiable.
 	{
 		CGIL gil;
 		char *cmd1 = "import sys as _sys;_sys.stdout=open('CONOUT$', 'wt');_sys.stderr=_sys.stdout;_sys.stdin=open('CONIN$', 'rt')";
 		if (!PyExecA(cmd1))MessageBoxW(GetForegroundWindow(), PyGetStr(), 0, 0);
 	}
-
-	SuspendThread(GetCurrentThread());
 
 	//interactive routine loop.
 	for (;;)
@@ -368,7 +364,7 @@ unsigned int _stdcall _InteractRoutine(void *para)
 			CGIL gil;
 			ShowWindow(hwn, SW_SHOW);
 			SetWindowPos(hwn, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
-			::MoveWindow(hwn, _rect.left, _rect.top, _rect.right - _rect.left, _rect.bottom - _rect.top, TRUE);
+			//::MoveWindow(hwn, _rect.left, _rect.top, _rect.right - _rect.left, _rect.bottom - _rect.top, TRUE);
 			SetForegroundWindow(hwn);
 
 			//	HANDLE hdlRead = GetStdHandle(STD_INPUT_HANDLE);
@@ -376,7 +372,8 @@ unsigned int _stdcall _InteractRoutine(void *para)
 			if (!PyExecA(cmd2))MessageBoxW(GetForegroundWindow(), PyGetStr(), 0, 0);
 
 			ShowWindow(hwn, SW_HIDE);
-		}//release GIL,or other thread may be locked.
+		}
+		//release GIL,or other thread may be locked.
 		SuspendThread(h_con_thd);
 	}
 	return 0;
@@ -385,7 +382,14 @@ unsigned int _stdcall _InteractRoutine(void *para)
 
 void InteractInConsole()
 {
-	ResumeThread(h_con_thd);
+	if (h_con_thd)
+	{
+		ResumeThread(h_con_thd);
+	}
+	else
+	{
+		h_con_thd = (HANDLE)_beginthreadex(0, 0, _InteractRoutine, 0, 0, 0);
+	}
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -396,7 +400,6 @@ public:
 	PY_INITIALIZER()
 	{
 		_init_python();
-		h_con_thd = (HANDLE)_beginthreadex(0, 0, _InteractRoutine, 0, 0, 0);
 	}
 	~PY_INITIALIZER()
 	{

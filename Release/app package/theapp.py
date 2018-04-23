@@ -72,14 +72,14 @@ def _set_autorun(name,enable):
 mutex_token="hc_xxzd"
 
 #if tray_txt not None,show tray,and only can closed by tray.
-tray_txt=''
-#tray_txt='环翠国土信息平台'
+#tray_txt=''
+tray_txt='环翠国土信息平台'
 
 #called when the frame html ready. Use as OnInitiaDialog().
 def OnInitApp():
 	#_load_htmls('0.html')#call twice to make focus() work normal.
 	_load_htmls('main.html')
-	__main__.exe.maindlg.set_timer(1000,1)
+	__main__.exe.maindlg.set_timer(1,1)
 	if tray_txt:
 		__main__.exe.maindlg.set_tray(tray_txt,1)
 #	__main__.exe.maindlg.set_hotkey(2,49,1)
