@@ -79,7 +79,7 @@ tray_txt='环翠国土信息平台'
 def OnInitApp():
 	#_load_htmls('0.html')#call twice to make focus() work normal.
 	_load_htmls('main.html')
-	__main__.exe.maindlg.set_timer(1,1)
+	#__main__.exe.maindlg.set_timer(1000,1)
 	if tray_txt:
 		__main__.exe.maindlg.set_tray(tray_txt,1)
 #	__main__.exe.maindlg.set_hotkey(2,49,1)
@@ -114,9 +114,10 @@ def OnClose():
 class CEverythig(object):
 	pass
 
-usr_info=CEverythig()
-usr_info.usr='未登录'
-usr_info.pwd=''
+cln=arbinrpc.Client('192.168.23.2',10001)
+log_info=CEverythig()
+log_info.usr='未登录'
+log_info.pwd=''
 
 def _on_tray(tp):
 	global allow_close
@@ -134,33 +135,29 @@ def main_login():
 	_load_htmls('login.html')
 
 def main_get_user_info():
-	return '当前用户：%s'%(usr_info.usr)
-
-def login_get_user_pwd():
-	return usr_info.usr,usr_info.pwd
-
-def login_login(usr,pwd):
-	#check usr,pwd
-	usr_info.usr=usr
-	usr_info.pwd=pwd
-	usr_info.token=usr
-	_load_htmls('main.html')
-
-def login_back():
-	_load_htmls('main.html')
+	return '当前用户：%s'%(log_info.usr)
 
 def close_wnd():
 	__main__.exe.maindlg.close_wnd()
 
-_cnt=0
 def _on_timer(_id):
-	global _cnt
-	import time
-	__main__.js.ifrf.set_log_info(str(_cnt))
-	_cnt+=1
+	pass
+################## login.html 's function#############################
+def login_get_user_pwd():
+	return log_info.usr,log_info.pwd
 
-def fun_jc(n):
-	print('in theapp. n:',n)
-	if n<1:
-		return 1
-	return __main__.js.ifrf.fun_jc(n-1)*n
+def login_login(usr,pwd):
+	#check usr,pwd
+	if cln.login(usr,pwd):
+		log_info.usr=usr
+		log_info.pwd=pwd
+		log_info.token=usr
+		_load_htmls('main.html')
+	else:
+		log_info.usr='未登录'
+		log_info.pwd=''
+		log_info.token=''
+		__main__.msgbox('请检查用户名和密码!')
+
+def login_back():
+	_load_htmls('main.html')

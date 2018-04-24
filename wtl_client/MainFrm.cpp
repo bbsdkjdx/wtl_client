@@ -192,7 +192,6 @@ LRESULT CMainFrame::OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*
 	CMessageLoop* pLoop = _Module.GetMessageLoop();
 	ATLASSERT(pLoop != NULL);
 	pLoop->RemoveMessageFilter(this);
-	pLoop->RemoveIdleHandler(this);
 	if(m_has_tray)Shell_NotifyIcon(NIM_DELETE, &m_tnid);
 	bHandled = FALSE;
 	return 1;
@@ -222,11 +221,6 @@ BOOL CMainFrame::PreTranslateMessage(MSG* pMsg)
 	return FALSE;
 }
 
-BOOL CMainFrame::OnIdle()
-{
-		//PyExecA("theapp.OnIdle()");
-	return FALSE;
-}
 
 LRESULT CMainFrame::OnTimer(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& bHandled)
 {
