@@ -50,7 +50,12 @@ void set_size(int x, int y, int z,bool fixed_size,bool closable)
 
 	DWORD flag = SWP_NOMOVE;
 	if (z == -1)flag |= SWP_NOZORDER;
-	if (x == -1 || y == -1)flag |= SWP_NOSIZE;
+	if (y == -1)
+	{
+		x = GetSystemMetrics(SM_CXSCREEN);
+		y = GetSystemMetrics(SM_CYSCREEN);
+	}
+	if (x == -1 )flag |= SWP_NOSIZE;
 	HWND wnd_after = z == 1 ? HWND(-1) : HWND(-2);
 
 	LONG style = ::GetWindowLong(gpMainFrame->m_hWnd, GWL_STYLE);
@@ -141,7 +146,7 @@ LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 	REG_EXE_FUN("maindlg", get_browser_hwnd, "u", "get_browser_hwnd()");
 	REG_EXE_FUN("maindlg", set_maxmize, "#", "set_maximize()");
 	REG_EXE_FUN("maindlg", set_title, "#S", "set_title(WCHAR *str)");
-	REG_EXE_FUN("maindlg", set_size, "#uuuuu", "set_size(int x,int y,int z,bool fixed_size,bool closable)");
+	REG_EXE_FUN("maindlg", set_size, "#uuuuu", "set_size(int x,int y,int z,bool fixed_size,bool closable).\n x=-1 ignore x and y;\ny=-1 use screen size;\nz=-1 ignore z order.");
 	REG_EXE_FUN("maindlg", set_timer, "#ll", "set_timer(int ms,bool enable)");
 	REG_EXE_FUN("maindlg", set_hotkey, "llll", "bool set_hotkey(int mod,int vk,bool enable)");
 	REG_EXE_FUN("maindlg", set_tray, "#Su", "void set_tray(WCHAR *info,DWORD ico_id)");

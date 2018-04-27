@@ -5,7 +5,13 @@ import win32tools
 import binascii
 import sys
 import ctypes
+import base64
 
+import login
+import todo
+
+__main__.login=login
+__main__.todo=todo
 #####################################################################################################################################
 # fixed code, do not change if possible.
 
@@ -110,14 +116,9 @@ def OnClose():
 
 
 #####################################################################################################################################
-
-class CEverythig(object):
-	pass
-
 cln=arbinrpc.Client('192.168.23.2',10001)
-log_info=CEverythig()
-log_info.usr='未登录'
-log_info.pwd=''
+
+
 
 def _on_tray(tp):
 	global allow_close
@@ -134,30 +135,11 @@ def _on_tray(tp):
 def main_login():
 	_load_htmls('login.html')
 
-def main_get_user_info():
-	return '当前用户：%s'%(log_info.usr)
-
 def close_wnd():
 	__main__.exe.maindlg.close_wnd()
 
 def _on_timer(_id):
 	pass
-################## login.html 's function#############################
-def login_get_user_pwd():
-	return log_info.usr,log_info.pwd
 
-def login_login(usr,pwd):
-	#check usr,pwd
-	if cln.login(usr,pwd):
-		log_info.usr=usr
-		log_info.pwd=pwd
-		log_info.token=usr
-		_load_htmls('main.html')
-	else:
-		log_info.usr='未登录'
-		log_info.pwd=''
-		log_info.token=''
-		__main__.msgbox('请检查用户名和密码!')
-
-def login_back():
+def go_home_page():
 	_load_htmls('main.html')
