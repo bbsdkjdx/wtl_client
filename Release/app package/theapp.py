@@ -6,12 +6,15 @@ import binascii
 import sys
 import ctypes
 import base64
+import socket
 
 import login
 import todo
 
 __main__.login=login
 __main__.todo=todo
+
+socket.setdefaulttimeout(1)
 #####################################################################################################################################
 # fixed code, do not change if possible.
 

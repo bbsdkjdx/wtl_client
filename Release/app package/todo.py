@@ -6,13 +6,16 @@ def on_todo():
 
 def get_data(event_type):
 	if event_type=='待办':
-		return [[1,2,3,4]]*5
+		return [[1,2,3,4]]*50
 	if event_type=='已完成':
-		return [[5,6,7,8]]*5
+		return [[5,6,7,8]]*50
 	if event_type=='全部':
-		return [[1,2,3,4]]*5+[[5,6,7,8]]*5
+		return [[1,2,3,4]]*50+[[5,6,7,8]]*50
 	return []			
 	
-
-
+def get_combo_data():
+	try:
+		return theapp.cln.get_user_combo_data()
+	except:
+		return []
 

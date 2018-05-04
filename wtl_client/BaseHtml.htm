@@ -42,7 +42,16 @@
      <!-- p is used for call js.-->
      <p id="jscaller" onclick="value=CallJs(value)" value=""></p>
      <p id="execaller" onclick="external.ext_fun()" value=""></p>
+
+     <iframe frameborder=1 id='ifr_id1' style="VISIBILITY: visible;  HEIGHT: 0%; WIDTH: 100%"></iframe>
+     <iframe frameborder=1 id='ifr_id2' style="VISIBILITY: visible;  HEIGHT: 100%; WIDTH: 100%; "></iframe>
+
          <script>
+             ifr1 = document.getElementById('ifr_id1');
+             ifr2 = document.getElementById('ifr_id2');
+             var ifr = ifr2;
+             ifrf = ifr.contentWindow;
+
               function set_html(txt)
               {
                   function _set_html() {
@@ -57,17 +66,16 @@
                  ifr.src=txt
              }
 
-             var ifr = document.createElement("iframe");
-             ifr.id = 'frm1';
-             ifr.name = 'frm1';
-             ifr.width = '100%';
-             ifr.height = '100%';
-             //ifr.marginHeight = 0;
-             //ifr.marginWidth = 0;
-
-             document.body.appendChild(ifr);
-             ifrf = ifr.contentWindow;
-             ExtFun('theapp.OnInitApp')
+             function switch_ifr()
+             {
+                 if_old=ifr1;
+                 if_new=ifr2;
+                 if (ifr == ifr2) { if_old = ifr2; if_new = ifr1; }
+                 ifr = if_new;
+                 ifrf = ifr.contentWindow;
+                 ifr1.style.height = (ifr == ifr1) ? "100%" : "0%";
+              }
+            ExtFun('theapp.OnInitApp')
         </script>
      </body>
 </HTML>    

@@ -10,3 +10,4 @@
 *.ipch
 /Release/ip.p
 /Release/DLLs/*
+/Release/loin_cache.p
