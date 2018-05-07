@@ -9,10 +9,13 @@ import base64
 import socket
 
 import login
-import todo
-
 __main__.login=login
+
+import todo
 __main__.todo=todo
+
+import inputer
+__main__.inputer=inputer
 
 socket.setdefaulttimeout(1)
 #####################################################################################################################################
@@ -27,10 +30,10 @@ document.oncontextmenu=function(){event.returnValue=event.srcElement.nodeName=='
 document.onkeydown=function(){event.returnValue=!(event.keyCode==8 && event.srcElement.nodeName!='INPUT');}
 </script>''' % (_html_base)
 
-#switch pages
-def _load_htmls(k):
-	s_html=__main__.htmls[k].decode('utf-8').strip()
-	__main__.js.set_html(extra_js+s_html)
+#load page.
+def _load_htmls(k,async=True):
+	htmls=__main__.htmls[k].decode('utf-8').strip()
+	__main__.js.set_html(extra_js+htmls,async)
 
 #menu support
 def _show_menu(li,x=None, y=None):
