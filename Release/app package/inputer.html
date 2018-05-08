@@ -72,9 +72,9 @@
                 y = items[x]
                 ttl=y[0]; tpe=y[1]; dat=y[2]; val=y[3];
                 html=''
-                if (tpe=='txt_s')html='<input style="width:100%"></input>';
-                if (tpe=='txt_m')html='<textarea style="width:100%"></textarea>';
-                if (tpe=='txt_p')html='<input type="password" style="width:100%"></input>';
+                if (tpe=='txt_s')html='<input style="width:100%" onfocus="this.select()"></input>';
+                if (tpe=='txt_m')html='<textarea style="width:100%;" rows="3" onfocus="this.select()"></textarea>';
+                if (tpe=='txt_p')html='<input type="password" style="width:100%" onfocus="this.select()"></input>';
                 if (tpe=='select')html='<select value="" style="width:auto;"></select>';
                 rw=main_table.insertRow(x);
                 c0=rw.insertCell(0);

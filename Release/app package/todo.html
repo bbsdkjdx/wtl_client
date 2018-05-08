@@ -232,8 +232,10 @@ function on_input_complete(p)
 
 function on_create()
 {
-    itms=[['abcdabcd:','txt_s',[],'a'],['abcdabcd:','txt_m',[],'b'],['abcdabcd:','txt_p',[],'c'],['abcdabcd:','select',['a ','b','c'],'c']];
-    window.parent.ExtFun('inputer.do_input','创建新事件',itms,'on_input_complete');
+    itms=[['事件类型:','txt_s',[],''],
+    ['事件描述:','txt_s',[],''],
+    ['结束时限：','txt_s',[],'']]
+    window.parent.ExtFun('inputer.do_input','登录系统',itms,'on_input_complete');
 }
 //select the first navi_bar as default.
 on_click_nav(navi.rows[0].cells[0]);
