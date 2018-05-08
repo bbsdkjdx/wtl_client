@@ -10,18 +10,26 @@
     margin-top: 5px;
     font-family:"Trebuchet MS", Arial, Helvetica, sans-serif;
     width:30%;
+    height: 50px;
     border-collapse:collapse;
     float: right;
-}
-.submit_btn td
-{
-    
     border:2px solid #9eb6ca;
     font-size:1.1em;
     text-align:center;
     padding-top:5px;
     padding-bottom:4px;
     color:#ffffff;
+}
+
+
+.styleInput
+{
+    border: 1px solid #D2D9dC;
+    color: #444;
+    font: 16px 'Microsoft YaHei', '微软雅黑';
+    padding: 0px ;
+    margin-bottom: 0px;
+    width: 100%;
 }
 </style>
 
@@ -72,8 +80,8 @@
                 y = items[x]
                 ttl=y[0]; tpe=y[1]; dat=y[2]; val=y[3];
                 html=''
-                if (tpe=='txt_s')html='<input style="width:100%" onfocus="this.select()"></input>';
-                if (tpe=='txt_m')html='<textarea style="width:100%;" rows="3" onfocus="this.select()"></textarea>';
+                if (tpe=='txt_s')html='<input class="styleInput"onfocus="this.select()"></input>';
+                if (tpe=='txt_m')html='<textarea class="styleInput" rows="3" onfocus="this.select()"></textarea>';
                 if (tpe=='txt_p')html='<input type="password" style="width:100%" onfocus="this.select()"></input>';
                 if (tpe=='select')html='<select value="" style="width:auto;"></select>';
                 rw=main_table.insertRow(x);
