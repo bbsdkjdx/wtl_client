@@ -82,8 +82,8 @@
                 html=''
                 if (tpe=='txt_s')html='<input class="styleInput"onfocus="this.select()"></input>';
                 if (tpe=='txt_m')html='<textarea class="styleInput" rows="3" onfocus="this.select()"></textarea>';
-                if (tpe=='txt_p')html='<input type="password" style="width:100%" onfocus="this.select()"></input>';
-                if (tpe=='select')html='<select value="" style="width:auto;"></select>';
+                if (tpe=='txt_p')html='<input type="password" class="styleInput" onfocus="this.select()"></input>';
+                if (tpe=='select')html='<select value="" class="styleInput" style="width:auto;"></select>';
                 rw=main_table.insertRow(x);
                 c0=rw.insertCell(0);
                 c0.width='10%';c0.align='center';c0.innerHTML=ttl;
