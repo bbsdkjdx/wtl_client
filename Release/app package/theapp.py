@@ -27,7 +27,7 @@ _html_base=os.getcwd()+'\\dlls\\'
 #disable contextmenu and backspace to goback.
 extra_js='''<!doctype html><base href="%s" /><script>
 document.oncontextmenu=function(){event.returnValue=event.srcElement.nodeName=='INPUT';};
-document.onkeydown=function(){event.returnValue=!(event.keyCode==8 && event.srcElement.nodeName!='INPUT');}
+document.onkeydown=function(){event.returnValue=!(event.keyCode==8 && (event.srcElement.nodeName!='INPUT')||event.srcElement.nodeName!='TEXTAREA'));}
 </script>''' % (_html_base)
 
 #load page.

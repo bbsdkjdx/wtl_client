@@ -69,8 +69,7 @@
         user_office.innerHTML='科室：'+_info[1] 
         function on_login() { window.parent.ExtFun('login.do_login',1); }
         function on_todo(){ window.parent.ExtFun('todo.on_todo');}
-        input_complete=function(para){alert(para);};
-        function on_query(){window.parent.ExtFun('inputer.do_input','输入标题',[],'input_complete');}//window.parent.ExtFun('msgbox','该功能暂末正式开放，敬请期待！','信息平台');}
+        function on_query(){window.parent.ExtFun('msgbox','该功能暂末正式开放，敬请期待！','信息平台');}//window.parent.ExtFun('inputer.do_input','输入标题',[],'input_complete');}//
         function test(para) { alert(para); }
         function fun_jc(n){if (n<1)return 1;return window.parent.ExtFun('theapp.fun_jc',n-1)*n;}
         function set_log_info(s){user_info.innerHTML=s;}

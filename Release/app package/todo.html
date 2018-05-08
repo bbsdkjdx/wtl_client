@@ -100,7 +100,7 @@
             <table height="70%" id="details" class="detail_table">
                     <tr height="10%">
                             <th width="50px">编号</th>
-                            <td width="60px"><input style="margin:0px"></input></td>
+                            <td width="60px"></input></td>
                             <th width="50px">事件</th>
                             <td></td>
                             <th width="50px">描述</th>
@@ -225,9 +225,15 @@ function fill_combo(cmb)
 
 fill_combo(sel)
 
+function on_input_complete(p)
+{
+    if(p.length>0)alert(p);
+}
+
 function on_create()
 {
-    details.rows[0].cells[3].add(new Input());
+    itms=[['abcdabcd:','txt_s',[],'a'],['abcdabcd:','txt_m',[],'b'],['abcdabcd:','txt_p',[],'c'],['abcdabcd:','select',['a ','b','c'],'c']];
+    window.parent.ExtFun('inputer.do_input','创建新事件',itms,'on_input_complete');
 }
 //select the first navi_bar as default.
 on_click_nav(navi.rows[0].cells[0]);
