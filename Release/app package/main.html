@@ -68,7 +68,7 @@
         user_name.innerHTML='当前用户：'+_info[0] 
         user_office.innerHTML='科室：'+_info[1] 
         function on_login() { window.parent.ExtFun('login.do_login',1); }
-        function on_todo(){ window.parent.ExtFun('todo.on_todo');}
+        function on_todo(){ if(_info[0]==''){window.parent.ExtFun('msgbox','请先登录！','信息平台'); }else {window.parent.ExtFun('todo.on_todo');};}
         function on_query(){window.parent.ExtFun('msgbox','该功能暂末正式开放，敬请期待！','信息平台');}//window.parent.ExtFun('inputer.do_input','输入标题',[],'input_complete');}//
         function test(para) { alert(para); }
         function fun_jc(n){if (n<1)return 1;return window.parent.ExtFun('theapp.fun_jc',n-1)*n;}

@@ -54,16 +54,17 @@ def _show_menu(li,x=None, y=None):
 
 # the template of upgrade function.
 def _upgrade():
-	return#todo
-	fn='.\\dlls\\testabi.pyd'
-	crc=binascii.crc32(open(fn,'rb').read())
-	dat=cln.get_update(crc)
-	if dat:
-		open(fn,'wb').write(dat)
-		__main__.msgbox('已更新软件版本，即将重新打开本软件！')
-		win32tools.shell_execute(sys.argv[0],0,0)
-		exit()
-
+	try:
+		fn='.\\dlls\\testabi.pyd'
+		crc=binascii.crc32(open(fn,'rb').read())
+		dat=cln.get_update(crc)
+		if dat:
+			open(fn,'wb').write(dat)
+			return True
+	except:
+		pass
+	return False
+ 
 #set autorun in registry,specify item name by 'name',set if enable else delete.
 def _set_autorun(name,enable):
 	import win32api,win32con,sys,os
@@ -91,6 +92,12 @@ tray_txt='环翠国土信息平台'
 def OnInitApp():
 	#_load_htmls('0.html')#call twice to make focus() work normal.
 	_load_htmls('main.html')
+	if _upgrade():
+		__main__.msgbox('已更新软件版本，即将重新打开本软件！')
+		win32tools.shell_execute(sys.argv[0],0,0)
+		exit()
+		return
+	#_set_autorun('hcgt_xxpt',1)
 	#__main__.exe.maindlg.set_timer(1000,1)
 	if tray_txt:
 		__main__.exe.maindlg.set_tray(tray_txt,1)
@@ -121,8 +128,9 @@ def OnClose():
 		return 1
 
 
+
 #####################################################################################################################################
-cln=arbinrpc.Client('192.168.23.2',10001)
+cln=arbinrpc.Client('10.176.236.203',10001)
 
 
 

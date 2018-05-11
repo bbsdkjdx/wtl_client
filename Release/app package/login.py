@@ -18,9 +18,9 @@ class CEverythig(object):
 	pass
 
 log_info=CEverythig()
-log_info.usr='未登录'
+log_info.usr=''
 log_info.pwd=''
-log_info.office='未知'
+log_info.office=''
 log_info.token=''
 
 def load_cache():
@@ -53,7 +53,7 @@ def _login():
 		save_cache()
 		return True	
 	else:
-		log_info.usr='未登录'
+		log_info.usr=''
 		log_info.pwd=''
 		log_info.office=''
 		log_info.token=''

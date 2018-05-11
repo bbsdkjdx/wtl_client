@@ -89,8 +89,10 @@
                     <td width="30%">
                             <table cellspacing="5" class="nav_btn">
                                     <tr>
-                                            <td bgColor="green" onmousedown="on_create()">创建事件</td>
-                                            <td bgColor="red" onmousedown="on_click_nav(this)">返回主页</td>
+                                        <td bgColor="green" onmousedown="on_create()">创建</td>
+                                        <td bgColor="green" onmousedown="on_modify()">修改</td>
+                                        <td bgColor="green" onmousedown="on_handle()">办理</td>
+                                        <td bgColor="red" onmousedown="on_click_nav(this)">返回主页</td>
                                     </tr>   
                             </table>
                     </td>
@@ -98,21 +100,16 @@
                     </table>
 
             <table height="70%" id="details" class="detail_table">
-                    <tr height="10%">
+                    <tr height="20%">
                             <th width="50px">编号</th>
-                            <td width="60px"></input></td>
+                            <td width="60px"></td>
                             <th width="50px">事件</th>
-                            <td></td>
+                            <td width="300px"></td>
                             <th width="50px">描述</th>
                             <td></td>
                                   
                     </tr>
-            
-                    <tr height="10%">
-                            <th>流程</th>
-                            <td colspan="5"></td>
-                    </tr>
-                    <tr height="70%">
+                    <tr height="80%">
                             <th>状态</th>
                             <td colspan="5"></td>
                     </tr>
@@ -132,8 +129,6 @@
                     </tr>
             </table>
             
-            <select id='sel' value=''>
-            </select>
     </div>
 
 
@@ -144,25 +139,32 @@
 
 
 <script type="text/javascript">
-var last_itm=0;
+var last_itm=-1;
 received_data=[];
 //window.parent.ExtFun('exe.maindlg.set_maxmize')
 
 function clearTable()
 {
-    last_itm=0;
+    last_itm=-1;
     for(x=main_table.rows.length;x>1;--x)main_table.deleteRow(1);
 }
 
 function fillTable(datas)
 {
     clearTable();
-    if(datas.length==0)datas=[['无记录！']];
+    if(datas.length==0)
+    {
+        main_table.insertRow(1).insertCell(0).innerHTML='无记录';
+        return;
+    }
     for(x=datas.length-1;x>=0;--x)
     {
         row=main_table.insertRow(1);
         data=datas[x];
-        for(y in data)row.insertCell(y).innerHTML=data[y];
+        row.insertCell(0).innerHTML=data[1];
+        row.insertCell(1).innerHTML=data[2];
+        row.insertCell(2).innerHTML=data[3];
+        row.insertCell(3).innerHTML=data[6];
         row.onmousedown=on_click_row;
         //last_cell=row.cells[row.cells.length-1]
         //last_cell.onclick=show_accessory;
@@ -173,10 +175,10 @@ function fillTable(datas)
 
 function on_click_row()
 {
-    if(last_itm!=0)last_itm.bgColor='';
-    last_itm=this;
+    if(last_itm!=-1)main_table.rows[last_itm+1].bgColor='';
+    last_itm=this.rowIndex-1;
     this.bgColor='#8b9ce7'
-    show_detail(received_data[this.rowIndex])
+    show_detail(received_data[this.rowIndex-1])
 }
 
 function on_click_nav(itm)
@@ -189,7 +191,7 @@ function on_click_nav(itm)
     {
         window.parent.ExtFun('theapp.go_home_page');
     }
-    received_data=window.parent.ExtFun('todo.get_data',itm.innerHTML);
+    received_data=window.parent.ExtFun('todo.get_events',itm.innerHTML);
     fillTable(received_data);
     //alert(itm.innerHTML);
 }
@@ -200,43 +202,85 @@ function show_detail(dtl)
     r1.cells[1].innerHTML=dtl[0];
     r1.cells[3].innerHTML=dtl[1];
     r1.cells[5].innerHTML=dtl[2];
-    details.rows[1].cells[1].innerHTML=dtl[3];
-    details.rows[2].cells[1].innerHTML=dtl[4];
+    details.rows[1].cells[1].innerHTML=dtl[5];
 }
 
-function fill_combo(cmb) 
-{
-        opt = new Option('请选择', '请选择')
-        opt.disabled = 1
-        cmb.add(opt)
-        comb_data = window.parent.ExtFun('todo.get_combo_data')
-        for (x = 0; x < comb_data.length; ++x) 
-        {
-            y = comb_data[x]
-            opt = new Option(y, y)
-            if (y.charAt(0) == '_') 
-            {
-                //opt.style.font.bold=1
-                opt.disabled = 1
-            }
-            cmb.add(opt)
-        }
-    }
 
-fill_combo(sel)
-
-function on_input_complete(p)
+function on_after_create(p)
 {
-    if(p.length>0)alert(p);
+    if(p.length==0)return;
+    window.parent.ExtFun('todo.on_create_event',p[0],p[1],p[2]);
+    on_click_nav(navi.rows[0].cells[0]);
 }
 
 function on_create()
 {
-    itms=[['事件类型:','txt_s',[],''],
-    ['事件描述:','txt_m',[],''],
-    ['结束时限：','txt_p',[],''],
-    ['结束时限：','select',['aaaaa','bbb','ccc'],'ccc']]
-    window.parent.ExtFun('inputer.do_input','创建事件',itms,'on_input_complete');
+    dts=window.parent.ExtFun('todo.get_dates');
+    itms=[['事件类型：','txt_s',[],''],
+    ['事件描述：','txt_m',[],''],
+    ['结束时限：','select',dts,dts[0]]]
+    window.parent.ExtFun('inputer.do_input','创建事件',itms,'on_after_create');
+}
+
+function on_after_modify(p)
+{
+    if(p.length==0)return;
+    evt=received_data[last_itm];
+    window.parent.ExtFun('todo.on_modify_event',evt[0],p[0],p[1],p[2]);
+    on_click_nav(navi.rows[0].cells[0]);
+}
+
+function on_modify()
+{
+    if(last_itm!=-1)
+    {
+        evt=received_data[last_itm];
+        if (evt[4].length>1)
+        {
+            window.parent.ExtFun('msgbox','无法修改办理中的事件！');
+            return;
+        }
+        u_i=window.parent.ExtFun('login.get_user_info')
+        if (evt[4][0][0]!=u_i[0])
+        {
+            window.parent.ExtFun('msgbox','无法修改别人创建的事件！');
+            return;
+        }
+    dts=window.parent.ExtFun('todo.get_dates');
+    itms=[['事件类型：','txt_s',[],evt[1]],
+    ['事件描述：','txt_m',[],evt[2]],
+    ['结束时限：','select',dts,evt[3]]]
+    window.parent.ExtFun('inputer.do_input','修改事件',itms,'on_after_modify');
+
+    }
+}
+
+
+function on_after_handle(p)
+{
+    if(p.length==0)return;
+    cmnt=p[0];
+    _to=p[1];
+    _id=received_data[last_itm][0]
+    window.parent.ExtFun('todo.on_handle_event',_id,cmnt,_to);
+    on_click_nav(navi.rows[0].cells[0]);
+}
+
+function on_handle()
+{
+    if(last_itm!=-1)
+    {
+        evt=received_data[last_itm];
+        if (evt[evt.length-1]=='已处理')
+        {
+            window.parent.ExtFun('msgbox','该事件已办理完毕！');
+            return;
+        }
+    }
+    dts=window.parent.ExtFun('todo.get_users_data');
+    itms=[['备注：','txt_s',[],''],
+    ['移交至：','select',dts,dts[0]]]
+    window.parent.ExtFun('inputer.do_input','处理事件',itms,'on_after_handle');
 }
 //select the first navi_bar as default.
 on_click_nav(navi.rows[0].cells[0]);
