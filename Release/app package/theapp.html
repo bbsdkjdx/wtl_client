@@ -55,6 +55,10 @@
                 <h2>信息查询</h2>
                 <p>信息中心面向各科室提供的数据查询服务。</p>
             </div>
+            <div class="col-md-4" style="background-color:rgb(35, 223, 51) " onclick="on_update_detail()">
+                <h2>更新日志</h2>
+                <p>信息平台系统更新情况。欢迎多提宝贵意见或建议！</p>
+            </div>
         </div>
     </div>
 
@@ -70,6 +74,7 @@
         function on_login() { window.parent.ExtFun('login.do_login',1); }
         function on_todo(){ if(_info[0]==''){window.parent.ExtFun('msgbox','请先登录！','信息平台'); }else {window.parent.ExtFun('todo.on_todo');};}
         function on_query(){window.parent.ExtFun('msgbox','该功能暂末正式开放，敬请期待！','信息平台');}//window.parent.ExtFun('inputer.do_input','输入标题',[],'input_complete');}//
+        function on_update_detail(){window.parent.ExtFun('theapp._load_htmls','update_detail.html');}//window.parent.ExtFun('inputer.do_input','输入标题',[],'input_complete');}//
         function test(para) { alert(para); }
         function fun_jc(n){if (n<1)return 1;return window.parent.ExtFun('theapp.fun_jc',n-1)*n;}
         function set_log_info(s){user_info.innerHTML=s;}

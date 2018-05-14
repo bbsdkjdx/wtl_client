@@ -91,9 +91,9 @@ tray_txt='环翠国土信息平台'
 #called when the frame html ready. Use as OnInitiaDialog().
 def OnInitApp():
 	#_load_htmls('0.html')#call twice to make focus() work normal.
-	_load_htmls('main.html')
+	_load_htmls('theapp.html')
 	if _upgrade():
-		__main__.msgbox('已更新软件版本，即将重新打开本软件！')
+		__main__.msgbox('已更新软件版本，即将重新打开本软件！请在更新日志里查看更新内容。')
 		win32tools.shell_execute(sys.argv[0],0,0)
 		exit()
 		return
@@ -156,4 +156,4 @@ def _on_timer(_id):
 	pass
 
 def go_home_page():
-	_load_htmls('main.html')
+	_load_htmls('theapp.html')
