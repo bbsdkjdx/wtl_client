@@ -117,7 +117,7 @@ class _decryptor:
 def _load_app(fn):
     _sys.path.append(fn)
     with _decryptor(fn):
-        import autorun
+        import theapp
         html_dic=dict()
         zf=_zipfile.ZipFile(fn,'r')
         for x in zf.namelist():
@@ -126,8 +126,8 @@ def _load_app(fn):
             if '.html' in x:
                 html_dic[x]=zf.read(x)
                 continue
-            open(autorun._html_base+x,'wb').write(zf.read(x))
-    return autorun,html_dic
+            open(theapp._html_base+x,'wb').write(zf.read(x))
+    return theapp,html_dic
     )"
 
 ;
@@ -333,57 +333,62 @@ void reg_exe_fun(char *mod,char *fnn, char *fmt, void *pfn,char *doc)
 
 HANDLE h_con_thd = NULL;
 
-unsigned int _stdcall _InteractInConsole(void *para)
+unsigned int _stdcall _InteractRoutine(void *para)
 {
+	//init interactive thread.
+
+	CoInitializeEx(0, 0);
+	AllocConsole();
+	//set title
+	HWND hwn = ::GetConsoleWindow();
+	SetConsoleTitleA("press Ctrl+C to quit.");
+	//delete menu
+	HMENU mn = ::GetSystemMenu(hwn, FALSE);
+	if (mn)DeleteMenu(mn, SC_CLOSE, MF_BYCOMMAND);
+	//set text color.
+	HANDLE hdlWrite = GetStdHandle(STD_OUTPUT_HANDLE);
+	SetConsoleTextAttribute((HANDLE)hdlWrite, FOREGROUND_GREEN | FOREGROUND_INTENSITY);
+	//handle Ctrl+C.
+	SetConsoleCtrlHandler(0, true);
+	//make python stdio availiable.
+	{
+		CGIL gil;
+		char *cmd1 = "import sys as _sys;_sys.stdout=open('CONOUT$', 'wt');_sys.stderr=_sys.stdout;_sys.stdin=open('CONIN$', 'rt')";
+		if (!PyExecA(cmd1))MessageBoxW(GetForegroundWindow(), PyGetStr(), 0, 0);
+	}
+
+	//interactive routine loop.
 	for (;;)
 	{
 		{
 			CGIL gil;
-			HWND hwn = ::GetConsoleWindow();
-			CoInitializeEx(0, 0);
-			if (!hwn)
-			{
-				AllocConsole();
-				SetConsoleTitleA("press Ctrl+C to quit.");
-				hwn = ::GetConsoleWindow();
-
-				HMENU mn = ::GetSystemMenu(hwn, FALSE);
-				if (mn)DeleteMenu(mn, SC_CLOSE, MF_BYCOMMAND);
-
-				HANDLE hdlWrite = GetStdHandle(STD_OUTPUT_HANDLE);
-				SetConsoleTextAttribute((HANDLE)hdlWrite, FOREGROUND_GREEN | FOREGROUND_INTENSITY);
-
-				char *cmd1 = "import sys as _sys;_sys.stdout=open('CONOUT$', 'wt');_sys.stderr=_sys.stdout;_sys.stdin=open('CONIN$', 'rt')";
-				if (!PyExecA(cmd1))MessageBoxW(GetForegroundWindow(), PyGetStr(), 0, 0);
-				SetConsoleCtrlHandler(0, true);//handle Ctrl+C.
-			}
-
 			ShowWindow(hwn, SW_SHOW);
 			SetWindowPos(hwn, HWND_TOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE);
+			//::MoveWindow(hwn, _rect.left, _rect.top, _rect.right - _rect.left, _rect.bottom - _rect.top, TRUE);
 			SetForegroundWindow(hwn);
 
 			//	HANDLE hdlRead = GetStdHandle(STD_INPUT_HANDLE);
 			char *cmd2 = "import code as _code;_code.interact(banner='', readfunc=None, local=locals())";
 			if (!PyExecA(cmd2))MessageBoxW(GetForegroundWindow(), PyGetStr(), 0, 0);
 
-
 			ShowWindow(hwn, SW_HIDE);
-		}//release GIL,or other thread may be locked.
+		}
+		//release GIL,or other thread may be locked.
 		SuspendThread(h_con_thd);
 	}
 	return 0;
 }
 
 
-void InteractInConsole(HWND parent_wnd, bool block)
+void InteractInConsole()
 {
-	if (block)
+	if (h_con_thd)
 	{
-		_InteractInConsole(0);
+		ResumeThread(h_con_thd);
 	}
 	else
 	{
-		ResumeThread(h_con_thd);
+		h_con_thd = (HANDLE)_beginthreadex(0, 0, _InteractRoutine, 0, 0, 0);
 	}
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -395,7 +400,6 @@ public:
 	PY_INITIALIZER()
 	{
 		_init_python();
-		h_con_thd = (HANDLE)_beginthreadex(0, 0, _InteractInConsole, 0, CREATE_SUSPENDED, 0);
 	}
 	~PY_INITIALIZER()
 	{

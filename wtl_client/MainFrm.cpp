@@ -50,7 +50,12 @@ void set_size(int x, int y, int z,bool fixed_size,bool closable)
 
 	DWORD flag = SWP_NOMOVE;
 	if (z == -1)flag |= SWP_NOZORDER;
-	if (x == -1 || y == -1)flag |= SWP_NOSIZE;
+	if (y == -1)
+	{
+		x = GetSystemMetrics(SM_CXSCREEN);
+		y = GetSystemMetrics(SM_CYSCREEN);
+	}
+	if (x == -1 )flag |= SWP_NOSIZE;
 	HWND wnd_after = z == 1 ? HWND(-1) : HWND(-2);
 
 	LONG style = ::GetWindowLong(gpMainFrame->m_hWnd, GWL_STYLE);
@@ -141,7 +146,7 @@ LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 	REG_EXE_FUN("maindlg", get_browser_hwnd, "u", "get_browser_hwnd()");
 	REG_EXE_FUN("maindlg", set_maxmize, "#", "set_maximize()");
 	REG_EXE_FUN("maindlg", set_title, "#S", "set_title(WCHAR *str)");
-	REG_EXE_FUN("maindlg", set_size, "#uuuuu", "set_size(int x,int y,int z,bool fixed_size,bool closable)");
+	REG_EXE_FUN("maindlg", set_size, "#uuuuu", "set_size(int x,int y,int z,bool fixed_size,bool closable).\n x=-1 ignore x and y;\ny=-1 use screen size;\nz=-1 ignore z order.");
 	REG_EXE_FUN("maindlg", set_timer, "#ll", "set_timer(int ms,bool enable)");
 	REG_EXE_FUN("maindlg", set_hotkey, "llll", "bool set_hotkey(int mod,int vk,bool enable)");
 	REG_EXE_FUN("maindlg", set_tray, "#Su", "void set_tray(WCHAR *info,DWORD ico_id)");
@@ -180,7 +185,7 @@ LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 	CMessageLoop* pLoop = _Module.GetMessageLoop();
 	ATLASSERT(pLoop != NULL);
 	pLoop->AddMessageFilter(this);
-	pLoop->AddIdleHandler(this);
+	//pLoop->AddIdleHandler(this);
 
 	//test
 	return 0;
@@ -192,7 +197,6 @@ LRESULT CMainFrame::OnDestroy(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*
 	CMessageLoop* pLoop = _Module.GetMessageLoop();
 	ATLASSERT(pLoop != NULL);
 	pLoop->RemoveMessageFilter(this);
-	pLoop->RemoveIdleHandler(this);
 	if(m_has_tray)Shell_NotifyIcon(NIM_DELETE, &m_tnid);
 	bHandled = FALSE;
 	return 1;
@@ -203,7 +207,7 @@ BOOL CMainFrame::PreTranslateMessage(MSG* pMsg)
 	//Ctrl+F12 pressed.
 	if (pMsg->message == 256 && pMsg->wParam == 123 && GetAsyncKeyState(0x11) & 0x8000)
 	{
-		InteractInConsole(m_hWnd, false);
+		InteractInConsole();
 	}
 
 	//filte default hotkey.
@@ -222,23 +226,18 @@ BOOL CMainFrame::PreTranslateMessage(MSG* pMsg)
 	return FALSE;
 }
 
-BOOL CMainFrame::OnIdle()
-{
-		//PyExecA("autorun.OnIdle()");
-	return FALSE;
-}
 
 LRESULT CMainFrame::OnTimer(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& bHandled)
 {
 	PySetInt(wParam, "timer");
-	bHandled=PyExecA("autorun.OnTimer()");
+	bHandled=PyExecA("theapp.OnTimer()");
 	return S_OK;
 }
 
 LRESULT CMainFrame::OnHotkey(UINT /*uMsg*/, WPARAM wParam, LPARAM /*lParam*/, BOOL& bHandled)
 {
 	PySetInt(wParam, "hotkey");
-	bHandled = PyExecA("autorun.OnHotkey()");
+	bHandled = PyExecA("theapp.OnHotkey()");
 	return S_OK;
 }
 
@@ -253,16 +252,16 @@ LRESULT CMainFrame::OnTray(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandl
 	switch (lParam)
 	{
 	case  WM_LBUTTONDOWN:
-		PyExecA("autorun.OnTray('l_down')");
+		PyExecA("theapp.OnTray('l_down')");
 		break;
 	case  WM_LBUTTONDBLCLK:
-		PyExecA("autorun.OnTray('l_dbclk')");
+		PyExecA("theapp.OnTray('l_dbclk')");
 		break;
 	case  WM_RBUTTONDOWN:
-		PyExecA("autorun.OnTray('r_down')");
+		PyExecA("theapp.OnTray('r_down')");
 		break;
 	case  WM_RBUTTONDBLCLK:
-		PyExecA("autorun.OnTray('r_dbclk')");
+		PyExecA("theapp.OnTray('r_dbclk')");
 		break;
 	default:
 		break;
@@ -272,7 +271,7 @@ LRESULT CMainFrame::OnTray(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandl
 
 LRESULT CMainFrame::OnClose(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& bHandled)
 {
-	if (!PyEvalA("autorun.OnClose()"))
+	if (!PyEvalA("theapp.OnClose()"))
 	{
 		bHandled = FALSE;
 		return S_OK;

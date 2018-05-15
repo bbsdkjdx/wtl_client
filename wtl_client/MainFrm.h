@@ -11,8 +11,7 @@ const UINT IDM_TRAY = WM_USER + 100;
 
 class CMainFrame : 
 	public CFrameWindowImpl<CMainFrame>, 
-	public CUpdateUI<CMainFrame>,
-	public CMessageFilter, public CIdleHandler
+	public CMessageFilter
 {
 public:
 	DECLARE_FRAME_WND_CLASS(NULL, IDR_MAINFRAME)
@@ -22,7 +21,6 @@ public:
 	bool m_has_tray;
 	CComPtr<IWebBrowser2> m_pWb2;
 	virtual BOOL PreTranslateMessage(MSG* pMsg);
-	virtual BOOL OnIdle();
 
 	BEGIN_UPDATE_UI_MAP(CMainFrame)
 	END_UPDATE_UI_MAP()
@@ -35,7 +33,6 @@ public:
 		MESSAGE_HANDLER(WM_CLOSE, OnClose)
 		MESSAGE_HANDLER(IDM_TRAY, OnTray)
 		MESSAGE_HANDLER(WM_TaskbarRestart, OnTaskBarReboot)
-		CHAIN_MSG_MAP(CUpdateUI<CMainFrame>)
 		CHAIN_MSG_MAP(CFrameWindowImpl<CMainFrame>)
 	END_MSG_MAP()
 

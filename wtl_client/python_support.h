@@ -22,8 +22,8 @@ int PyExecW(wchar_t *arg);
 int PyExecA(char *arg);//exec(arg).return true if success.use PyGetStr() to get exception info if fail.;
 int PyEvalW(wchar_t *arg);
 int PyEvalA(char *arg);//eval(arg).return true if success,use PyGetStr() to get result.;
-void InteractInConsole(HWND parent_wnd, bool block);
 
+void InteractInConsole();
 //'#':'ctypes.c_void_p', 
 //'s' : 'ctypes.c_char_p',        'S' : 'ctypes.c_wchar_p',
 //'l' : 'ctypes.c_int32',         'u' : 'ctypes.c_uint32',
