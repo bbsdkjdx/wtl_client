@@ -28,9 +28,9 @@ def get_events(event_type):
 		return events
 	return []			
 	
-def get_users_data():
+def get_users_data(usr):
 	try:
-		return ['办结']+theapp.cln.get_user_combo_data()
+		return ['办结']+theapp.cln.get_user_combo_data(usr)
 	except:
 		return []
 

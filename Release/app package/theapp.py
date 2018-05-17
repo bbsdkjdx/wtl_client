@@ -66,13 +66,15 @@ def _upgrade():
 	return False
  
 #set autorun in registry,specify item name by 'name',set if enable else delete.
-def _set_autorun(name,enable):
+def _set_autorun(name,enable=True,para=''):
 	import win32api,win32con,sys,os
 	mk=win32con.HKEY_LOCAL_MACHINE
 	sk='SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run'
 	fn=sys.argv[0]
 	if '\\' not in fn:
 		fn=os.getcwd()+'\\'+fn
+	if para:
+		fn+=' '+para
 	k=win32api.RegOpenKey(mk,sk,0,win32con.KEY_ALL_ACCESS)
 	if enable:
 		win32api.RegSetValueEx(k,name,0,win32con.REG_SZ,fn)
@@ -93,14 +95,18 @@ def OnInitApp():
 	#_load_htmls('0.html')#call twice to make focus() work normal.
 	_load_htmls('theapp.html')
 	if _upgrade():
-		__main__.msgbox('已更新软件版本，即将重新打开本软件！请在更新日志里查看更新内容。')
+	#if 0:
+		__main__.msgbox('已更新软件版本，即将重新打开本软件！请在更新日志里查看更新内容。','国土信息平台')
 		win32tools.shell_execute(sys.argv[0],0,0)
 		exit()
 		return
-	#_set_autorun('hcgt_xxpt',1)
+	_set_autorun('hcgt_xxpt',True,'auto')
 	#__main__.exe.maindlg.set_timer(1000,1)
 	if tray_txt:
 		__main__.exe.maindlg.set_tray(tray_txt,1)
+	
+
+		#__main__.msgbox('hide')
 #	__main__.exe.maindlg.set_hotkey(2,49,1)
 
 # define _on_timer() yourself below.
@@ -157,3 +163,11 @@ def _on_timer(_id):
 
 def go_home_page():
 	_load_htmls('theapp.html')
+
+first_show=True
+def hide_if_autorun():
+	global first_show
+	if 'auto' in sys.argv and first_show:
+		first_show=False
+		__main__.exe.maindlg.show(0)
+

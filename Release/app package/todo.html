@@ -141,6 +141,8 @@
 <script type="text/javascript">
 var last_itm=-1;
 received_data=[];
+current_user=window.parent.ExtFun('login.get_user_info')[0]
+
 //window.parent.ExtFun('exe.maindlg.set_maxmize')
 
 function clearTable()
@@ -178,7 +180,7 @@ function on_click_row()
     if(last_itm!=-1)main_table.rows[last_itm+1].bgColor='';
     last_itm=this.rowIndex-1;
     this.bgColor='#8b9ce7'
-    show_detail(received_data[this.rowIndex-1])
+    show_detail()
 }
 
 function on_click_nav(itm)
@@ -193,11 +195,20 @@ function on_click_nav(itm)
     }
     received_data=window.parent.ExtFun('todo.get_events',itm.innerHTML);
     fillTable(received_data);
+    show_detail();
     //alert(itm.innerHTML);
 }
 
-function show_detail(dtl)
+function show_detail()
 {
+    if(last_itm==-1)
+    { 
+        dtl=['','','','','',''];
+    }
+    else
+    {
+        dtl=received_data[last_itm]
+    }
     r1=details.rows[0];
     r1.cells[1].innerHTML=dtl[0];
     r1.cells[3].innerHTML=dtl[1];
@@ -240,8 +251,7 @@ function on_modify()
             window.parent.ExtFun('msgbox','无法修改办理中的事件！');
             return;
         }
-        u_i=window.parent.ExtFun('login.get_user_info')
-        if (evt[4][0][0]!=u_i[0])
+        if (evt[4][0][0]!=current_user)
         {
             window.parent.ExtFun('msgbox','无法修改别人创建的事件！');
             return;
@@ -277,7 +287,7 @@ function on_handle()
             return;
         }
     }
-    dts=window.parent.ExtFun('todo.get_users_data');
+    dts=window.parent.ExtFun('todo.get_users_data',current_user);
     itms=[['备注：','txt_s',[],''],
     ['移交至：','select',dts,dts[0]]]
     window.parent.ExtFun('inputer.do_input','处理事件',itms,'on_after_handle');

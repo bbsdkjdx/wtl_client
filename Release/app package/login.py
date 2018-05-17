@@ -65,7 +65,7 @@ def on_login(usr,pwd):
 	log_info.usr=usr
 	log_info.pwd=pwd
 	if _login():
-		theapp._load_htmls('main.html')
+		theapp.go_home_page()
 	else:
 		__main__.msgbox('请检查用户名和密码!')
 
