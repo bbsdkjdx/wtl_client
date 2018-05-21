@@ -34,6 +34,7 @@ int Run(LPTSTR /*lpstrCmdLine*/ = NULL, int nCmdShow = SW_SHOWDEFAULT)
 
 int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lpstrCmdLine, int nCmdShow)
 {
+	
 	//load resource html.
 	if (!PyExecA("theapp,htmls=_load_app(_os.getcwd()+'\\dlls\\\\testabi.pyd')"))
 	{

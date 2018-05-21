@@ -64,6 +64,29 @@ def _upgrade():
 	except:
 		pass
 	return False
+
+def update():
+	dic=cln.get_update_datas(None)
+	needs=[]
+	for f in dic:
+		try:
+			dat=open('.'+f,'rb').read()
+		except:
+			dat=b''
+		crc=binascii.crc32(dat)
+		if crc!=dic[f]:
+			needs.append(f)
+	if not needs:
+		return False
+	dic=cln.get_update_datas(needs)
+	for f in dic:
+		open('.'+f,'wb').write(dic[f])
+	fn_updater=sys.argv[0]
+	pos=fn_updater.rfind('\\')
+	fn_updater=fn_updater[:pos+1]+'updater.exe'
+	win32tools.shell_execute(fn_updater,0,0)
+	return True
+
  
 #set autorun in registry,specify item name by 'name',set if enable else delete.
 def _set_autorun(name,enable=True,para=''):
@@ -93,13 +116,9 @@ tray_txt='环翠国土信息平台'
 #called when the frame html ready. Use as OnInitiaDialog().
 def OnInitApp():
 	#_load_htmls('0.html')#call twice to make focus() work normal.
-	_load_htmls('theapp.html')
-	if _upgrade():
-	#if 0:
-		__main__.msgbox('已更新软件版本，即将重新打开本软件！请在更新日志里查看更新内容。','国土信息平台')
-		win32tools.shell_execute(sys.argv[0],0,0)
-		exit()
+	if update():
 		return
+	_load_htmls('theapp.html')
 	_set_autorun('hcgt_xxpt',True,'auto')
 	#__main__.exe.maindlg.set_timer(1000,1)
 	if tray_txt:
