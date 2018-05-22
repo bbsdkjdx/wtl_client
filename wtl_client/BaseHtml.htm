@@ -37,56 +37,66 @@
     <meta http-equiv="Content-Type" content="IE=8" />
 </HEAD>
 
- <body id='CHtmlDialogPyDlg' topmargin='0' leftmargin='0' >
+ <body id='CHtmlDialogPyDlg' topmargin='0' leftmargin='0'>
 
      <!-- p is used for call js.-->
      <p id="jscaller" onclick="value=CallJs(value)" value=""></p>
      <p id="execaller" onclick="external.ext_fun()" value=""></p>
 
-     <iframe  id='ifr_id1' style="frameborder:0;VISIBILITY: visible; HEIGHT: 0%; WIDTH: 100%"></iframe>
-     <iframe  id='ifr_id2' style="frameborder:0;VISIBILITY: visible; HEIGHT: 100%; WIDTH: 100%; "></iframe>
+     <iframe id='ifr_id1' style="frameborder:0;VISIBILITY: visible; HEIGHT: 100%; WIDTH: 100%"></iframe>
 
-         <script>
-             ifr1 = document.getElementById('ifr_id1');
-             ifr2 = document.getElementById('ifr_id2');
-             var ifr = ifr2;
-             ifrf = ifr.contentWindow;
+     <script>
+         ifr = document.getElementById('ifr_id1');
+         ifrf = ifr.contentWindow;
+         ifr_stack = [ifr];
 
-              function set_html(para)
-             {
-                  txt = para[0];
-                  async = para[1];
-                  function _set_html() {
-                      var ifrdoc = ifr.contentWindow.document;
-                      ifrdoc.open();
-                      ifrdoc.write(txt);
-                      ifrdoc.close();
-                  }
-                  if (async)
-                  {
-                      setTimeout(_set_html, 0);
-                  }
-                  else
-                  {
-                      _set_html();
-                  }
-              }
-             function set_url(txt) {
-                 ifr.src=txt
+         function set_html(para) {
+             txt = para[0];
+             async = para[1];
+             function _set_html() {
+                 var ifrdoc = ifr.contentWindow.document;
+                 ifrdoc.open();
+                 ifrdoc.write(txt);
+                 ifrdoc.close();
              }
+             if (async) {
+                 setTimeout(_set_html, 0);
+             }
+             else {
+                 _set_html();
+             }
+         }
+         function set_url(txt) {
+             ifr.src = txt
+         }
 
-             function switch_ifr()
-             {
-                 if_old=ifr1;
-                 if_new=ifr2;
-                 if (ifr == ifr2) { if_old = ifr2; if_new = ifr1; }
-                 ifr = if_new;
-                 ifrf = ifr.contentWindow;
-                 ifr1.style.height = (ifr == ifr1) ? "100%" : "0%";
-              }
-             ExtFun('theapp.OnInitApp');
+         ExtFun('theapp.OnInitApp');
 
-        </script>
-     </body>
+         function new_ifr() {
+             var _ifr = document.createElement('iframe');
+             _ifr.width = "100%";
+             _ifr.height = "100%";
+             _ifr.frameBorder = 0;
+             document.body.insertBefore(_ifr, ifr_stack[ifr_stack.length - 1]);
+             ifr_stack.push(_ifr);
+             ifr = _ifr;
+             ifrf = ifr.contentWindow;
+         }
+         function del_ifr() {
+             if (ifr_stack.length < 2) return;
+             _ifr = ifr_stack.pop();
+             document.body.removeChild(_ifr);
+             ifr = ifr_stack[ifr_stack.length - 1]
+             ifrf = ifr.contentWindow;
+         }
+
+         //get the last iframe's call back function by name "s_cb".
+         function get_callback(s_cb)
+         {
+             return eval('ifr_stack[ifr_stack.length - 2].contentWindow.' + s_cb);
+         }
+     </script>
+ </body>
+
 </HTML>    
 

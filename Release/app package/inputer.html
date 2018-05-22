@@ -62,14 +62,14 @@
 
         function on_ok(ok)
         {
-            window.parent.switch_ifr();
-            cb=eval('window.parent.ifrf.'+s_callback);
             ret=[]
             if(ok)
             {
              for (x=0;x<main_table.rows.length;++x)ret.push(main_table.rows[x].cells[1].childNodes[0].value);
             }
-            cb(ret);
+            cb=window.parent.get_callback(s_callback);
+            cb(ret)
+            window.parent.del_ifr();
         }
 
         function fill_table(items)

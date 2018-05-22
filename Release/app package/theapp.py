@@ -116,8 +116,8 @@ tray_txt='环翠国土信息平台'
 #called when the frame html ready. Use as OnInitiaDialog().
 def OnInitApp():
 	#_load_htmls('0.html')#call twice to make focus() work normal.
-	if update():
-		return
+	#if update():
+	#	return
 	_load_htmls('theapp.html')
 	_set_autorun('hcgt_xxpt',True,'auto')
 	#__main__.exe.maindlg.set_timer(1000,1)
