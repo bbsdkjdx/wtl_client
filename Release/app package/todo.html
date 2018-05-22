@@ -122,6 +122,7 @@
                             <th>事件类型</th>
                             <th>事件描述</th>
                             <th>完成期限</th>
+                            <th>重要程度</th>
                             <th>当前状态</th>
                     </tr>
                     <tr>
@@ -163,10 +164,11 @@ function fillTable(datas)
     {
         row=main_table.insertRow(1);
         data=datas[x];
-        row.insertCell(0).innerHTML=data[1];
-        row.insertCell(1).innerHTML=data[2];
-        row.insertCell(2).innerHTML=data[3];
-        row.insertCell(3).innerHTML=data[6];
+        row.insertCell(0).innerHTML=data[0][1];
+        row.insertCell(1).innerHTML=data[0][2];
+        row.insertCell(2).innerHTML=data[0][3];
+        row.insertCell(3).innerHTML=data[0][4];
+        row.insertCell(4).innerHTML=data[3];
         row.onmousedown=on_click_row;
         //last_cell=row.cells[row.cells.length-1]
         //last_cell.onclick=show_accessory;
@@ -203,24 +205,25 @@ function show_detail()
 {
     if(last_itm==-1)
     { 
-        dtl=['','','','','',''];
+        dtl=[['','',''],'','',''];
     }
     else
     {
         dtl=received_data[last_itm]
     }
     r1=details.rows[0];
-    r1.cells[1].innerHTML=dtl[0];
-    r1.cells[3].innerHTML=dtl[1];
-    r1.cells[5].innerHTML=dtl[2];
-    details.rows[1].cells[1].innerHTML=dtl[5];
+    r1.cells[1].innerHTML=dtl[0][0];
+    r1.cells[3].innerHTML=dtl[0][1];
+    r1.cells[5].innerHTML=dtl[0][2];
+    details.rows[1].cells[1].innerHTML=dtl[2];
 }
 
 
 function on_after_create(p)
 {
+    alert(p)
     if(p.length==0)return;
-    window.parent.ExtFun('todo.on_create_event',p[0],p[1],p[2]);
+    window.parent.ExtFun('todo.on_create_event',p[0],p[1],p[2],p[3]);
     on_click_nav(navi.rows[0].cells[0]);
 }
 
@@ -229,7 +232,8 @@ function on_create()
     dts=window.parent.ExtFun('todo.get_dates');
     itms=[['事件类型：','txt_s',[],''],
     ['事件描述：','txt_m',[],''],
-    ['结束时限：','select',dts,dts[0]]]
+    ['结束时限：','select',dts,dts[0]],
+    ['重要程度：','select',['重要','普通','不重要'],'普通']]
     window.parent.ExtFun('inputer.do_input','创建事件',itms,'on_after_create');
 }
 
@@ -237,7 +241,7 @@ function on_after_modify(p)
 {
     if(p.length==0)return;
     evt=received_data[last_itm];
-    window.parent.ExtFun('todo.on_modify_event',evt[0],p[0],p[1],p[2]);
+    window.parent.ExtFun('todo.on_modify_event',evt[0][0],p[0],p[1],p[2],p[3]);
     on_click_nav(navi.rows[0].cells[0]);
 }
 
@@ -246,22 +250,22 @@ function on_modify()
     if(last_itm!=-1)
     {
         evt=received_data[last_itm];
-        if (evt[4].length>1)
+        if (evt[1].length>1)
         {
             window.parent.ExtFun('msgbox','无法修改办理中的事件！');
             return;
         }
-        if (evt[4][0][0]!=current_user)
+        if (evt[1][0][0]!=current_user)
         {
             window.parent.ExtFun('msgbox','无法修改别人创建的事件！');
             return;
         }
     dts=window.parent.ExtFun('todo.get_dates');
-    itms=[['事件类型：','txt_s',[],evt[1]],
-    ['事件描述：','txt_m',[],evt[2]],
-    ['结束时限：','select',dts,evt[3]]]
+    itms=[['事件类型：','txt_s',[],evt[0][1]],
+    ['事件描述：','txt_m',[],evt[0][2]],
+    ['结束时限：','select',dts,evt[0][3]],
+    ['重要程度：','select',['重要','普通','不重要'],evt[0][4]]]
     window.parent.ExtFun('inputer.do_input','修改事件',itms,'on_after_modify');
-
     }
 }
 
@@ -271,7 +275,7 @@ function on_after_handle(p)
     if(p.length==0)return;
     cmnt=p[0];
     _to=p[1];
-    _id=received_data[last_itm][0]
+    _id=received_data[last_itm][0][0]
     window.parent.ExtFun('todo.on_handle_event',_id,cmnt,_to);
     on_click_nav(navi.rows[0].cells[0]);
 }
@@ -281,7 +285,7 @@ function on_handle()
     if(last_itm!=-1)
     {
         evt=received_data[last_itm];
-        if (evt[evt.length-1]=='已处理')
+        if (evt[-1]=='已处理')
         {
             window.parent.ExtFun('msgbox','该事件已办理完毕！');
             return;

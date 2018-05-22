@@ -49,7 +49,7 @@
             </div>
             <div class="col-md-4" style="background-color:rgb(35, 223, 176)" onclick="on_todo()">
                 <h2>待办事项</h2>
-                <p>您有0件需要完成的工作。</p>
+                <p id='id_n_task'>您有0件需要完成的工作。</p>
             </div>
             <div class="col-md-4" style="background-color:rgb(35, 132, 223) " onclick="on_query()">
                 <h2>信息查询</h2>
@@ -71,6 +71,8 @@
         _info= window.parent.ExtFun('login.get_user_info')
         user_name.innerHTML='当前用户：'+_info[0] 
         user_office.innerHTML='科室：'+_info[1] 
+        n= window.parent.ExtFun('todo.get_n_todo')
+        id_n_task.innerHTML='您有'+n+'件需要完成的工作。'
         function on_login() { window.parent.ExtFun('login.do_login',1); }
         function on_todo(){ if(_info[0]==''){window.parent.ExtFun('msgbox','请先登录！','信息平台'); }else {window.parent.ExtFun('todo.on_todo');};}
         function on_query(){window.parent.ExtFun('msgbox','该功能暂末正式开放，敬请期待！','信息平台');}//window.parent.ExtFun('inputer.do_input','输入标题',[],'input_complete');}//

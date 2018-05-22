@@ -18,16 +18,19 @@ def translate_status(stas):
 
 def get_events(event_type):
 	global events
-	events=theapp.cln.get_events(login.log_info.usr)
-	events=[x+translate_status(x[4]) for x in events]
+	events=theapp.cln.get_events2(login.log_info.usr)
+	events=[x+translate_status(x[1]) for x in events]
 	if event_type=='待办':
-		return [x for x in events if x[4][-1][1]==login.log_info.usr]
+		return [x for x in events if x[1][-1][1]==login.log_info.usr]
 	if event_type=='已完成':
-		return [x for x in events if x[4][-1][1]!=login.log_info.usr]
+		return [x for x in events if x[1][-1][1]!=login.log_info.usr]
 	if event_type=='全部':
 		return events
 	return []			
-	
+
+def get_n_todo():
+	return len(get_events('待办'))
+
 def get_users_data(usr):
 	try:
 		return ['办结']+theapp.cln.get_user_combo_data(usr)
@@ -37,12 +40,11 @@ def get_users_data(usr):
 def get_dates():
 	return theapp.cln.get_dates()
 
-def on_create_event(title,describe,deadline):
-	theapp.cln.on_create_event(login.log_info.usr,title,describe,deadline)
+def on_create_event(title,describe,deadline,priority):
+	theapp.cln.on_create_event(login.log_info.usr,title,describe,deadline,priority)
 
-def on_modify_event(_id,title,describe,deadline):
-	theapp.cln.on_modify_event(_id,title,describe,deadline)
-
+def on_modify_event(_id,title,describe,deadline,priority):
+	theapp.cln.on_modify_event(_id,title,describe,deadline,priority)
 
 def on_handle_event(_id,comment,_to):
 	theapp.cln.on_handle_event(_id,login.log_info.usr,comment,_to)
