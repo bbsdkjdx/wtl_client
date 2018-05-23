@@ -79,9 +79,19 @@
         id_n_task.innerHTML='您有'+n+'件需要完成的工作。'
         function on_login() { window.parent.ExtFun('login.do_login',1); }
         function on_todo(){ if(_info[0]==''){window.parent.ExtFun('msgbox','请先登录！','信息平台'); }else {window.parent.ExtFun('todo.on_todo');};}
-        function on_query(){window.parent.ExtFun('msgbox','该功能暂末正式开放，敬请期待！','信息平台');}//window.parent.ExtFun('inputer.do_input','输入标题',[],'input_complete');}//
         function on_update_detail(){window.parent.ExtFun('theapp._load_htmls','update_detail.html');}//window.parent.ExtFun('inputer.do_input','输入标题',[],'input_complete');}//
         function set_log_info(s){user_info.innerHTML=s;}
+        function on_query()
+        {
+            if(_info[1]=='信息中心')
+            {
+                window.parent.ExtFun('kingland.show_page');
+            }
+            else
+            {
+                window.parent.ExtFun('msgbox','该功能暂末正式开放，敬请期待！','信息平台');
+            }
+        }
 
         function on_after_modify_password(p)
         {

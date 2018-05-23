@@ -17,6 +17,9 @@ __main__.todo=todo
 import inputer
 __main__.inputer=inputer
 
+import kingland
+__main__.kingland=kingland
+
 socket.setdefaulttimeout(1)
 #####################################################################################################################################
 # fixed code, do not change if possible.

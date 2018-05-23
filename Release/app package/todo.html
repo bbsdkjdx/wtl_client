@@ -249,14 +249,18 @@ function on_modify()
     if(last_itm!=-1)
     {
         evt=received_data[last_itm];
-        if (evt[1].length>1)
+        sta=evt[1]
+        for(x=0;x<sta.length;++x)
         {
-            window.parent.ExtFun('msgbox','无法修改办理中的事件！');
-            return;
+            if (sta[x][0]!=current_user)
+            {
+                window.parent.ExtFun('msgbox','无法修改已涉及他人的事件！');
+                return;
+            }
         }
         if (evt[1][0][0]!=current_user)
         {
-            window.parent.ExtFun('msgbox','无法修改别人创建的事件！');
+            window.parent.ExtFun('msgbox','无法修改他人创建的事件！');
             return;
         }
     dts=window.parent.ExtFun('todo.get_dates');
