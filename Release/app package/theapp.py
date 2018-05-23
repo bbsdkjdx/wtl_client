@@ -116,8 +116,13 @@ tray_txt='环翠国土信息平台'
 #called when the frame html ready. Use as OnInitiaDialog().
 def OnInitApp():
 	#_load_htmls('0.html')#call twice to make focus() work normal.
-	if update():
-		return
+	try:
+		if update():
+			return
+	except:
+		__main__.msgbox('无法连接服务器，请检查网络或联系管理员。','环翠国土信息平台')
+		ctypes.windll.kernel32.ExitProcess(0)
+		
 	_load_htmls('theapp.html')
 	_set_autorun('hcgt_xxpt',True,'auto')
 	#__main__.exe.maindlg.set_timer(1000,1)

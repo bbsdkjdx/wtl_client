@@ -76,8 +76,28 @@ def do_login(show=False):
 		_login()
 	else:
 		theapp._load_htmls('login.html')
+
+def modify_password(pwd):
+	if log_info.usr=='':
+		__main__.msgbox('请先登录！','密码修改失败')
+		return
+	if pwd[0]!=log_info.pwd:
+		__main__.msgbox('原密码不正确。','密码修改失败')
+		return
+	if pwd[1]!=pwd[2]:
+		__main__.msgbox('两次输入的新密码不一至。','密码修改失败')
+		return
+	if theapp.cln.modify_password(log_info.usr,pwd[1]):
+		log_info.pwd=pwd[1]
+		save_cache()
+		__main__.msgbox('密码修改成功！','密码修改')
+	else:
+		__main__.msgbox('用户名不正确！','密码修改失败')
 	
-	
+    #        u_p=window.parent.ExtFun('login.get_user_pwd');
+     #       if(u_p[0]==''){window.parent.ExtFun('msgbox','请先登录！','密码修改失败');return;}
+     #       if(p[0]!=u_p[1]){window.parent.ExtFun('msgbox','原密码不正确。','密码修改失败');return;}
+     #       if(p[2]!=p[1]){window.parent.ExtFun('msgbox','两次输入的新密码不一至。','密码修改失败');return;}
 
 
 

@@ -72,7 +72,8 @@
 
          ExtFun('theapp.OnInitApp');
 
-         function new_ifr() {
+         function new_ifr()
+         {
              var _ifr = document.createElement('iframe');
              _ifr.width = "100%";
              _ifr.height = "100%";
@@ -82,19 +83,21 @@
              ifr = _ifr;
              ifrf = ifr.contentWindow;
          }
-         function del_ifr() {
+
+         function del_ifr(s_cb,data)
+         {
              if (ifr_stack.length < 2) return;
              _ifr = ifr_stack.pop();
-             document.body.removeChild(_ifr);
+             _ifr.height="0%";
              ifr = ifr_stack[ifr_stack.length - 1]
              ifrf = ifr.contentWindow;
+             if(s_cb)
+             {
+                 eval('ifrf.' + s_cb)(data);
+             }
+             document.body.removeChild(_ifr);
          }
 
-         //get the last iframe's call back function by name "s_cb".
-         function get_callback(s_cb)
-         {
-             return eval('ifr_stack[ifr_stack.length - 2].contentWindow.' + s_cb);
-         }
      </script>
  </body>
 

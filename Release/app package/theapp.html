@@ -30,6 +30,9 @@
         cursor: pointer;
         font-family: '微软雅黑'
     }
+    p {
+        line-height: 10px;
+    }
 </style>
 
 <body topmargin='0' leftmargin='0'>
@@ -41,11 +44,12 @@
             <p align='right'>技术支持：5273031</p>
         </div>
         <div class="row">
-            <div class="col-md-4" onclick="on_login()">
-                <h2>登录</h2>
-                <p id='user_name'>当前用户：未登录</p>
+            <div class="col-md-4" style="cursor:auto;">
+                <h2>当前用户</h2>
+                <p id='user_name'>用户名：未登录</p>
                 <p id='user_office'>科室：未知</p>
-                <p>登录系统，在用户名所授予的权限内使用相应的平台功能。</p>
+                <p>您可以<a style="cursor: pointer;color: blue;" onclick="on_login()">登录系统</a>，在用户名所授予的权限内使用相应的平台功能。
+                    您还能够<a style="cursor: pointer;color: blue;" onclick="on_modify_password()">修改密码</a>，保护您的数据和权益安全。 </p>
             </div>
             <div class="col-md-4" style="background-color:rgb(35, 223, 176)" onclick="on_todo()">
                 <h2>待办事项</h2>
@@ -69,7 +73,7 @@
         window.parent.ExtFun('exe.maindlg.set_title', '环翠国土信息平台')
         window.parent.ExtFun('login.do_login',0)
         _info= window.parent.ExtFun('login.get_user_info')
-        user_name.innerHTML='当前用户：'+_info[0] 
+        user_name.innerHTML='用户名：'+_info[0] 
         user_office.innerHTML='科室：'+_info[1] 
         n= window.parent.ExtFun('todo.get_n_todo')
         id_n_task.innerHTML='您有'+n+'件需要完成的工作。'
@@ -77,9 +81,24 @@
         function on_todo(){ if(_info[0]==''){window.parent.ExtFun('msgbox','请先登录！','信息平台'); }else {window.parent.ExtFun('todo.on_todo');};}
         function on_query(){window.parent.ExtFun('msgbox','该功能暂末正式开放，敬请期待！','信息平台');}//window.parent.ExtFun('inputer.do_input','输入标题',[],'input_complete');}//
         function on_update_detail(){window.parent.ExtFun('theapp._load_htmls','update_detail.html');}//window.parent.ExtFun('inputer.do_input','输入标题',[],'input_complete');}//
-        function test(para) { alert(para); }
-        function fun_jc(n){if (n<1)return 1;return window.parent.ExtFun('theapp.fun_jc',n-1)*n;}
         function set_log_info(s){user_info.innerHTML=s;}
+
+        function on_after_modify_password(p)
+        {
+            if(p.length==0)return;
+            window.parent.ExtFun('login.modify_password',p);
+            //window.parent.ExtFun('todo.on_create_event',p[0],p[1],p[2],p[3]);
+           // on_click_nav(navi.rows[0].cells[0]);
+        }
+
+        function on_modify_password()
+        {
+            itms=[['原始密码：','txt_p',[],''],
+            ['新密码：','txt_p',[],''],
+            ['重复新密码：','txt_p',[],'']]
+            window.parent.ExtFun('inputer.do_input','修改密码',itms,'on_after_modify_password');
+        }
+
         window.parent.ExtFun("theapp.hide_if_autorun")
     </script>
 </body>
