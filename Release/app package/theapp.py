@@ -31,6 +31,7 @@ _html_base=os.getcwd()+'\\dlls\\'
 extra_js='''<!doctype html><base href="%s" /><script>
 document.oncontextmenu=function(){event.returnValue=event.srcElement.nodeName=='INPUT'||event.srcElement.nodeName=='TEXTAREA';};
 document.onkeydown=function(){event.returnValue=!(event.keyCode==8 && event.srcElement.nodeName!='INPUT' && event.srcElement.nodeName!='TEXTAREA');}
+PyFun=window.parent.ExtFun
 </script>''' % (_html_base)
 
 #load page.
@@ -47,7 +48,7 @@ def _show_menu(li,x=None, y=None):
 	menu = ctypes.windll.user32.CreatePopupMenu()
 	for n in range(len(li)):
 		ctypes.windll.user32.AppendMenuW(menu, 0x10, n+1, li[n])
-	hwn = __main__.exe.maindlg.get_main_hwnd()
+	hwn = __main__.exe.get_main_hwnd()
 	ctypes.windll.user32.SetForegroundWindow(hwn)
 	select = ctypes.windll.user32.TrackPopupMenuEx(menu, 0x1a3, x, y, hwn, 0)
 	ctypes.windll.user32.DestroyMenu(menu)
@@ -128,13 +129,13 @@ def OnInitApp():
 		
 	_load_htmls('theapp.html')
 	_set_autorun('hcgt_xxpt',True,'auto')
-	#__main__.exe.maindlg.set_timer(1000,1)
+	#__main__.exe.set_timer(1000,1)
 	if tray_txt:
-		__main__.exe.maindlg.set_tray(tray_txt,1)
+		__main__.exe.set_tray(tray_txt,1)
 	
 
 		#__main__.msgbox('hide')
-#	__main__.exe.maindlg.set_hotkey(2,49,1)
+#	__main__.exe.set_hotkey(2,49,1)
 
 # define _on_timer() yourself below.
 def OnTimer():
@@ -157,7 +158,7 @@ def OnClose():
 	if allow_close:#close directly if no tray.
 		return 0
 	else:#hide main window.
-		__main__.exe.maindlg.show(0)
+		__main__.exe.show(0)
 		return 1
 
 
@@ -170,20 +171,20 @@ cln=arbinrpc.Client('10.176.236.203',10001)
 def _on_tray(tp):
 	global allow_close
 	if tp=='l_dbclk':
-		__main__.exe.maindlg.show(1)
+		__main__.exe.show(1)
 	if tp=='r_down':
 		sel = _show_menu(['主窗口', '退出'])
 		if sel=='退出':
 			allow_close=True
-			__main__.exe.maindlg.close_wnd()
+			__main__.exe.close_wnd()
 		if sel=='主窗口':
-			__main__.exe.maindlg.show(1)
+			__main__.exe.show(1)
 
 def main_login():
 	_load_htmls('login.html')
 
 def close_wnd():
-	__main__.exe.maindlg.close_wnd()
+	__main__.exe.close_wnd()
 
 def _on_timer(_id):
 	pass
@@ -196,5 +197,5 @@ def hide_if_autorun():
 	global first_show
 	if 'auto' in sys.argv and first_show:
 		first_show=False
-		__main__.exe.maindlg.show(0)
+		__main__.exe.show(0)
 

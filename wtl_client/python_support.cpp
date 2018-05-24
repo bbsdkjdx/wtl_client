@@ -49,7 +49,7 @@ R"(
 _thd_dict=dict()
 def _get_caller():
     import htmldoc
-    wnd=exe.maindlg.get_browser_hwnd()
+    wnd=exe.get_browser_hwnd()
     doc=htmldoc.wnd2htmldoc(wnd)
     dic=dict()
     dic['_exe_caller']=doc.getElementById('execaller')

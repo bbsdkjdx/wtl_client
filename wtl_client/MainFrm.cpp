@@ -143,16 +143,16 @@ LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 	m_hWndClient = m_view.Create(m_hWnd, rcDefault, url, WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN, 0);
 
 	//reg function to python.
-	REG_EXE_FUN("maindlg", get_browser_hwnd, "u", "get_browser_hwnd()");
-	REG_EXE_FUN("maindlg", set_maxmize, "#", "set_maximize()");
-	REG_EXE_FUN("maindlg", set_title, "#S", "set_title(WCHAR *str)");
-	REG_EXE_FUN("maindlg", set_size, "#uuuuu", "set_size(int x,int y,int z,bool fixed_size,bool closable).\n x=-1 ignore x and y;\ny=-1 use screen size;\nz=-1 ignore z order.");
-	REG_EXE_FUN("maindlg", set_timer, "#ll", "set_timer(int ms,bool enable)");
-	REG_EXE_FUN("maindlg", set_hotkey, "llll", "bool set_hotkey(int mod,int vk,bool enable)");
-	REG_EXE_FUN("maindlg", set_tray, "#Su", "void set_tray(WCHAR *info,DWORD ico_id)");
-	REG_EXE_FUN("maindlg", get_main_hwnd, "l", "HWND get_main_hwnd()");
-	REG_EXE_FUN("maindlg", show, "#l", "void show(int sh)");
-	REG_EXE_FUN("maindlg", close_wnd, "#", "void close_wnd()");
+	REG_EXE_FUN("", get_browser_hwnd, "u", "get_browser_hwnd()");
+	REG_EXE_FUN("", set_maxmize, "#", "set_maximize()");
+	REG_EXE_FUN("", set_title, "#S", "set_title(WCHAR *str)");
+	REG_EXE_FUN("", set_size, "#uuuuu", "set_size(int x,int y,int z,bool fixed_size,bool closable).\n x=-1 ignore x and y;\ny=-1 use screen size;\nz=-1 ignore z order.");
+	REG_EXE_FUN("", set_timer, "#ll", "set_timer(int ms,bool enable)");
+	REG_EXE_FUN("", set_hotkey, "llll", "bool set_hotkey(int mod,int vk,bool enable)");
+	REG_EXE_FUN("", set_tray, "#Su", "void set_tray(WCHAR *info,DWORD ico_id)");
+	REG_EXE_FUN("", get_main_hwnd, "l", "HWND get_main_hwnd()");
+	REG_EXE_FUN("", show, "#l", "void show(int sh)");
+	REG_EXE_FUN("", close_wnd, "#", "void close_wnd()");
 
 	//set tray information.
 	m_tnid.cbSize = sizeof(NOTIFYICONDATA);

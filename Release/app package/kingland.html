@@ -80,11 +80,11 @@
 </head>
 <body>
 <script type="text/javascript">
-   // window.parent.ExtFun('exe.maindlg.set_maxmize')
+   // PyFun('exe.set_maxmize')
 //insertRow,deleteRow;
 function show_accessory()
 {
-    window.parent.ExtFun('kingland.show_file',this.innerHTML);
+    PyFun('kingland.show_file',this.innerHTML);
 }
 function clearTable()
 {
@@ -107,7 +107,7 @@ function fillTable(datas)
 }
 function onQuery(s)
 {
-    ans=window.parent.ExtFun('kingland.on_query',s);
+    ans=PyFun('kingland.on_query',s);
     fillTable(ans);
 }
 
@@ -118,7 +118,7 @@ function onQuery(s)
         <td >
             <input width="100" type="text" class="loginInput" value="输入关键字，按回车搜索。" onfocus="this.select()" onkeydown="if(event.keyCode==13)onQuery(this.value)"></input> 
         </td>
-        <td bgColor="red" width="20%" onmousedown="window.parent.ExtFun('theapp.go_home_page');">返回主页</td>
+        <td bgColor="red" width="20%" onmousedown="PyFun('theapp.go_home_page');">返回主页</td>
     </tr>   
 </table>
 <table id="customers">

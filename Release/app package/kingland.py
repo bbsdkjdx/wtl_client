@@ -29,6 +29,6 @@ def on_query(s):
 n=0
 def fun(s):
 	global n
-	__main__.exe.maindlg.set_title(s+str(n))
+	__main__.exe.set_title(s+str(n))
 	n+=1
 	return [n]+['a']*n

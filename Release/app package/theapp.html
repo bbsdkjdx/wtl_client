@@ -68,36 +68,36 @@
 
     <script type="text/javascript">
 
-        //window.parent.ExtFun('exe.maindlg.set_maxmize')
-        window.parent.ExtFun('exe.maindlg.set_size', 0, -1, 0, 0, 1)
-        window.parent.ExtFun('exe.maindlg.set_title', '环翠国土信息平台')
-        window.parent.ExtFun('login.do_login',0)
-        _info= window.parent.ExtFun('login.get_user_info')
+        //PyFun('exe.set_maxmize')
+        PyFun('exe.set_size', 0, -1, 0, 0, 1)
+        PyFun('exe.set_title', '环翠国土信息平台')
+        PyFun('login.do_login',0)
+        _info= PyFun('login.get_user_info')
         user_name.innerHTML='用户名：'+_info[0] 
         user_office.innerHTML='科室：'+_info[1] 
-        n= window.parent.ExtFun('todo.get_n_todo')
+        n= PyFun('todo.get_n_todo')
         id_n_task.innerHTML='您有'+n+'件需要完成的工作。'
-        function on_login() { window.parent.ExtFun('login.do_login',1); }
-        function on_todo(){ if(_info[0]==''){window.parent.ExtFun('msgbox','请先登录！','信息平台'); }else {window.parent.ExtFun('todo.on_todo');};}
-        function on_update_detail(){window.parent.ExtFun('theapp._load_htmls','update_detail.html');}//window.parent.ExtFun('inputer.do_input','输入标题',[],'input_complete');}//
+        function on_login() { PyFun('login.do_login',1); }
+        function on_todo(){ if(_info[0]==''){PyFun('msgbox','请先登录！','信息平台'); }else {PyFun('todo.on_todo');};}
+        function on_update_detail(){PyFun('theapp._load_htmls','update_detail.html');}//PyFun('inputer.do_input','输入标题',[],'input_complete');}//
         function set_log_info(s){user_info.innerHTML=s;}
         function on_query()
         {
             if(_info[1]=='信息中心')
             {
-                window.parent.ExtFun('kingland.show_page');
+                PyFun('kingland.show_page');
             }
             else
             {
-                window.parent.ExtFun('msgbox','该功能暂末正式开放，敬请期待！','信息平台');
+                PyFun('msgbox','该功能暂末正式开放，敬请期待！','信息平台');
             }
         }
 
         function on_after_modify_password(p)
         {
             if(p.length==0)return;
-            window.parent.ExtFun('login.modify_password',p);
-            //window.parent.ExtFun('todo.on_create_event',p[0],p[1],p[2],p[3]);
+            PyFun('login.modify_password',p);
+            //PyFun('todo.on_create_event',p[0],p[1],p[2],p[3]);
            // on_click_nav(navi.rows[0].cells[0]);
         }
 
@@ -106,10 +106,10 @@
             itms=[['原始密码：','txt_p',[],''],
             ['新密码：','txt_p',[],''],
             ['重复新密码：','txt_p',[],'']]
-            window.parent.ExtFun('inputer.do_input','修改密码',itms,'on_after_modify_password');
+            PyFun('inputer.do_input','修改密码',itms,'on_after_modify_password');
         }
 
-        window.parent.ExtFun("theapp.hide_if_autorun")
+        PyFun("theapp.hide_if_autorun")
     </script>
 </body>
 
