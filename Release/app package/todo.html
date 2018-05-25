@@ -167,8 +167,13 @@ function fillTable(datas)
         row.insertCell(0).innerHTML=data[0][1];
         row.insertCell(1).innerHTML=data[0][2];
         row.insertCell(2).innerHTML=data[0][3];
-        row.insertCell(3).innerHTML=data[0][4];
-        row.insertCell(4).innerHTML=data[3];
+        c3=row.insertCell(3);
+        if(data[0][4]=='重要')c3.innerHTML='<font color="red">'+data[0][4]+'</font>'
+        if(data[0][4]=='普通')c3.innerHTML=data[0][4]
+        if(data[0][4]=='不重要')c3.innerHTML='<font color="green">'+data[0][4]+'</font>'
+        c4=row.insertCell(4);
+        if(data[3]=='未处理')c4.innerHTML='<font color="red">'+data[3]+'</font>'
+        if(data[3]=='已处理')c4.innerHTML='<font color="green">'+data[3]+'</font>'
         row.onmousedown=on_click_row;
         //last_cell=row.cells[row.cells.length-1]
         //last_cell.onclick=show_accessory;

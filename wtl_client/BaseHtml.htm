@@ -43,7 +43,7 @@
      <p id="jscaller" onclick="value=CallJs(value)" value=""></p>
      <p id="execaller" onclick="external.ext_fun()" value=""></p>
 
-     <iframe id='ifr_id1' style="frameborder:0;VISIBILITY: visible; HEIGHT: 100%; WIDTH: 100%"></iframe>
+     <iframe id='ifr_id1' tabindex="-1" style="frameborder:0;VISIBILITY: visible; HEIGHT: 100%; WIDTH: 100%"></iframe>
 
      <script>
          ifr = document.getElementById('ifr_id1');
@@ -78,6 +78,7 @@
              _ifr.width = "100%";
              _ifr.height = "100%";
              _ifr.frameBorder = 0;
+             _ifr.tabindex = "-1";
              document.body.insertBefore(_ifr, ifr_stack[ifr_stack.length - 1]);
              ifr_stack.push(_ifr);
              ifr = _ifr;
