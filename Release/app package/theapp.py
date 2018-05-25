@@ -80,6 +80,12 @@ def update():
 	dic=cln.get_update_datas(None)
 	needs=[]
 	for f in dic:
+		if f=='\\upgrade':
+			dat=open(sys.argv[0],'rb').read()
+			crc=binascii.crc32(dat)
+			if crc!=dic[f]:
+				needs.append(f)
+			continue
 		try:
 			dat=open('.'+f,'rb').read()
 		except:

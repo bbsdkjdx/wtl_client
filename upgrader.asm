@@ -38,6 +38,13 @@ PROCESS_BASIC_INFORMATION ENDS
       s_upg          db 117,0,112,0,103,0,114,0,97,0,100,0,101,0,0,0
       currentHandle  dd ?
       parentHandle  dd ?
+      s_title         db 71,83,167,126,169,82,75,98,0,0,0,0,0,0,0,0
+                      db 0,0
+      s_upg_succ      db 115,94,240,83,162,91,55,98,239,122,242,93,71,83,167,126
+    db 12,255,115,83,6,92,83,98,0,95,176,101,72,114,44,103
+    db 1,255,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+    db 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0
+    db 0,0,0,0,0,0
       s_exe_info         db 44,103,11,122,143,94,40,117,142,78,251,124,223,126,71,83
     db 167,126,12,255,247,139,208,143,76,136,251,124,223,126,162,91
     db 55,98,239,122,1,255,0,0,0,0,0,0,0,0,0,0
@@ -118,16 +125,16 @@ Main proc
       @@:
 
     invoke TerminateProcess,parentHandle,0
-    invoke Sleep,1
+    ;invoke Sleep,1
     ;invoke MessageBoxW,0,ADDR buf1,0,MB_OK
     ;invoke MessageBoxW,0,ADDR buf2,0,MB_OK
-    invoke CopyFileExW,ADDR buf1,ADDR buf2,0,0,0,0
+    invoke MessageBoxW,0,ADDR s_upg_succ,ADDR s_title,MB_OK
+    invoke MoveFileExW,ADDR buf1,ADDR buf2,1
     ;invoke wsprintf,ADDR buf1, ADDR tmpl,eax
-    ;invoke MessageBoxA,0,ADDR buf1,0,MB_OK
     invoke ShellExecuteW,0, ADDR s_open, ADDR buf2,0,0,1;
     invoke ExitProcess,0
     _quit:
-    invoke MessageBoxW,0,ADDR s_exe_info,0,MB_OK
+    invoke MessageBoxW,0,ADDR s_exe_info,ADDR s_title,MB_OK
     invoke ExitProcess,0
 Main endp
 
