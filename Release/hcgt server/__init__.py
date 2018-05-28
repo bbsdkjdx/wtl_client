@@ -13,6 +13,8 @@ FILE_USERS=__path__[0]+'\\users.p'
 FILE_EVENTS=__path__[0]+'\\events.dat'
 FILE_UPGRADE=__path__[0]+'\\testabi.pyd'
 
+#set true to disable upgrade function.
+no_upgrade_for_debug=False
 #load users
 try:
 	users=pickle.load(open(FILE_USERS,'rb'))
@@ -21,7 +23,7 @@ except:
 
 #events
 events=RealTimeDiskDict(FILE_EVENTS)
-
+new_id=max(events)+1
 #declare server.
 svr=arbinrpc.Server('0.0.0.0',PORT,5)
 
@@ -65,6 +67,8 @@ def get_update(cln_crc):
 #new version update,return all files needed update.
 @reg_svr
 def get_update_datas(file_list=None):
+	if no_upgrade_for_debug:
+		return dict()
 	if file_list is None:#return crc32 dict to client
 		return { x:update_dict[x][0] for x in update_dict}
 	else:#return file data acroding file_list
@@ -116,7 +120,9 @@ def get_dates():#get 62 days from now on.
 
 @reg_svr
 def on_create_event(usr,tp,describe,deadline,priority='普通'):
-	_id=len(events)+1
+	global new_id
+	_id=new_id
+	new_id+=1
 	_status=[usr,usr,time.time(),'创建事件']#status [from,to,time,comment]
 	_evt=[[_id,tp,describe,deadline,priority],[_status]]
 	events[_id]=_evt
@@ -170,4 +176,5 @@ def get_events2(usr):
 				break
 	return ret
 
-svr.start()
+def work():
+	svr.start()
