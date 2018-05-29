@@ -119,22 +119,28 @@ def get_dates():#get 62 days from now on.
 	return ret
 
 @reg_svr
-def on_create_event(usr,tp,describe,deadline,priority='普通'):
+def on_create_event(usr,tp,describe,deadline,priority='普通',fn='',dat=b''):
 	global new_id
 	_id=new_id
 	new_id+=1
-	_status=[usr,usr,time.time(),'创建事件']#status [from,to,time,comment]
+	_status=[usr,usr,time.time(),'创建事件',fn]#status [from,to,time,comment,accessory]
+	if fn and dat:
+		fn='%d.0.%s'%(_id,fn)
+		open('d:\\hcgt_accessory\\'+fn,'wb').write(dat)
 	_evt=[[_id,tp,describe,deadline,priority],[_status]]
 	events[_id]=_evt
 # events over view
 #[
-#[ [1, 'aa', 'bbb', '2018-05-09','重要'], [['毕彬', '毕彬', 1525850204.614087, '创建本事件']] ],
+#[ [1, 'aa', 'bbb', '2018-05-09','重要'], [['毕彬', '毕彬', 1525850204.614087, '创建本事件','附件名']] ],
 #]
 @reg_svr
-def on_handle_event(_id,usr,cmnt,_to):
+def on_handle_event(_id,usr,cmnt,_to,fn='',dat=b''):
 	if _id in events:
 		evt=events[_id]
-		sta=[usr,_to,time.time(),cmnt]
+		sta=[usr,_to,time.time(),cmnt,fn]
+		if fn and dat:
+			fn='%d.%d.%s'%(_id,len(evt[1]),fn)
+			open('d:\\hcgt_accessory\\'+fn,'wb').write(dat)
 		evt[1].append(sta)
 		events[_id]=evt
 		
@@ -175,6 +181,10 @@ def get_events2(usr):
 				ret.append(evt)
 				break
 	return ret
+
+@reg_svr
+def get_accessory(fn):
+	return open('d:\\hcgt_accessory\\'+fn,'rb').read()
 
 def work():
 	svr.start()
