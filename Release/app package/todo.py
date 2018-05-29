@@ -16,7 +16,7 @@ def translate_status(evt):
 		s_on_clk="PyFun('todo.show_accessory','%d.%d.%s')"%(evt[0][0],n,sta[4])
 		ret1+='[%s] %s->%s %s'%(st,sta[0],sta[1],sta[3])
 		if sta[4]:
-			ret1+='<font onclick="'+s_on_clk+'" style="cursor:pointer;color:blue">&nbsp&nbsp&nbsp&nbsp附件：'\
+			ret1+='<font onclick="'+s_on_clk+'" onmouseout="mouseout(this)" onmouseover="mousein(this)" style="cursor:pointer;color:blue">&nbsp&nbsp&nbsp&nbsp附件：'\
 			+sta[4]+'</font><br>'
 		else:
 			ret1+='<br>'

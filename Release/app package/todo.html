@@ -315,6 +315,16 @@ function on_handle()
         PyFun('inputer.do_input','处理事件',itms,'on_after_handle');
     }
 }
+
+function mousein(elm)
+{
+    elm.style.fontWeight='bold'
+}
+
+function mouseout(elm)
+{
+    elm.style.fontWeight=''
+}
 //select the first navi_bar as default.
 on_click_nav(navi.rows[0].cells[0]);
 </script>
