@@ -78,7 +78,8 @@
                             <table id="navi" class="nav_btn">
                                     <tr>
                                             <td  onmousedown="on_click_nav(this)">待办</td>
-                                            <td onmousedown="on_click_nav(this)">已完成</td>
+                                            <td onmousedown="on_click_nav(this)">已处理</td>
+                                            <td onmousedown="on_click_nav(this)">办结</td>
                                             <td onmousedown="on_click_nav(this)">全部</td>
                                     </tr>   
                             </table>
@@ -171,8 +172,9 @@ function fillTable(datas)
         if(data[0][4]=='普通')c3.innerHTML=data[0][4]
         if(data[0][4]=='不重要')c3.innerHTML='<font color="green">'+data[0][4]+'</font>'
         c4=row.insertCell(4);
-        if(data[3]=='未处理')c4.innerHTML='<font color="red">'+data[3]+'</font>'
+        if(data[3]=='待办')c4.innerHTML='<font color="red">'+data[3]+'</font>'
         if(data[3]=='已处理')c4.innerHTML='<font color="green">'+data[3]+'</font>'
+        if(data[3]=='办结')c4.innerHTML='<font color="black">'+data[3]+'</font>'
         row.onmousedown=on_click_row;
         //last_cell=row.cells[row.cells.length-1]
         //last_cell.onclick=show_accessory;
@@ -205,6 +207,7 @@ function on_click_nav(itm)
     }
     received_data=PyFun('todo.get_events',itm.innerHTML);
     fillTable(received_data);
+    PyFun('theapp.flush_alarm');
     //alert(itm.innerHTML);
 }
 
@@ -229,20 +232,22 @@ function show_detail()
 function on_after_create(p)
 {
     if(p.length==0)return;
-    PyFun('todo.on_create_event',p[0],p[1],p[2],p[3],p[4]);
+    PyFun('todo.on_create_event',p[0],p[1],p[2],p[3],p[4],p[5]);
     on_click_nav(navi.rows[0].cells[0]);
 }
 
 function on_create()
 {
     dts=PyFun('todo.get_dates');
+    users=PyFun('todo.get_users_data',current_user);
     itms=
     [
         ['事件类型：','txt_s',[],''],
         ['事件描述：','txt_m',[],''],
-        ['结束时限：','select',dts,dts[0]],
+        ['结束时限：','select',dts,dts[3]],
         ['重要程度：','select',['重要','普通','不重要'],'普通'],
-        ['附件：','file',[],'']
+        ['附件：','file',[],''],
+        ['移交至：','select',users,current_user ]
     ]
     PyFun('inputer.do_input','创建事件',itms,'on_after_create');
 }
@@ -300,9 +305,9 @@ function on_handle()
     if(last_itm!=-1)
     {
         evt=received_data[last_itm];
-        if (evt[3]=='已处理')
+        if (evt[3]=='已处理' || evt[3]=='办结')
         {
-            PyFun('msgbox','该事件已办理完毕！');
+            PyFun('msgbox','该事件您已办理！');
             return;
         }
         dts=PyFun('todo.get_users_data',current_user);

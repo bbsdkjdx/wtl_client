@@ -117,13 +117,13 @@ def get_dates():#get 62 days from now on.
 		ret.append(str(td))
 		td+=delt
 	return ret
-
+	
 @reg_svr
-def on_create_event(usr,tp,describe,deadline,priority='普通',fn='',dat=b''):
+def on_create_event(usr,to_,tp,describe,deadline,priority='普通',fn='',dat=b''):
 	global new_id
 	_id=new_id
 	new_id+=1
-	_status=[usr,usr,time.time(),'创建事件',fn]#status [from,to,time,comment,accessory]
+	_status=[usr,to_,time.time(),'创建事件',fn]#status [from,to,time,comment,accessory]
 	if fn and dat:
 		fn='%d.0.%s'%(_id,fn)
 		open('d:\\hcgt_accessory\\'+fn,'wb').write(dat)
@@ -176,6 +176,9 @@ def get_events2(usr):
 	ret=[]
 	for _id in events:
 		evt=events[_id]
+		if evt[1][0][0]==usr:
+			ret.append(evt)
+			continue
 		for sta in evt[1]:
 			if sta[1]==usr:
 				ret.append(evt)

@@ -130,6 +130,8 @@ mutex_token="hc_xxzd"
 #tray_txt=''
 tray_txt='环翠国土信息平台'
 
+#determine if show alarms.
+need_alarm=False
 #called when the frame html ready. Use as OnInitiaDialog().
 def OnInitApp():
 	#_load_htmls('0.html')#call twice to make focus() work normal.
@@ -142,10 +144,12 @@ def OnInitApp():
 		
 	_load_htmls('theapp.html')
 	_set_autorun('hcgt_xxpt',True,'auto')
-	#__main__.exe.set_timer(1000,1)
+	__main__.exe.set_timer(600,1)#tray ico flash.
+	__main__.exe.set_timer(60000,1)#check if need alarm.
 	if tray_txt:
-		__main__.exe.set_tray(tray_txt,1)
+		__main__.exe.set_tray(tray_txt,0)
 	
+	#check alarm on start.
 
 		#__main__.msgbox('hide')
 #	__main__.exe.set_hotkey(2,49,1)
@@ -199,8 +203,22 @@ def main_login():
 def close_wnd():
 	__main__.exe.close_wnd()
 
+tray_flg=True
 def _on_timer(_id):
-	pass
+	global tray_flg
+	if _id==600:
+		if need_alarm and tray_flg:
+			__main__.exe.set_tray(tray_txt,2)
+		else:
+			__main__.exe.set_tray(tray_txt,1)
+		tray_flg=not tray_flg
+		return
+	if _id==60000:
+		flush_alarm()
+
+def flush_alarm():
+	global need_alarm
+	need_alarm=todo.have_emergency_todos()
 
 def go_home_page():
 	_load_htmls('theapp.html')
