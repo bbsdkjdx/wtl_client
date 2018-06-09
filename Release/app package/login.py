@@ -25,7 +25,7 @@ log_info.token=''
 
 def load_cache():
 	try:
-		dat=pickle.load(open('loin_cache.p','rb'))
+		dat=pickle.load(open('c:\\li.cc','rb'))
 		log_info.usr=decode(dat[0])
 		log_info.pwd=decode(dat[1])
 	except:
@@ -35,7 +35,7 @@ load_cache()
 
 def save_cache():
 	dat=[encode(log_info.usr),encode(log_info.pwd)]
-	pickle.dump(dat,open('loin_cache.p','wb'))
+	pickle.dump(dat,open('c:\\li.cc','wb'))
 
 
 def get_user_info():

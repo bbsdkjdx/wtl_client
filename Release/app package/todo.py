@@ -35,7 +35,7 @@ def translate_event(evt):
 def get_sort_key(evt_ex):
 	k1= ['待办','已处理','办结'].index(evt_ex[3])
 	k2=['重要','普通','不重要'].index(evt_ex[0][4])
-	k3=evt_ex[0][3]
+	k3=-int(evt_ex[0][3].replace('-',''))
 	return k1,k2,k3
 
 def get_events(event_type):
@@ -46,12 +46,18 @@ def get_events(event_type):
 		return events
 	return [x for x in events if x[3]==event_type]
 
+def num2date(n):
+	td=datetime.date.today()
+	dlt=datetime.timedelta(n)
+	td+=dlt
+	return str(td)
+
 def have_emergency_todos():
 	evts=theapp.cln.get_events2(login.log_info.usr)
 	evts=[x+translate_event(x) for x in evts]
 	td=datetime.date.today()
 	dlt=datetime.timedelta(1)
-	s=str(td+dlt)
+	s=num2date(1)
 	for evt in evts:
 		if evt[3]=='待办' and evt[0][3]<s:
 			return True

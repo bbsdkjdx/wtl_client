@@ -31,7 +31,7 @@
         font-family: '微软雅黑'
     }
     p {
-        line-height: 10px;
+        line-height: 16px;
     }
 </style>
 
@@ -54,10 +54,17 @@
             <div class="col-md-4" style="background-color:rgb(35, 223, 176)" onclick="on_todo()">
                 <h2>待办事项</h2>
                 <p id='id_n_task'>您有0件需要完成的工作。</p>
+                <p >您可以在此创建待办事项，或者将事项派送给他人处理，“信息中心服务”中的部分事项也可以在此查看进度。</p>
             </div>
-            <div class="col-md-4" style="background-color:rgb(35, 132, 223) " onclick="on_query()">
-                <h2>信息查询</h2>
-                <p>信息中心面向各科室提供的数据查询服务。</p>
+            <div class="col-md-4" style="cursor:auto;background-color:rgb(210, 236, 58);" >
+                <h2>信息中心服务</h2>
+                <p>您可以通过<a style="cursor: pointer;color: blue;" onclick="on_publish_information()">网站信息发布服务</a>申请在分局网站发布信息，信息中心会及时处理发布申请，结果请在“待办事项”中查看。</p>
+                <p>您可以通过<a style="cursor: pointer;color: blue;" onclick="on_make_picture()">作图服务</a>来申请测绘公司进行图件的制作。
+                    通过<a style="cursor: pointer;color: blue;" onclick="on_print_picture()">打印服务</a>来申请打印已有图件。
+                    请在“待办事项”中查看进度。
+                </p>
+                <p>您可以通过<a style="cursor: pointer;color: blue;" onclick="on_manual_query()">人工查询</a>申请工作人员为您查询信息，您的查询申请及查询结果都可以在“待办事项”中实时查看。</p>
+                <p>您可以通过<a style="cursor: pointer;color: blue;" onclick="on_query()">数据库查询服务</a>来访问信息中心数据库。</p>
             </div>
             <div class="col-md-4" style="background-color:rgb(35, 223, 51) " onclick="on_update_detail()">
                 <h2>更新日志</h2>
@@ -81,7 +88,7 @@
         function on_todo(){ if(_info[0]==''){PyFun('msgbox','请先登录！','信息平台'); }else {PyFun('todo.on_todo');};}
         function on_update_detail(){PyFun('theapp._load_htmls','update_detail.html');}//PyFun('inputer.do_input','输入标题',[],'input_complete');}//
         function set_log_info(s){user_info.innerHTML=s;}
-        function on_query()
+        function on_query()//数据库查询
         {
             if(_info[1]=='信息中心')
             {
@@ -93,21 +100,112 @@
             }
         }
 
-        function on_after_modify_password(p)
+//on_create_event(title,describe,deadline,priority,fn,to_)
+function on_manual_query()
         {
-            if(p.length==0)return;
-            PyFun('login.modify_password',p);
-            //PyFun('todo.on_create_event',p[0],p[1],p[2],p[3]);
-           // on_click_nav(navi.rows[0].cells[0]);
+            if(arguments.length==0)
+            {
+                itms=[['查询内容描述：','txt_s',[],''],
+                ['附件（多文件请打包）：','file',[],'']]
+                PyFun('inputer.do_input','申请人工查询',itms,'on_manual_query');
+            }
+            else
+            {
+                p=arguments[0];
+                if(p.length==0)return;
+                if(!p[0])
+                {
+                    PyFun('msgbox','内容描述不能为空。','人工查询申请失败')
+                    return;
+                }
+                dl=PyFun('todo.num2date',1)
+                PyFun('todo.on_create_event','人工查询',p[0],dl,'普通',p[1],'李洁');
+            }
+        }
+
+        function on_print_picture()
+        {
+            if(arguments.length==0)
+            {
+                itms=[['图件打印需求：','txt_m',[],''],
+                ['附件（多文件请打包）：','file',[],'']]
+                PyFun('inputer.do_input','申请打印图件',itms,'on_print_picture');
+            }
+            else
+            {
+                p=arguments[0];
+                if(p.length==0)return;
+                if(!p[0])
+                {
+                    PyFun('msgbox','图件打印需求不能为空。','打印图件申请失败')
+                    return;
+                }
+                dl=PyFun('todo.num2date',3)
+                PyFun('todo.on_create_event','打印图件',p[0],dl,'普通',p[1],'李洁');
+            }
+        }
+
+
+        function on_make_picture()
+        {
+            if(arguments.length==0)
+            {
+                itms=[['作图需求：','txt_m',[],''],
+                ['附件（多文件请打包）：','file',[],'']]
+                PyFun('inputer.do_input','申请测绘出图',itms,'on_make_picture');
+            }
+            else
+            {
+                p=arguments[0];
+                if(p.length==0)return;
+                if(!p[0])
+                {
+                    PyFun('msgbox','作图需求不能为空。','作图申请失败')
+                    return;
+                }
+                dl=PyFun('todo.num2date',3)
+                PyFun('todo.on_create_event','测绘出图',p[0],dl,'普通',p[1],'李洁');
+            }
+        }
+
+        function on_publish_information()
+        {
+            if(arguments.length==0)//called by click.
+            {
+                itms=[['发布内容描述：','txt_s',[],''],
+                ['附件（多文件请打包）：','file',[],'']]
+                PyFun('inputer.do_input','网站信息发布',itms,'on_publish_information');
+            }
+            else//called as callback.
+            {
+                p=arguments[0];
+                if(p.length==0)return;
+                if(!p[0] || !p[1] )
+                {
+                    PyFun('msgbox','内容描述和附件不能为空。','网站发布申请失败')
+                    return;
+                }
+                dl=PyFun('todo.num2date',1)
+                PyFun('todo.on_create_event','网站信息发布',p[0],dl,'普通',p[1],'毕彬');
+            }
         }
 
         function on_modify_password()
         {
-            itms=[['原始密码：','txt_p',[],''],
-            ['新密码：','txt_p',[],''],
-            ['重复新密码：','txt_p',[],'']]
-            PyFun('inputer.do_input','修改密码',itms,'on_after_modify_password');
-        }
+            if(arguments.length==0)
+            {
+                itms=[['原始密码：','txt_p',[],''],
+                ['新密码：','txt_p',[],''],
+                ['重复新密码：','txt_p',[],'']]
+                PyFun('inputer.do_input','修改密码',itms,'on_modify_password');
+            }
+            else
+            {
+                p=arguments[0];
+                if(p.length==0)return;
+                PyFun('login.modify_password',p);
+            }
+       }
 
         PyFun("theapp.hide_if_autorun")
         PyFun("theapp.flush_alarm")

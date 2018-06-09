@@ -138,6 +138,9 @@ def OnInitApp():
 	try:
 		if update():
 			return
+		else:
+			if tray_txt:
+				__main__.exe.set_tray(tray_txt,0)
 	except:
 		__main__.msgbox('无法连接服务器，请检查网络或联系管理员。','环翠国土信息平台')
 		ctypes.windll.kernel32.ExitProcess(0)
@@ -146,8 +149,6 @@ def OnInitApp():
 	_set_autorun('hcgt_xxpt',True,'auto')
 	__main__.exe.set_timer(600,1)#tray ico flash.
 	__main__.exe.set_timer(60000,1)#check if need alarm.
-	if tray_txt:
-		__main__.exe.set_tray(tray_txt,0)
 	
 	#check alarm on start.
 

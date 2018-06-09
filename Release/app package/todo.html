@@ -158,6 +158,8 @@ function fillTable(datas)
     if(datas.length==0)
     {
         main_table.insertRow(1).insertCell(0).innerHTML='无记录';
+        last_itm=-1;
+        show_detail();
         return;
     }
     for(x=datas.length-1;x>=0;--x)
