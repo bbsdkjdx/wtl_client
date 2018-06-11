@@ -135,14 +135,16 @@ need_alarm=False
 #called when the frame html ready. Use as OnInitiaDialog().
 def OnInitApp():
 	#_load_htmls('0.html')#call twice to make focus() work normal.
+	if tray_txt:
+		__main__.exe.set_tray(tray_txt,0)
+
 	try:
 		if update():
+			__main__.exe.set_tray(tray_txt,-1)#delete tray
 			return
-		else:
-			if tray_txt:
-				__main__.exe.set_tray(tray_txt,0)
 	except:
 		__main__.msgbox('无法连接服务器，请检查网络或联系管理员。','环翠国土信息平台')
+		__main__.exe.set_tray(tray_txt,-1)
 		ctypes.windll.kernel32.ExitProcess(0)
 		
 	_load_htmls('theapp.html')

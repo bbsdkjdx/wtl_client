@@ -121,10 +121,16 @@ UINT get_browser_hwnd()
 	return 0;
 }
 HWND get_main_hwnd(){ return gpMainFrame ? gpMainFrame->m_hWnd : 0; }
-void set_tray(WCHAR *tip,DWORD ico_id)
+void set_tray(WCHAR *tip,int ico_id)
 {
 	if (gpMainFrame)
 	{
+		if (ico_id == -1)
+		{
+			if (gpMainFrame->m_has_tray)Shell_NotifyIcon(NIM_DELETE, &gpMainFrame->m_tnid);
+			gpMainFrame->m_has_tray = false;
+			return;
+		}
 		if (tip)wcscpy_s(gpMainFrame->m_tnid.szTip, tip);
 		if (ico_id)gpMainFrame->m_tnid.hIcon=LoadIcon(_Module.GetResourceInstance(), MAKEINTRESOURCE(ico_id==1?IDR_MAINFRAME:IDR_MAINFRAME2));
 		Shell_NotifyIcon(gpMainFrame->m_has_tray?NIM_MODIFY:NIM_ADD, &gpMainFrame->m_tnid);
@@ -149,7 +155,7 @@ LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 	REG_EXE_FUN("", set_size, "#uuuuu", "set_size(int x,int y,int z,bool fixed_size,bool closable).\n x=-1 ignore x and y;\ny=-1 use screen size;\nz=-1 ignore z order.");
 	REG_EXE_FUN("", set_timer, "#ll", "set_timer(int ms,bool enable)");
 	REG_EXE_FUN("", set_hotkey, "llll", "bool set_hotkey(int mod,int vk,bool enable)");
-	REG_EXE_FUN("", set_tray, "#Su", "void set_tray(WCHAR *info,DWORD ico_id)");
+	REG_EXE_FUN("", set_tray, "#Sl", "void set_tray(WCHAR *info,int ico_id)");
 	REG_EXE_FUN("", get_main_hwnd, "l", "HWND get_main_hwnd()");
 	REG_EXE_FUN("", show, "#l", "void show(int sh)");
 	REG_EXE_FUN("", close_wnd, "#", "void close_wnd()");

@@ -101,8 +101,9 @@
         }
 
 //on_create_event(title,describe,deadline,priority,fn,to_)
-function on_manual_query()
+        function on_manual_query()
         {
+            if(_info[0]==''){PyFun('msgbox','请先登录。','国土信息平台');return;}
             if(arguments.length==0)
             {
                 itms=[['查询内容描述：','txt_s',[],''],
@@ -125,6 +126,7 @@ function on_manual_query()
 
         function on_print_picture()
         {
+            if(_info[0]==''){PyFun('msgbox','请先登录。','国土信息平台');return;}
             if(arguments.length==0)
             {
                 itms=[['图件打印需求：','txt_m',[],''],
@@ -148,6 +150,7 @@ function on_manual_query()
 
         function on_make_picture()
         {
+            if(_info[0]==''){PyFun('msgbox','请先登录。','国土信息平台');return;}
             if(arguments.length==0)
             {
                 itms=[['作图需求：','txt_m',[],''],
@@ -170,6 +173,7 @@ function on_manual_query()
 
         function on_publish_information()
         {
+            if(_info[0]==''){PyFun('msgbox','请先登录。','国土信息平台');return;}
             if(arguments.length==0)//called by click.
             {
                 itms=[['发布内容描述：','txt_s',[],''],
@@ -192,6 +196,7 @@ function on_manual_query()
 
         function on_modify_password()
         {
+            if(_info[0]==''){PyFun('msgbox','请先登录。','国土信息平台');return;}
             if(arguments.length==0)
             {
                 itms=[['原始密码：','txt_p',[],''],
