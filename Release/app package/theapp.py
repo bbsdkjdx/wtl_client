@@ -80,7 +80,7 @@ def update():
 	dic=cln.get_update_datas(None)
 	needs=[]
 	for f in dic:
-		if f=='\\upgrade':
+		if f=='\\upgrade.exe':
 			dat=open(sys.argv[0],'rb').read()
 			crc=binascii.crc32(dat)
 			if crc!=dic[f]:
@@ -100,8 +100,8 @@ def update():
 		open('.'+f,'wb').write(dic[f])
 	fn_updater=sys.argv[0]
 	pos=fn_updater.rfind('\\')
-	fn_updater=fn_updater[:pos+1]+'updater.exe'
-	win32tools.shell_execute(fn_updater,0,0)
+	fn_updater=fn_updater[:pos+1]+'upgrade.exe'
+	ctypes.windll.shell32.ShellExecuteW(0,'open',fn_updater,str(os.getpid()),0,1)
 	return True
 
  
@@ -132,11 +132,32 @@ tray_txt='环翠国土信息平台'
 
 #determine if show alarms.
 need_alarm=False
+
+#try to do as upgrade helper at the beginging of app start.
+
+def quit_if_not_first_instance():
+	ctypes.windll.kernel32.CreateMutexW(0,0,tray_txt)
+	if ctypes.windll.kernel32.GetLastError()==183:
+		ctypes.windll.kernel32.ExitProcess(0)
+
+def try_as_upgrade_helper():
+	try:
+		#__main__.msgbox(sys.argv)
+		pid=int(sys.argv[-1])
+		fn=win32tools.pid2fn(pid)
+		win32tools.killpid(pid)
+		__main__.msgbox('平台客户端有新版本，即将重新打开！')
+		ctypes.windll.kernel32.CopyFileW(sys.argv[0],fn,0)
+		ctypes.windll.shell32.ShellExecuteW(0,'open',fn,0,0,1)
+		ctypes.windll.kernel32.ExitProcess(0)
+	except:
+		pass
+
 #called when the frame html ready. Use as OnInitiaDialog().
 def OnInitApp():
-	#_load_htmls('0.html')#call twice to make focus() work normal.
-	if tray_txt:
-		__main__.exe.set_tray(tray_txt,0)
+	try_as_upgrade_helper()
+	quit_if_not_first_instance()
+	__main__.exe.set_tray(tray_txt,0)
 
 	try:
 		if update():

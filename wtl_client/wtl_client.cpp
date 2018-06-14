@@ -41,13 +41,6 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lp
 		MessageBoxW(GetForegroundWindow(),PyGetStr(), 0, 0);
 	}
 
-	//check if only single instance.
-	if (PyEvalA("theapp.mutex_token"))
-	{
-		CreateMutexW(NULL, NULL, PyGetStr());
-		if (GetLastError() == ERROR_ALREADY_EXISTS) return 0;
-	}
-
 	HRESULT hRes = ::CoInitialize(NULL);
 // If you are running on NT 4.0 or higher you can use the following call instead to 
 // make the EXE free threaded. This means that calls come in on a random RPC thread.

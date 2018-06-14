@@ -3,6 +3,7 @@ import theapp
 import login
 import time
 import datetime
+import os
 def on_todo():
 	theapp._load_htmls('todo.html')
 
@@ -96,6 +97,9 @@ def on_handle_event(_id,comment,_to,fn):
 def show_accessory(fn):
 	import win32tools
 	dat=theapp.cln.get_accessory(fn)
-	ext=fn[fn.rfind('.'):]
-	open('tmp'+ext,'wb').write(dat)
-	win32tools.shell_execute('tmp'+ext,show=0,block=0)
+	#ext=fn[fn.rfind('.'):]
+	pth='c:\\hcgt_temp\\'
+	if not os.path.isdir(pth):
+		os.mkdir(pth)
+	open(pth+fn,'wb').write(dat)
+	win32tools.shell_execute(pth+fn,show=0,block=0)
