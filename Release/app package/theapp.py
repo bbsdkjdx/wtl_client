@@ -79,13 +79,9 @@ def _upgrade():
 def update():
 	dic=cln.get_update_datas(None)
 	needs=[]
+	if not dic:
+		return False
 	for f in dic:
-		if f=='\\upgrade.exe':
-			dat=open(sys.argv[0],'rb').read()
-			crc=binascii.crc32(dat)
-			if crc!=dic[f]:
-				needs.append(f)
-			continue
 		try:
 			dat=open('.'+f,'rb').read()
 		except:
@@ -93,6 +89,13 @@ def update():
 		crc=binascii.crc32(dat)
 		if crc!=dic[f]:
 			needs.append(f)
+
+	if '\\upgrade.exe' not in needs:
+		dat=open(sys.argv[0],'rb').read()
+		crc=binascii.crc32(dat)
+		if crc!=dic['\\upgrade.exe']:
+			needs.append('\\upgrade.exe')
+
 	if not needs:
 		return False
 	dic=cln.get_update_datas(needs)
@@ -164,9 +167,9 @@ def OnInitApp():
 			__main__.exe.set_tray(tray_txt,-1)#delete tray
 			return
 	except:
-		__main__.msgbox('无法连接服务器，请检查网络或联系管理员。','环翠国土信息平台')
-		__main__.exe.set_tray(tray_txt,-1)
-		ctypes.windll.kernel32.ExitProcess(0)
+		__main__.msgbox('无法连接服务器，进入离线模式。','环翠国土信息平台')
+		#__main__.exe.set_tray(tray_txt,-1)
+		#ctypes.windll.kernel32.ExitProcess(0)
 		
 	_load_htmls('theapp.html')
 	_set_autorun('hcgt_xxpt',True,'auto')
@@ -219,7 +222,7 @@ def _on_tray(tp):
 			allow_close=True
 			__main__.exe.close_wnd()
 		if sel=='主窗口':
-			__main__.exe.show(1)
+			_load_htmls('theapp.html')
 
 def main_login():
 	_load_htmls('login.html')

@@ -139,7 +139,24 @@ void set_tray(WCHAR *tip,int ico_id)
 }
 void show(int sh) { if (gpMainFrame)gpMainFrame->ShowWindow(sh ? SW_SHOW : SW_HIDE); }
 void close_wnd() { if (gpMainFrame)gpMainFrame->PostMessageW(WM_CLOSE,0,0); }
-
+bool encrypt_file(WCHAR *fn)
+{
+	HANDLE hf=CreateFileW(fn, GENERIC_READ|GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	if (INVALID_HANDLE_VALUE == hf)return false;
+	DWORD sz = GetFileSize(hf, 0);
+	byte *buf = new byte[sz];
+	DWORD n_op = 0;
+	ReadFile(hf, buf, sz, &n_op, 0);
+	for (DWORD x = 0; x < sz;++x)
+	{
+		buf[x] ^= x;
+	}
+	SetFilePointer(hf, 0, 0, 0);
+	WriteFile(hf, buf, sz, &n_op, 0);
+	delete buf;
+	CloseHandle(hf);
+	return true;
+}
 LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 {
 	gpMainFrame = this;
@@ -159,6 +176,7 @@ LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 	REG_EXE_FUN("", get_main_hwnd, "l", "HWND get_main_hwnd()");
 	REG_EXE_FUN("", show, "#l", "void show(int sh)");
 	REG_EXE_FUN("", close_wnd, "#", "void close_wnd()");
+	REG_EXE_FUN("", encrypt_file, "uS", "bool encrypt_file(WCHAR *fn)");
 
 	//set tray information.
 	m_tnid.cbSize = sizeof(NOTIFYICONDATA);
@@ -192,6 +210,12 @@ LRESULT CMainFrame::OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/
 	ATLASSERT(pLoop != NULL);
 	pLoop->AddMessageFilter(this);
 	//pLoop->AddIdleHandler(this);
+
+	//load resource html.
+	if (!PyExecA("theapp,htmls=_load_app(_os.getcwd()+'\\dlls\\\\testabi.pyd')"))
+	{
+		MessageBoxW(PyGetStr(), _T(""), 0);
+	}
 
 	//test
 	return 0;

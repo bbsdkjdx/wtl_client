@@ -106,14 +106,9 @@ class _decryptor:
     def __enter__(self):
         self.encrypt()
     def __exit__(self,t,v,b):
-        open(self.fn,'wb').write(self.data0)
+        self.encrypt()
     def encrypt(self):
-        byte=_ctypes.c_char
-        self.data0=open(self.fn,'rb').read()
-        buf=_ctypes.create_string_buffer(self.data0,len(self.data0))
-        for x in range(len(buf)):
-            buf[x]=byte(ord(buf[x])^(x&0xff))
-        open(self.fn,'wb').write(buf.raw)
+        exe.encrypt_file(self.fn)
 def _load_app(fn):
     _sys.path.append(fn)
     with _decryptor(fn):
@@ -127,6 +122,7 @@ def _load_app(fn):
                 html_dic[x]=zf.read(x)
                 continue
             open(theapp._html_base+x,'wb').write(zf.read(x))
+        zf.close()
     return theapp,html_dic
     )"
 

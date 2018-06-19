@@ -13,12 +13,10 @@ class decryptor:
 	def __exit__(self,t,v,b):
 		open(self.fn,'wb').write(self.data0)
 	def encrypt(self):
-		byte=ctypes.c_char
-		self.data0=open(self.fn,'rb').read()
-		buf=ctypes.create_string_buffer(self.data0,len(self.data0))
-		for x in range(len(buf)):
-			buf[x]=byte(ord(buf[x])^(x&0xff))
-		open(self.fn,'wb').write(buf.raw)
+		dat=bytearray(open(self.fn,'rb').read())
+		for n in range(len(dat)):
+			dat[n]^=(n&255)
+		open(self.fn,'wb').write(dat)
 
 def pack():
 	pth=os.getcwd()+'\\app package\\'
