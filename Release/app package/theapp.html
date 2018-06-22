@@ -58,7 +58,7 @@
             </div>
             <div class="col-md-4" style="cursor:auto;background-color:rgb(210, 236, 58);" >
                 <h2>信息中心服务</h2>
-                <p>您可以通过<a style="cursor: pointer;color: blue;" onclick="on_publish_information()">网站信息发布服务</a>申请在分局网站发布信息，信息中心会及时处理发布申请，结果请在“待办事项”中查看。</p>
+                <p>您可以通过<a style="cursor: pointer;color: blue;" onclick="on_publish_information()">信息发布服务</a>申请在市局信息平台、分局网站、楼下大屏幕发布信息，信息中心会及时处理发布申请，结果请在“待办事项”中查看。</p>
                 <p>您可以通过<a style="cursor: pointer;color: blue;" onclick="on_make_picture()">作图服务</a>来申请测绘公司进行图件的制作。
                     通过<a style="cursor: pointer;color: blue;" onclick="on_print_picture()">打印服务</a>来申请打印已有图件。
                     请在“待办事项”中查看进度。
@@ -90,7 +90,7 @@
         function set_log_info(s){user_info.innerHTML=s;}
         function on_query()//数据库查询
         {
-            if(_info[1]=='信息中心')
+            if(_info[1]=='信息中心 ')
             {
                 PyFun('kingland.show_page');
             }
@@ -120,7 +120,7 @@
                     return;
                 }
                 dl=PyFun('todo.num2date',1)
-                PyFun('todo.on_create_event','人工查询',p[0],dl,'普通',p[1],'李洁');
+                PyFun('todo.on_create_event','人工查询',p[0],dl,'普通',p[1],'信息中心 ');
             }
         }
 
@@ -143,7 +143,7 @@
                     return;
                 }
                 dl=PyFun('todo.num2date',3)
-                PyFun('todo.on_create_event','打印图件',p[0],dl,'普通',p[1],'李洁');
+                PyFun('todo.on_create_event','打印图件',p[0],dl,'普通',p[1],'信息中心 ');
             }
         }
 
@@ -167,7 +167,7 @@
                     return;
                 }
                 dl=PyFun('todo.num2date',3)
-                PyFun('todo.on_create_event','测绘出图',p[0],dl,'普通',p[1],'李洁');
+                PyFun('todo.on_create_event','测绘出图',p[0],dl,'普通',p[1],'信息中心 ');
             }
         }
 
@@ -178,7 +178,7 @@
             {
                 itms=[['发布内容描述：','txt_s',[],''],
                 ['附件（多文件请打包）：','file',[],'']]
-                PyFun('inputer.do_input','网站信息发布',itms,'on_publish_information');
+                PyFun('inputer.do_input','信息发布申请',itms,'on_publish_information');
             }
             else//called as callback.
             {
@@ -190,7 +190,7 @@
                     return;
                 }
                 dl=PyFun('todo.num2date',1)
-                PyFun('todo.on_create_event','网站信息发布',p[0],dl,'普通',p[1],'毕彬');
+                PyFun('todo.on_create_event','网站信息发布',p[0],dl,'普通',p[1],'信息中心 ');
             }
         }
 

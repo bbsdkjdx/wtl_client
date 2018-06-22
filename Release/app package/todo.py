@@ -23,7 +23,7 @@ def translate_event(evt):
 		else:
 			ret1+='<br>'
 	while 1:
-		if stas[-1][1]==login.log_info.usr:
+		if stas[-1][1] in [login.log_info.usr,login.log_info.office]:
 			ret2='待办'
 			break
 		if stas[-1][1]=='办结':
@@ -87,6 +87,9 @@ def on_create_event(title,describe,deadline,priority,fn,to_):
 def on_modify_event(_id,title,describe,deadline,priority):
 	theapp.cln.on_modify_event(_id,title,describe,deadline,priority)
 
+def on_delete_event(_id):
+	theapp.cln.on_delete_event(_id)
+
 def on_handle_event(_id,comment,_to,fn):
 	fn_s,dat='',b''
 	if fn:
@@ -103,3 +106,8 @@ def show_accessory(fn):
 		os.mkdir(pth)
 	open(pth+fn,'wb').write(dat)
 	win32tools.shell_execute(pth+fn,show=0,block=0)
+
+def confirm(s):
+	import ctypes
+	wnd=ctypes.windll.user32.GetForegroundWindow()
+	return True if 6==ctypes.windll.user32.MessageBoxW(wnd,str(s),'',0x34) else False

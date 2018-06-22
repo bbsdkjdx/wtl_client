@@ -96,7 +96,7 @@ def get_user_combo_data(usr):
 	_ofc=''
 	my_ofc=users[usr][1]
 	ret=[]
-	ret_self=['__当前科室__ ']
+	ret_self=[my_ofc]
 	for x in users:
 		ofc=users[x][1]
 		if ofc==my_ofc:
@@ -104,7 +104,7 @@ def get_user_combo_data(usr):
 			continue
 		if ofc!=_ofc:
 			_ofc=ofc
-			ret.append('___'+ofc+'___ ')
+			ret.append(ofc)
 		ret.append(x)
 	return ret_self+ret
 
@@ -153,6 +153,11 @@ def on_modify_event(_id,title,describe,deadline,priority='普通'):
 		evt[0][3]=deadline
 		evt[0][4]=priority
 		events[_id]=evt
+
+@reg_svr
+def on_delete_event(_id):
+	if _id in events:
+		events.pop(_id)
 			
 #old version compatible.no use in new version.
 @reg_svr
@@ -174,13 +179,14 @@ def get_events(usr):
 @reg_svr
 def get_events2(usr):
 	ret=[]
+	ofc=users[usr][1]
 	for _id in events:
 		evt=events[_id]
 		if evt[1][0][0]==usr:
 			ret.append(evt)
 			continue
 		for sta in evt[1]:
-			if sta[1]==usr:
+			if sta[1] in [usr,ofc]:
 				ret.append(evt)
 				break
 	return ret

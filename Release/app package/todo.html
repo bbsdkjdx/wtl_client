@@ -90,6 +90,7 @@
                                     <tr>
                                         <td bgColor="green" onmousedown="on_create()">创建</td>
                                         <td bgColor="green" onmousedown="on_modify()">修改</td>
+                                        <td bgColor="green" onmousedown="on_delete()">删除</td>
                                         <td bgColor="green" onmousedown="on_handle()">办理</td>
                                         <td bgColor="red" onmousedown="on_click_nav(this)">返回主页</td>
                                     </tr>   
@@ -141,6 +142,7 @@
 
 <script type="text/javascript">
 var last_itm=-1;
+var current_nav='';
 received_data=[];
 current_user=PyFun('login.get_user_info')[0]
 
@@ -197,6 +199,13 @@ function on_click_row()
     show_detail()
 }
 
+function on_refresh_table()
+{
+    received_data=PyFun('todo.get_events',current_nav);
+    fillTable(received_data);
+    PyFun('theapp.flush_alarm');    
+}
+
 function on_click_nav(itm)
 {
     cels=navi.rows[0].cells;
@@ -207,9 +216,8 @@ function on_click_nav(itm)
     {
         PyFun('theapp.go_home_page');
     }
-    received_data=PyFun('todo.get_events',itm.innerHTML);
-    fillTable(received_data);
-    PyFun('theapp.flush_alarm');
+    current_nav=itm.innerHTML;
+    on_refresh_table();
     //alert(itm.innerHTML);
 }
 
@@ -230,39 +238,72 @@ function show_detail()
     details.rows[1].cells[1].innerHTML=dtl[2];
 }
 
-
-function on_after_create(p)
-{
-    if(p.length==0)return;
-    PyFun('todo.on_create_event',p[0],p[1],p[2],p[3],p[4],p[5]);
-    on_click_nav(navi.rows[0].cells[0]);
-}
-
 function on_create()
 {
-    dts=PyFun('todo.get_dates');
-    users=PyFun('todo.get_users_data',current_user);
-    itms=
-    [
-        ['事件类型：','txt_s',[],''],
-        ['事件描述：','txt_m',[],''],
-        ['结束时限：','select',dts,dts[3]],
-        ['重要程度：','select',['重要','普通','不重要'],'普通'],
-        ['附件：','file',[],''],
-        ['移交至：','select',users,current_user ]
-    ]
-    PyFun('inputer.do_input','创建事件',itms,'on_after_create');
-}
-
-function on_after_modify(p)
-{
-    if(p.length==0)return;
-    evt=received_data[last_itm];
-    PyFun('todo.on_modify_event',evt[0][0],p[0],p[1],p[2],p[3]);
-    on_click_nav(navi.rows[0].cells[0]);
+    if(arguments.length==0)
+    {
+        dts=PyFun('todo.get_dates');
+        users=PyFun('todo.get_users_data',current_user);
+        itms=
+        [
+            ['事件类型：','txt_s',[],''],
+            ['事件描述：','txt_m',[],''],
+            ['结束时限：','select',dts,dts[3]],
+            ['重要程度：','select',['重要','普通','不重要'],'普通'],
+            ['附件：','file',[],''],
+            ['移交至：','select',users,current_user ]
+        ]
+        PyFun('inputer.do_input','创建事件',itms,'on_create');
+    }
+    else
+    {
+        p=arguments[0];
+        if(p.length==0)return;
+        PyFun('todo.on_create_event',p[0],p[1],p[2],p[3],p[4],p[5]);
+        on_click_nav(navi.rows[0].cells[0]);
+    }
 }
 
 function on_modify()
+{
+    if(arguments.length!=0)//called by inputer.
+    {
+        p=arguments[0]
+        if(p.length==0)return;
+        evt=received_data[last_itm];
+        PyFun('todo.on_modify_event',evt[0][0],p[0],p[1],p[2],p[3]);
+        on_refresh_table();
+    }
+    else//called by click.
+    {
+        if(last_itm!=-1)
+        {
+            evt=received_data[last_itm];
+            sta=evt[1]
+            for(x=0;x<sta.length;++x)
+            {
+                if (sta[x][0]!=current_user)
+                {
+                    PyFun('msgbox','无法修改已涉及他人的事件！');
+                    return;
+                }
+            }
+            if (evt[1][0][0]!=current_user)
+            {
+                PyFun('msgbox','无法修改他人创建的事件！');
+                return;
+            }
+            dts=PyFun('todo.get_dates');
+            itms=[['事件类型：','txt_s',[],evt[0][1]],
+            ['事件描述：','txt_m',[],evt[0][2]],
+            ['结束时限：','select',dts,evt[0][3]],
+            ['重要程度：','select',['重要','普通','不重要'],evt[0][4]]]
+            PyFun('inputer.do_input','修改事件',itms,'on_modify');
+        }
+    }
+}
+
+function on_delete()
 {
     if(last_itm!=-1)
     {
@@ -272,54 +313,55 @@ function on_modify()
         {
             if (sta[x][0]!=current_user)
             {
-                PyFun('msgbox','无法修改已涉及他人的事件！');
+                PyFun('msgbox','无法删除已涉及他人的事件！');
                 return;
             }
         }
         if (evt[1][0][0]!=current_user)
         {
-            PyFun('msgbox','无法修改他人创建的事件！');
+            PyFun('msgbox','无法删除他人创建的事件！');
             return;
         }
-    dts=PyFun('todo.get_dates');
-    itms=[['事件类型：','txt_s',[],evt[0][1]],
-    ['事件描述：','txt_m',[],evt[0][2]],
-    ['结束时限：','select',dts,evt[0][3]],
-    ['重要程度：','select',['重要','普通','不重要'],evt[0][4]]]
-    PyFun('inputer.do_input','修改事件',itms,'on_after_modify');
+        if (PyFun('todo.confirm','您确认删除该事件吗？'))
+        {
+            PyFun('todo.on_delete_event',evt[0][0]);
+            on_refresh_table();
+        }
     }
-}
-
-
-function on_after_handle(p)
-{
-    if(p.length==0)return;
-    cmnt=p[0];
-    _to=p[1];
-    fn=p[2]
-    _id=received_data[last_itm][0][0]
-    PyFun('todo.on_handle_event',_id,cmnt,_to,fn);
-    on_click_nav(navi.rows[0].cells[0]);
 }
 
 function on_handle()
 {
-    if(last_itm!=-1)
+    if(arguments.length==0)
     {
-        evt=received_data[last_itm];
-        if (evt[3]=='已处理' || evt[3]=='办结')
+        if(last_itm!=-1)
         {
-            PyFun('msgbox','该事件您已办理！');
-            return;
+            evt=received_data[last_itm];
+            if (evt[3]=='已处理' || evt[3]=='办结')
+            {
+                PyFun('msgbox','该事件您已办理！');
+                return;
+            }
+            dts=PyFun('todo.get_users_data',current_user);
+            itms=
+            [
+                ['备注：','txt_s',[],''],
+                ['移交至：','select',dts,evt[1][evt[1].length-1][1] ],
+                ['附件：','file',[],'']
+            ]
+            PyFun('inputer.do_input','处理事件',itms,'on_handle');
         }
-        dts=PyFun('todo.get_users_data',current_user);
-        itms=
-        [
-            ['备注：','txt_s',[],''],
-            ['移交至：','select',dts,dts[0] ],
-            ['附件：','file',[],'']
-        ]
-        PyFun('inputer.do_input','处理事件',itms,'on_after_handle');
+    }
+    else
+    {
+        p=arguments[0]
+        if(p.length==0)return;
+        cmnt=p[0];
+        _to=p[1];
+        fn=p[2]
+        _id=received_data[last_itm][0][0]
+        PyFun('todo.on_handle_event',_id,cmnt,_to,fn);
+        on_click_nav(navi.rows[0].cells[0]);
     }
 }
 

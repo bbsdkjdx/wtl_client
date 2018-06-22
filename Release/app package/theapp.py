@@ -224,6 +224,21 @@ def _on_tray(tp):
 		if sel=='主窗口':
 			_load_htmls('theapp.html')
 
+def on_hint():#todo need delete.
+	import re,clipboard,pickle
+	dic=pickle.load(open('gtans.p','rb'))
+	s=clipboard.cb2s().replace('\r','')
+	li=re.findall(r'^\d+、(.*)$',s,re.M)
+	if len(li)!=100:
+		__main__.msgbox('剪切板数据格式不正确，请重新复制！')
+		return
+	li=[x.strip() for x in li]
+	ans=[dic.get(x,'没有匹配到答案。') for x in li]
+	ans=[str(n)+'、'+x.replace('\n','<br>') for n,x in enumerate(ans,1)]
+	s='<br><br>'.join(ans)
+	__main__.js.set_html(extra_js+s)
+	__main__.exe.set_size(-1,0,1,0,1)
+
 def main_login():
 	_load_htmls('login.html')
 
