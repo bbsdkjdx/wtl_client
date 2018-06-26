@@ -1,7 +1,9 @@
+import time
 class RealTimeDiskDict(dict):
     def __init__(self,fn):
         self.fn=fn
         self.n_line=0
+        self.last_update_time=time.time()
         try:
             with open(fn,'r') as f:
                 for ln in f:
@@ -18,16 +20,19 @@ class RealTimeDiskDict(dict):
             open(fn,'a').close()
             self.n_line=0
 
+
     def __setitem__(self,key,value):
         open(self.fn,'a').write(repr([key,value])+'\n')
         self.n_line+=1
         super().__setitem__(key,value)
+        self.last_update_time=time.time()
         self.compress_file_if_possible()
 
     def pop(self,key):
         super().pop(key)
         open(self.fn,'a').write(repr([key,None])+'\n')
         self.n_line+=1
+        self.last_update_time=time.time()
         self.compress_file_if_possible()
 
     def compress_file_if_possible(self):

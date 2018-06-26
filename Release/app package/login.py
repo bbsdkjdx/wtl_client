@@ -46,7 +46,14 @@ def get_user_pwd():
 
 def _login():
 	import theapp
-	ret=theapp.cln.login(log_info.usr,log_info.pwd)
+	try:
+		ret=theapp.cln.login(log_info.usr,log_info.pwd)
+	except:
+		log_info.usr=''
+		log_info.office=''
+		log_info.pwd=''
+		log_info.token=''
+		return False
 	if ret:
 		log_info.office=ret[1]
 		log_info.token=log_info.usr

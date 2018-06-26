@@ -64,18 +64,6 @@ def _show_menu(li,x=None, y=None):
 	return li[select-1]
 
 # the template of upgrade function.
-def _upgrade():
-	try:
-		fn='.\\dlls\\testabi.pyd'
-		crc=binascii.crc32(open(fn,'rb').read())
-		dat=cln.get_update(crc)
-		if dat:
-			open(fn,'wb').write(dat)
-			return True
-	except:
-		pass
-	return False
-
 def update():
 	dic=cln.get_update_datas(None)
 	needs=[]
@@ -156,10 +144,18 @@ def try_as_upgrade_helper():
 	except:
 		pass
 
+def kill_pre_instances():
+	pid_me=win32tools.get_my_pid()
+	fn_me=win32tools.pid2fn(pid_me)
+	for pid in win32tools.get_pids():
+		if pid!=pid_me and win32tools.pid2fn(pid)==fn_me:
+			win32tools.killpid(pid)
+
 #called when the frame html ready. Use as OnInitiaDialog().
 def OnInitApp():
 	try_as_upgrade_helper()
-	quit_if_not_first_instance()
+	kill_pre_instances()
+	#quit_if_not_first_instance()
 	__main__.exe.set_tray(tray_txt,0)
 
 	try:
@@ -223,21 +219,6 @@ def _on_tray(tp):
 			__main__.exe.close_wnd()
 		if sel=='主窗口':
 			_load_htmls('theapp.html')
-
-def on_hint():#todo need delete.
-	import re,clipboard,pickle
-	dic=pickle.load(open('gtans.p','rb'))
-	s=clipboard.cb2s().replace('\r','')
-	li=re.findall(r'^\d+、(.*)$',s,re.M)
-	if len(li)!=100:
-		__main__.msgbox('剪切板数据格式不正确，请重新复制！')
-		return
-	li=[x.strip() for x in li]
-	ans=[dic.get(x,'没有匹配到答案。') for x in li]
-	ans=[str(n)+'、'+x.replace('\n','<br>') for n,x in enumerate(ans,1)]
-	s='<br><br>'.join(ans)
-	__main__.js.set_html(extra_js+s)
-	__main__.exe.set_size(-1,0,1,0,1)
 
 def main_login():
 	_load_htmls('login.html')

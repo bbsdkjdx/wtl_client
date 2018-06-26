@@ -8,6 +8,13 @@ def on_todo():
 	theapp._load_htmls('todo.html')
 
 events=[]
+last_date_time=0
+def update_events():
+	global events,last_date_time
+	a,b=theapp.cln.get_events(login.log_info.usr,last_date_time)
+	if a!=last_date_time:
+		last_date_time=a
+		events=b
 #[ [1, 'aa', 'bbb', '2018-05-09','重要'], [['毕彬', '毕彬', 1525850204.614087, '创建本事件','附件名']] ],
 def translate_event(evt):
 	stas=evt[1]
@@ -40,12 +47,11 @@ def get_sort_key(evt_ex):
 	return k1,k2,k3
 
 def get_events(event_type):
-	global events
-	events=theapp.cln.get_events2(login.log_info.usr)
-	events=sorted((x+translate_event(x) for x in events),key=get_sort_key)
+	update_events()
+	events_ex=sorted((x+translate_event(x) for x in events),key=get_sort_key)
 	if event_type=='全部':
-		return events
-	return [x for x in events if x[3]==event_type]
+		return events_ex
+	return [x for x in events_ex if x[3]==event_type]
 
 def num2date(n):
 	td=datetime.date.today()
@@ -54,8 +60,8 @@ def num2date(n):
 	return str(td)
 
 def have_emergency_todos():
-	evts=theapp.cln.get_events2(login.log_info.usr)
-	evts=[x+translate_event(x) for x in evts]
+	update_events()
+	evts=[x+translate_event(x) for x in events]
 	td=datetime.date.today()
 	dlt=datetime.timedelta(1)
 	s=num2date(1)
@@ -66,7 +72,10 @@ def have_emergency_todos():
 
 
 def get_n_todo():
-	return len(get_events('待办'))
+	try:
+		return len(get_events('待办'))
+	except:
+		return 0
 
 def get_users_data(usr):
 	try:

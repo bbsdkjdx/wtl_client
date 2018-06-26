@@ -12,7 +12,7 @@ PORT=10001
 FILE_USERS=__path__[0]+'\\users.p'
 FILE_EVENTS=__path__[0]+'\\events.dat'
 FILE_UPGRADE=__path__[0]+'\\testabi.pyd'
-
+ACCESSORY_ROOT='d:\\hcgt_accessory\\'
 #set true to disable upgrade function.
 no_upgrade_for_debug=False
 #load users
@@ -126,7 +126,7 @@ def on_create_event(usr,to_,tp,describe,deadline,priority='普通',fn='',dat=b''
 	_status=[usr,to_,time.time(),'创建事件',fn]#status [from,to,time,comment,accessory]
 	if fn and dat:
 		fn='%d.0.%s'%(_id,fn)
-		open('d:\\hcgt_accessory\\'+fn,'wb').write(dat)
+		open(ACCESSORY_ROOT+fn,'wb').write(dat)
 	_evt=[[_id,tp,describe,deadline,priority],[_status]]
 	events[_id]=_evt
 # events over view
@@ -140,7 +140,7 @@ def on_handle_event(_id,usr,cmnt,_to,fn='',dat=b''):
 		sta=[usr,_to,time.time(),cmnt,fn]
 		if fn and dat:
 			fn='%d.%d.%s'%(_id,len(evt[1]),fn)
-			open('d:\\hcgt_accessory\\'+fn,'wb').write(dat)
+			open(ACCESSORY_ROOT+fn,'wb').write(dat)
 		evt[1].append(sta)
 		events[_id]=evt
 		
@@ -161,20 +161,21 @@ def on_delete_event(_id):
 			
 #old version compatible.no use in new version.
 @reg_svr
-def get_events(usr):
+def get_events(usr,last_data_time):
+	if last_data_time==events.last_update_time:
+		return last_data_time,[]
 	ret=[]
+	ofc=users[usr][1]
 	for _id in events:
 		evt=events[_id]
+		if evt[1][0][0]==usr:
+			ret.append(evt)
+			continue
 		for sta in evt[1]:
-			if sta[1]==usr:
+			if sta[1] in [usr,ofc]:
 				ret.append(evt)
 				break
-	ret2=[]
-	for x in ret:
-		y=x[0][:-1]
-		y.append(x[1])
-		ret2.append(y)
-	return ret2
+	return events.last_update_time,ret
 
 @reg_svr
 def get_events2(usr):
@@ -193,7 +194,7 @@ def get_events2(usr):
 
 @reg_svr
 def get_accessory(fn):
-	return open('d:\\hcgt_accessory\\'+fn,'rb').read()
+	return open(ACCESSORY_ROOT+fn,'rb').read()
 
 def work():
 	svr.start()
