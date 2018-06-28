@@ -89,14 +89,13 @@
          {
              if (ifr_stack.length < 2) return;
              _ifr = ifr_stack.pop();
-             _ifr.height="0%";
+             document.body.removeChild(_ifr);
              ifr = ifr_stack[ifr_stack.length - 1]
              ifrf = ifr.contentWindow;
              if(s_cb)
              {
                  eval('ifrf.' + s_cb)(data);
              }
-             document.body.removeChild(_ifr);
          }
 
      </script>
