@@ -1,4 +1,4 @@
-import pickle
+﻿import pickle
 import re
 import arbinrpc
 import binascii
@@ -7,6 +7,7 @@ import time
 import os
 from collections import OrderedDict
 from .datastructure import RealTimeDiskDict
+from . import kingland
 #constants
 PORT=10001
 FILE_USERS=__path__[0]+'\\users.p'
@@ -195,6 +196,14 @@ def get_events2(usr):
 @reg_svr
 def get_accessory(fn):
 	return open(ACCESSORY_ROOT+fn,'rb').read()
+
+@reg_svr
+def kingland_search(usr,tm,s):
+	return kingland.search(usr,tm,s)
+
+@reg_svr
+def kingland_file(usr,tm,n):
+	return kingland.get_file(usr,tm,n)
 
 def work():
 	svr.start()

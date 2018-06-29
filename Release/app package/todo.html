@@ -294,6 +294,7 @@ function on_modify()
                 return;
             }
             dts=PyFun('todo.get_dates');
+            dts=[evt[0][3]].concat(dts)
             itms=[['事件类型：','txt_s',[],evt[0][1]],
             ['事件描述：','txt_m',[],evt[0][2]],
             ['结束时限：','select',dts,evt[0][3]],

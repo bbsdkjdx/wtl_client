@@ -46,6 +46,8 @@ def get_user_pwd():
 
 def _login():
 	import theapp
+	import todo
+	todo.last_date_time=0
 	try:
 		ret=theapp.cln.login(log_info.usr,log_info.pwd)
 	except:

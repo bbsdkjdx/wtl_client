@@ -43,7 +43,10 @@ def translate_event(evt):
 def get_sort_key(evt_ex):
 	k1= ['待办','已处理','办结'].index(evt_ex[3])
 	k2=['重要','普通','不重要'].index(evt_ex[0][4])
-	k3=-int(evt_ex[0][3].replace('-',''))
+	try:
+		k3=-int(evt_ex[0][3].replace('-',''))
+	except:
+		k3=0
 	return k1,k2,k3
 
 def get_events(event_type):
