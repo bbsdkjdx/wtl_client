@@ -144,12 +144,27 @@ def try_as_upgrade_helper():
 	except:
 		pass
 
+def clear_dead_tray():
+    import ctypes
+    FindWindowW=ctypes.windll.user32.FindWindowW
+    FindWindowExW=ctypes.windll.user32.FindWindowExW
+    w1=FindWindowW('Shell_TrayWnd',0)
+    w2=FindWindowExW(w1,0,'TrayNotifyWnd',0)
+    w3=FindWindowExW(w2,0,'SysPager',0)
+    w4=FindWindowExW(w3,0,'ToolbarWindow32',0)
+    rect=(ctypes.c_uint32*4)()
+    ctypes.windll.user32.GetWindowRect(w4,ctypes.byref(rect))
+    wid=rect[2]-rect[0]
+    for x in range(0,wid,20):
+        ctypes.windll.user32.PostMessageW(w4,0x200,0,5<<16|x)
+
 def kill_pre_instances():
 	pid_me=win32tools.get_my_pid()
 	fn_me=win32tools.pid2fn(pid_me)
 	for pid in win32tools.get_pids():
 		if pid!=pid_me and win32tools.pid2fn(pid)==fn_me:
 			win32tools.killpid(pid)
+			clear_dead_tray()
 
 #called when the frame html ready. Use as OnInitiaDialog().
 def OnInitApp():

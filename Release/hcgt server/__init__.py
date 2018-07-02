@@ -12,7 +12,6 @@ from . import kingland
 PORT=10001
 FILE_USERS=__path__[0]+'\\users.p'
 FILE_EVENTS=__path__[0]+'\\events.dat'
-FILE_UPGRADE=__path__[0]+'\\testabi.pyd'
 ACCESSORY_ROOT='d:\\hcgt_accessory\\'
 #set true to disable upgrade function.
 no_upgrade_for_debug=False
@@ -53,17 +52,6 @@ def get_update_dict():
 
 update_dict=get_update_dict()
 
-#old version compatible.no use in new version.
-@reg_svr
-def get_update(cln_crc):
-	try:
-		update_data=open(FILE_UPGRADE,'rb').read()
-	except:
-		update_data=b''
-	crc32=binascii.crc32(update_data)
-	if crc32==cln_crc:
-		return b''
-	return update_data
 
 #new version update,return all files needed update.
 @reg_svr
