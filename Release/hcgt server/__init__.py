@@ -147,7 +147,14 @@ def on_modify_event(_id,title,describe,deadline,priority='普通'):
 def on_delete_event(_id):
 	if _id in events:
 		events.pop(_id)
-			
+
+@reg_svr
+def on_recall_status(_id):
+	if _id in events:
+		evt=events[_id]
+		evt[1].pop(-1)
+		events[_id]=evt
+
 #old version compatible.no use in new version.
 @reg_svr
 def get_events(usr,last_data_time):

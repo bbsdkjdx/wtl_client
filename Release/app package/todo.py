@@ -109,6 +109,9 @@ def on_handle_event(_id,comment,_to,fn):
 		fn_s=fn[fn.rfind('\\')+1:]
 	theapp.cln.on_handle_event(_id,login.log_info.usr,comment,_to,fn_s,dat)
 
+def on_recall_status(_id):
+	theapp.cln.on_recall_status(_id)
+
 def show_accessory(fn):
 	import win32tools
 	dat=theapp.cln.get_accessory(fn)

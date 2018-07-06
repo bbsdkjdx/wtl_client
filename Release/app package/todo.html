@@ -92,6 +92,7 @@
                                         <td bgColor="green" onmousedown="on_modify()">修改</td>
                                         <td bgColor="green" onmousedown="on_delete()">删除</td>
                                         <td bgColor="green" onmousedown="on_handle()">办理</td>
+                                        <td bgColor="green" onmousedown="on_recall()">撤销</td>
                                         <td bgColor="red" onmousedown="on_click_nav(this)">返回主页</td>
                                     </tr>   
                             </table>
@@ -363,6 +364,32 @@ function on_handle()
         _id=received_data[last_itm][0][0]
         PyFun('todo.on_handle_event',_id,cmnt,_to,fn);
         on_click_nav(navi.rows[0].cells[0]);
+    }
+}
+
+function on_recall()
+{
+    if(arguments.length==0)
+    {
+        if(last_itm!=-1)
+        {
+            evt=received_data[last_itm];
+            if (evt[1].length==1)
+            {
+                PyFun('msgbox','该事件只有一条状态，如果不需要，请使用删除功能删除整个事件！');
+                return;
+            }
+            if (evt[1][evt[1].length-1][0]!=current_user)
+            {
+                PyFun('msgbox','您的处理结果不是最后一条，请尝试联系最后一条状态的处理者先行撤销！');
+                return;
+            }
+            if (PyFun('todo.confirm','您确认撤销最后一条状态吗？'))
+            {
+                PyFun('todo.on_recall_status',evt[0][0]);
+                on_refresh_table();
+            }
+        }
     }
 }
 
