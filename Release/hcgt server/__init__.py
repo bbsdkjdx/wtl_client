@@ -97,6 +97,7 @@ def get_user_combo_data(usr):
 		ret.append(x)
 	return ret_self+ret
 
+#todo deprecated.
 @reg_svr
 def get_dates():#get 62 days from now on.
 	td=datetime.date.today()
@@ -164,6 +165,9 @@ def get_events(usr,last_data_time):
 	ofc=users[usr][1]
 	for _id in events:
 		evt=events[_id]
+		if usr in ['刘昌军','张德军'] and evt[0][1]=='测绘出图':
+			ret.append(evt)
+			continue
 		if evt[1][0][0]==usr:
 			ret.append(evt)
 			continue
@@ -176,6 +180,7 @@ def get_events(usr,last_data_time):
 @reg_svr
 def get_events2(usr):
 	ret=[]
+	se=set()
 	ofc=users[usr][1]
 	for _id in events:
 		evt=events[_id]

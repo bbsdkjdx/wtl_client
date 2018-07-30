@@ -21,9 +21,9 @@ def translate_event(evt):
 	ret1=''
 	for n,sta in enumerate(stas):
 		t=time.localtime(sta[2])
-		st='%d-%d-%d %d:%d:%d'%(t.tm_year,t.tm_mon,t.tm_mday,t.tm_hour,t.tm_min,t.tm_sec)
+		st='%04d-%02d-%02d %02d:%02d:%02d'%(t.tm_year,t.tm_mon,t.tm_mday,t.tm_hour,t.tm_min,t.tm_sec)
 		s_on_clk="PyFun('todo.show_accessory','%d.%d.%s')"%(evt[0][0],n,sta[4])
-		ret1+='[%s] %s->%s %s'%(st,sta[0],sta[1],sta[3])
+		ret1+='<font style="background:yellow">[%s]</font><font style="background:#10e7d5">%s->%s</font> %s'%(st,sta[0],sta[1],sta[3])
 		if sta[4]:
 			ret1+='<font onclick="'+s_on_clk+'" onmouseout="mouseout(this)" onmouseover="mousein(this)" style="cursor:pointer;color:blue">&nbsp&nbsp&nbsp&nbsp附件：'\
 			+sta[4]+'</font><br>'
@@ -86,8 +86,14 @@ def get_users_data(usr):
 	except:
 		return []
 
-def get_dates():
-	return theapp.cln.get_dates()
+def get_dates():#get 62 days from now on.
+	td=datetime.date.today()
+	delt=datetime.timedelta(1)
+	ret=[]
+	for x in range(62):
+		ret.append(str(td))
+		td+=delt
+	return ret
 
 def on_create_event(title,describe,deadline,priority,fn,to_):
 	fn_s,dat='',b''
