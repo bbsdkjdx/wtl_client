@@ -20,6 +20,9 @@ __main__.inputer=inputer
 import kingland
 __main__.kingland=kingland
 
+import little_program
+__main__.little_program=little_program
+
 socket.setdefaulttimeout(1)
 #####################################################################################################################################
 # fixed code, do not change if possible.

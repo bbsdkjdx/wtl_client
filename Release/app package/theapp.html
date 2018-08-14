@@ -69,7 +69,13 @@
                     通过<a style="cursor: pointer;color: blue;" onclick="on_it_support()">IT技术支持</a>申请解决网络、计算机、软件、打印机等问题，如果因为网络故障无法使用此功能，请致电信息中心。
                 </p>
             </div>
-            <div class="col-md-4" style="background-color:rgb(35, 223, 51) " onclick="on_update_detail()">
+            <div class="col-md-4" style="cursor:auto;background-color:rgb(41, 219, 50);" >
+                <h2>小程序</h2>
+                <p>小程序能够提供一些便捷的办公功能，用来提高办公效率，如果您有什么需求请联系信息中心开发相应功能。</p>
+                <p>办公室<a style="cursor: pointer;color: blue;" onclick="on_print_label()">打印桌签</a>功能能够打印2至6字桌签。
+                </p>
+            </div>
+            <div class="col-md-4" style="background-color:rgb(206, 218, 207) " onclick="on_update_detail()">
                 <h2>更新日志</h2>
                 <p>信息平台系统更新情况。欢迎多提宝贵意见或建议！</p>
             </div>
@@ -218,7 +224,25 @@
                 PyFun('todo.on_create_event','IT技术支持',p[0],dl,'普通',p[1],'信息中心 ');
             }
         }
-
+        function on_print_label()
+        {
+            if(arguments.length==0)//called by click.
+            {
+                itms=[['桌签文字（2-6个字）：','txt_s',[],'']]
+                PyFun('inputer.do_input','打印桌签',itms,'on_print_label');
+            }
+            else//called as callback.
+            {
+                p=arguments[0];
+                if(p.length==0)return;
+                if(p[0].length<2 || p[0].length>6)
+                {
+                    PyFun('msgbox','桌签文字只能是2-6个文字','打印桌签')
+                    return;
+                }
+                PyFun('little_program.print_label',p[0]);
+            }
+        }
         function on_modify_password()
         {
             if(_info[0]==''){PyFun('msgbox','请先登录。','国土信息平台');return;}
