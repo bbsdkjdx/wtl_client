@@ -22,7 +22,7 @@ def translate_event(evt):
 	for n,sta in enumerate(stas):
 		t=time.localtime(sta[2])
 		st='%04d-%02d-%02d %02d:%02d:%02d'%(t.tm_year,t.tm_mon,t.tm_mday,t.tm_hour,t.tm_min,t.tm_sec)
-		s_on_clk="PyFun('todo.show_accessory','%d.%d.%s')"%(evt[0][0],n,sta[4])
+		s_on_clk="PyFun('todo.show_accessory','%d.%d.%s','%s','%s')"%(evt[0][0],n,sta[4],sta[0],sta[1])
 		ret1+='<font style="background:yellow">[%s]</font><font style="background:#10e7d5">%s->%s</font> %s'%(st,sta[0],sta[1],sta[3])
 		if sta[4]:
 			ret1+='<font onclick="'+s_on_clk+'" onmouseout="mouseout(this)" onmouseover="mousein(this)" style="cursor:pointer;color:blue">&nbsp&nbsp&nbsp&nbsp附件：'\
@@ -118,7 +118,10 @@ def on_handle_event(_id,comment,_to,fn):
 def on_recall_status(_id):
 	theapp.cln.on_recall_status(_id)
 
-def show_accessory(fn):
+def show_accessory(fn,_frm=None,_to=None):
+	if login.log_info.usr not in [_frm,_to] and login.log_info.office not in [_frm,_to]:
+		__main__.msgbox('您没有打开权限！')
+		return
 	import win32tools
 	dat=theapp.cln.get_accessory(fn)
 	#ext=fn[fn.rfind('.'):]
