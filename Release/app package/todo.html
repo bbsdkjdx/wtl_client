@@ -68,6 +68,16 @@
     padding-bottom:4px;
     color:#ffffff;
 }
+#FilterInput
+{
+    border: 1px solid #D2D9dC;
+    color: #444;
+    font: 16px 'Microsoft YaHei', '微软雅黑';
+    padding: 0px ;
+    margin-bottom: 0px;
+    width: 50%;
+
+}
 
 </style>
 </head>
@@ -84,7 +94,7 @@
                                     </tr>   
                             </table>
                     </td>
-                    <td> </td>
+                    <td ><p style="color: #f51010;font-weight: bold;">按关键字显示：<input id="FilterInput" onfocus="this.select()" onkeydown="setTimeout(on_refresh_table,0)"></input></p></td>
                     <td width="30%">
                             <table cellspacing="5" class="nav_btn">
                                     <tr>
@@ -202,7 +212,7 @@ function on_click_row()
 
 function on_refresh_table()
 {
-    received_data=PyFun('todo.get_events',current_nav);
+    received_data=PyFun('todo.get_events',current_nav,FilterInput.value);
     fillTable(received_data);
     PyFun('theapp.flush_alarm');    
 }

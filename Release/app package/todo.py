@@ -22,10 +22,10 @@ def translate_event(evt):
 	for n,sta in enumerate(stas):
 		t=time.localtime(sta[2])
 		st='%04d-%02d-%02d %02d:%02d:%02d'%(t.tm_year,t.tm_mon,t.tm_mday,t.tm_hour,t.tm_min,t.tm_sec)
-		s_on_clk="PyFun('todo.show_accessory','%d.%d.%s','%s','%s')"%(evt[0][0],n,sta[4],sta[0],sta[1])
+		s_on_clk="PyFun('todo.show_accessory','%d.%d.%s','%s','%s',event.button)"%(evt[0][0],n,sta[4],sta[0],sta[1])
 		ret1+='<font style="background:yellow">[%s]</font><font style="background:#10e7d5">%s->%s</font> %s'%(st,sta[0],sta[1],sta[3])
 		if sta[4]:
-			ret1+='<font onclick="'+s_on_clk+'" onmouseout="mouseout(this)" onmouseover="mousein(this)" style="cursor:pointer;color:blue">&nbsp&nbsp&nbsp&nbsp附件：'\
+			ret1+='<font onmouseup="'+s_on_clk+'" onmouseout="mouseout(this)" onmouseover="mousein(this)" style="cursor:pointer;color:blue">&nbsp&nbsp&nbsp&nbsp附件：'\
 			+sta[4]+'</font><br>'
 		else:
 			ret1+='<br>'
@@ -49,12 +49,16 @@ def get_sort_key(evt_ex):
 		k3=0
 	return k1,k2,k3
 
-def get_events(event_type):
+def get_events(event_type,filter_str=''):
 	update_events()
 	events_ex=sorted((x+translate_event(x) for x in events),key=get_sort_key)
 	if event_type=='全部':
-		return events_ex
-	return [x for x in events_ex if x[3]==event_type]
+		ret=events_ex
+	else:
+		ret=[x for x in events_ex if x[3]==event_type]
+	if filter_str:
+		ret=[x for x in ret if filter_str.upper() in str(x).upper()]
+	return ret
 
 def num2date(n):
 	td=datetime.date.today()
@@ -118,18 +122,23 @@ def on_handle_event(_id,comment,_to,fn):
 def on_recall_status(_id):
 	theapp.cln.on_recall_status(_id)
 
-def show_accessory(fn,_frm=None,_to=None):
+def show_accessory(fn,_frm=None,_to=None,is_open=1):
 	if login.log_info.usr not in [_frm,_to] and login.log_info.office not in [_frm,_to]:
 		__main__.msgbox('您没有打开权限！')
 		return
 	import win32tools
 	dat=theapp.cln.get_accessory(fn)
-	#ext=fn[fn.rfind('.'):]
-	pth='c:\\hcgt_temp\\'
-	if not os.path.isdir(pth):
-		os.mkdir(pth)
-	open(pth+fn,'wb').write(dat)
-	win32tools.shell_execute(pth+fn,show=0,block=0)
+	if is_open==1:
+		#ext=fn[fn.rfind('.'):]
+		pth='c:\\hcgt_temp\\'
+		if not os.path.isdir(pth):
+			os.mkdir(pth)
+		open(pth+fn,'wb').write(dat)
+		win32tools.shell_execute(pth+fn,show=0,block=0)
+	else:
+		fn2=win32tools.select_file(0,fn)
+		if fn2:
+			open(fn2,'wb').write(dat)
 
 def confirm(s):
 	import ctypes
