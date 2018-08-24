@@ -224,12 +224,14 @@
                 PyFun('todo.on_create_event','IT技术支持',p[0],dl,'普通',p[1],'信息中心 ');
             }
         }
+
         function on_print_label()
         {
             if(arguments.length==0)//called by click.
             {
                 itms=[['桌签文字（2-6个字）：','txt_s',[],'']]
-                PyFun('inputer.do_input','打印桌签',itms,'on_print_label');
+                chk=[['len(p[0])<2 or len(p[0])>6','桌签文字只能是2-6个字。']]
+                PyFun('inputer.do_input','打印桌签',itms,'on_print_label',chk);
             }
             else//called as callback.
             {

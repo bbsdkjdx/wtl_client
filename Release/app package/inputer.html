@@ -69,6 +69,8 @@
             }
             //cb=window.parent.get_callback(s_callback);
             //cb(ret)
+            if(!PyFun('inputer.check_ok',ret))return;
+            PyFun('inputer.pop_checker');
             window.parent.del_ifr(s_callback,ret);
         }
 
