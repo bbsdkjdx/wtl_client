@@ -162,21 +162,29 @@
             if(_info[0]==''){PyFun('msgbox','请先登录。','国土信息平台');return;}
             if(arguments.length==0)
             {
-                itms=[['作图需求：','txt_m',[],''],
-                ['附件（多文件请打包）：','file',[],'']]
-                PyFun('inputer.do_input','申请测绘出图',itms,'on_make_picture');
+                itms=
+                [
+                ['图件类型：','select',['供地图','征地图','收地图','宗地图','土地预审','示意图（非正式）','勘界图（非正式）','转坐标','其它'],'供地图'],
+                ['项目名称：','txt_s',[],''],
+                ['面积（多个面积请用逗号或空格隔开）：','txt_s',[],''],
+                ['作图依据（规划红线等，多文件请打包）：','file',[],''],
+                ['备注：','txt_m',[],'']
+                ]
+                chk=
+                [
+                ['len(p[1].strip())==0','项目名称不能为空。'],
+                ['len(p[2].strip())==0','面积不能为空。'],
+                ['len(p[3])==0 and len(p[4].strip())==0','请提供作图依据，如不能提供，请在备注写明原因。'],
+                ]
+                PyFun('inputer.do_input','申请测绘出图',itms,'on_make_picture',chk);
             }
             else
             {
                 p=arguments[0];
                 if(p.length==0)return;
-                if(!p[0])
-                {
-                    PyFun('msgbox','作图需求不能为空。','作图申请失败')
-                    return;
-                }
+                s=p[0]+','+p[1]+','+p[2]+','+p[4]
                 dl=PyFun('todo.num2date',3)
-                PyFun('todo.on_create_event','测绘出图',p[0],dl,'普通',p[1],'信息中心 ');
+                PyFun('todo.on_create_event','测绘出图',s,dl,'普通',p[3],'信息中心 ');
             }
         }
 
@@ -237,11 +245,6 @@
             {
                 p=arguments[0];
                 if(p.length==0)return;
-                if(p[0].length<2 || p[0].length>6)
-                {
-                    PyFun('msgbox','桌签文字只能是2-6个文字','打印桌签')
-                    return;
-                }
                 PyFun('little_program.print_label',p[0]);
             }
         }
@@ -253,7 +256,12 @@
                 itms=[['原始密码：','txt_p',[],''],
                 ['新密码：','txt_p',[],''],
                 ['重复新密码：','txt_p',[],'']]
-                PyFun('inputer.do_input','修改密码',itms,'on_modify_password');
+                chk=
+                [
+                    ['p[1]!=p[2]','两次输入新密码不一致。'],
+                    ['p[0]==p[1]','新密码与旧密码相同。']
+                ]
+                PyFun('inputer.do_input','修改密码',itms,'on_modify_password',chk);
             }
             else
             {

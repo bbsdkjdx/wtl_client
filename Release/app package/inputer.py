@@ -22,6 +22,6 @@ def pop_checker():
 def check_ok(p):#check_item use "p[x]" refer data.
 	for s_eval,msg in check_list[-1]:
 		if eval(s_eval):
-			__main__.msgbox(msg)
+			__main__.msgbox(msg,'输入有误')
 			return False
 	return True
