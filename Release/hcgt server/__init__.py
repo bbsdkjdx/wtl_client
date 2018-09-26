@@ -8,6 +8,7 @@ import os
 from collections import OrderedDict
 from .datastructure import RealTimeDiskDict
 from . import kingland
+from . import ownership
 #constants
 PORT=10001
 FILE_USERS=__path__[0]+'\\users.p'
@@ -204,6 +205,22 @@ def kingland_search(usr,tm,s):
 @reg_svr
 def kingland_file(usr,tm,n):
 	return kingland.get_file(usr,tm,n)
+
+@reg_svr
+def db_search(usr,tm,db_type,s):
+	if db_type=='金土工程':
+		return kingland.search(usr,tm,s)
+	if db_type=='所有权扫描':
+		return ownership.search(usr,tm,s)
+	return []
+
+@reg_svr
+def db_file(usr,tm,db_type,s):
+	if db_type=='金土工程':
+		return kingland.get_file(usr,tm,s)
+	if db_type=='所有权扫描':
+		return ownership.get_file(usr,tm,s)
+	return b''
 
 def work():
 	svr.start()

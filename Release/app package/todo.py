@@ -123,7 +123,7 @@ def on_recall_status(_id):
 	theapp.cln.on_recall_status(_id)
 
 def show_accessory(fn,_frm=None,_to=None,is_open=1):
-	if login.log_info.usr not in [_frm,_to] and login.log_info.office not in [_frm,_to]:
+	if _frm in ['华地','圣达','永平'] and login.log_info.usr not in [_frm,_to] and login.log_info.office not in [_frm,_to]:
 		__main__.msgbox('您没有打开权限！')
 		return
 	import win32tools

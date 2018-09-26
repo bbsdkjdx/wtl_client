@@ -20,6 +20,9 @@ __main__.inputer=inputer
 import kingland
 __main__.kingland=kingland
 
+import query_db
+__main__.query_db=query_db
+
 import little_program
 __main__.little_program=little_program
 

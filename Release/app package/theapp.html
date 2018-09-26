@@ -99,14 +99,7 @@
         function set_log_info(s){user_info.innerHTML=s;}
         function on_query()//数据库查询
         {
-            if(_info[1]=='信息中心 ')
-            {
-                PyFun('kingland.show_page');
-            }
-            else
-            {
-                PyFun('msgbox','该功能暂末正式开放，敬请期待！','信息平台');
-            }
+            PyFun('query_db.show_page');
         }
 
 //on_create_event(title,describe,deadline,priority,fn,to_)
