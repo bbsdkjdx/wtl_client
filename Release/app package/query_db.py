@@ -9,7 +9,10 @@ import binascii
 import sys
 
 def show_page():
-	theapp._load_htmls('query_db.html')
+	if login.log_info.office=='信息中心 ':
+		theapp._load_htmls('query_db.html')
+	else:
+		__main__.msgbox('该功能暂未正式开放！')
 
 def show_file(db_type,n):
 	usr=login.log_info.usr

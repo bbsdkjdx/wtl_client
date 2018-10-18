@@ -349,18 +349,29 @@ function on_handle()
         if(last_itm!=-1)
         {
             evt=received_data[last_itm];
-            if (evt[3]=='已处理' || evt[3]=='办结')
+            users=PyFun('todo.get_users_data',current_user);
+            if (evt[3]=='已处理')
             {
                 PyFun('msgbox','该事件您已办理！');
                 return;
             }
-            dts=PyFun('todo.get_users_data',current_user);
-            itms=
-            [
-                ['备注：','txt_s',[],''],
-                ['移交至：','select',dts,evt[1][evt[1].length-1][1] ],
-                ['附件：','file',[],'']
-            ]
+            if (evt[3]=='办结')
+            {
+                itms=
+                [
+                    ['备注：','txt_s',[],''],
+                    ['附件：','file',[],'']
+                ]
+            }
+            else
+            {
+                itms=
+                [
+                    ['备注：','txt_s',[],''],
+                    ['移交至：','select',users,evt[1][evt[1].length-1][1] ],
+                    ['附件：','file',[],'']
+                ]
+            }
             PyFun('inputer.do_input','处理事件',itms,'on_handle');
         }
     }
@@ -368,9 +379,18 @@ function on_handle()
     {
         p=arguments[0]
         if(p.length==0)return;
-        cmnt=p[0];
-        _to=p[1];
-        fn=p[2]
+        if(p.length==2)
+        {
+            _to='办结';
+            cmnt=p[0];
+            fn=p[1]
+        }
+        else
+        {
+            cmnt=p[0];
+            _to=p[1];
+            fn=p[2]
+        }
         _id=received_data[last_itm][0][0]
         PyFun('todo.on_handle_event',_id,cmnt,_to,fn);
         on_click_nav(navi.rows[0].cells[0]);

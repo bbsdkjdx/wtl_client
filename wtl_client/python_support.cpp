@@ -104,11 +104,11 @@ class _decryptor:
     def __init__(self,fn):
         self.fn=fn
     def __enter__(self):
-        self.encrypt()
+        self.encrypt(0)
     def __exit__(self,t,v,b):
-        self.encrypt()
-    def encrypt(self):
-        exe.encrypt_file(self.fn)
+        self.encrypt(1)
+    def encrypt(self,enc):
+        exe.encrypt_file(self.fn,enc)
 def _load_app(fn):
     _sys.path.append(fn)
     with _decryptor(fn):

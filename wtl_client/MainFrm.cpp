@@ -139,7 +139,7 @@ void set_tray(WCHAR *tip,int ico_id)
 }
 void show(int sh) { if (gpMainFrame)gpMainFrame->ShowWindow(sh ? SW_SHOW : SW_HIDE); }
 void close_wnd() { if (gpMainFrame)gpMainFrame->PostMessageW(WM_CLOSE,0,0); }
-bool encrypt_file(WCHAR *fn)
+bool encrypt_file(WCHAR *fn,BOOL enc)
 {
 	HANDLE hf=CreateFileW(fn, GENERIC_READ|GENERIC_WRITE, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	if (INVALID_HANDLE_VALUE == hf)return false;
@@ -147,12 +147,15 @@ bool encrypt_file(WCHAR *fn)
 	byte *buf = new byte[sz];
 	DWORD n_op = 0;
 	ReadFile(hf, buf, sz, &n_op, 0);
-	for (DWORD x = 0; x < sz;++x)
+	if ((buf[1] == 0x4b) ^ (!enc))
 	{
-		buf[x] ^= x;
+		for (DWORD x = 0; x < sz;++x)
+		{
+			buf[x] ^= x;
+		}
+		SetFilePointer(hf, 0, 0, 0);
+		WriteFile(hf, buf, sz, &n_op, 0);
 	}
-	SetFilePointer(hf, 0, 0, 0);
-	WriteFile(hf, buf, sz, &n_op, 0);
 	delete buf;
 	CloseHandle(hf);
 	return true;
