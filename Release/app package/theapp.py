@@ -26,6 +26,9 @@ __main__.query_db=query_db
 import little_program
 __main__.little_program=little_program
 
+import html_control
+__main__.html_control=html_control
+
 socket.setdefaulttimeout(1)
 #####################################################################################################################################
 # fixed code, do not change if possible.
