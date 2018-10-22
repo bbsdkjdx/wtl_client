@@ -192,9 +192,11 @@ function fillTable(datas)
     last_itm=-1;
     if(datas.length==0)
     {
-        main_table.insertRow(1).insertCell(0).innerHTML='无记录';
-        last_itm=-1;
-        show_detail();
+        head_li=["事件类型","当前状态","完成期限","重要程度","事件描述"]
+        width_li=[100,100,100,100]
+        s_html=PyFun('html_control.create_table','main_table',head_li,width_li,[],"on_click_row")
+        table_container.innerHTML=s_html
+        show_detail()
         return;
     }
 
@@ -216,6 +218,7 @@ function fillTable(datas)
     width_li=[100,100,100,100]
     s_html=PyFun('html_control.create_table','main_table',head_li,width_li,dat2,"on_click_row")
     table_container.innerHTML=s_html
+    on_click_row(main_table.rows[0])
 
     //(_id,head_li,width_li,data_li,fun_clk_row)
         // importance=data[0][4]

@@ -57,7 +57,7 @@ src_table='''    <style type="text/css">
             </tbody>
         </table>
 
-        <div style="height:100%;width:98%;">
+        <div style="height:100%;width:100%;">
             <table class="tbody" id="the_table_id" > 
                 col_width_descriptors
                 <tbody >
@@ -73,7 +73,7 @@ def create_table(_id,head_li,width_li,data_li,fun_clk_row):
     col_width_descriptors=''.join((s%(x) for x in width_li))+r'<col></col>'
     ret=ret.replace('col_width_descriptors',col_width_descriptors)
     ret=ret.replace('the_table_head_row',r'<th>'+r'</th><th>'.join([str(x) for x in head_li])+r'</th>')
-    get_row=lambda li:r'<td>'+r'</td><td>'.join([str(x).replace('<',"&lt") for x in li])+r'</td>'
+    get_row=lambda li:r'<td>'+r'</td><td>'.join([str(x) for x in li])+r'</td>'
     s_tr='<tr onmousedown="%s(this)">'%(fun_clk_row)
     the_table_body=s_tr+(r'</tr>'+s_tr).join((get_row(x) for x in data_li))+r'</tr>'
     ret=ret.replace('the_table_body',the_table_body)
