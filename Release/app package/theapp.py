@@ -128,7 +128,7 @@ mutex_token="hc_xxzd"
 
 #if tray_txt not None,show tray,and only can closed by tray.
 #tray_txt=''
-tray_txt='环翠国土信息平台'
+tray_txt='自然资源信息平台'
 
 #determine if show alarms.
 need_alarm=False
@@ -187,7 +187,7 @@ def OnInitApp():
 			__main__.exe.set_tray(tray_txt,-1)#delete tray
 			return
 	except:
-		__main__.msgbox('无法连接服务器，进入离线模式。','环翠国土信息平台')
+		__main__.msgbox('无法连接服务器，进入离线模式。',tray_txt)
 		#__main__.exe.set_tray(tray_txt,-1)
 		#ctypes.windll.kernel32.ExitProcess(0)
 		

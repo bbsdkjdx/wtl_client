@@ -39,9 +39,9 @@
 
     <div class="container">
         <div class="jumbotron">
-            <h1 align='center'>环翠国土信息服务平台</h1>
-            <p align='right'>威海市国土资源局 · 环翠分局</p>
-            <p align='right'>技术支持：5273031</p>
+            <h1 align='center'>自然资源信息平台</h1>
+            <p align='right'>威海市环翠区 · 自然资源局</p>
+            <p align='right'>技术支持：5273031 毕彬、毕瀚方</p>
         </div>
         <div class="row">
             <div class="col-md-4" style="cursor:auto;">
@@ -65,7 +65,7 @@
                 <p>您可以通过<a style="cursor: pointer;color: blue;" onclick="on_manual_query()">人工查询</a>申请工作人员为您查询信息，
                     通过<a style="cursor: pointer;color: blue;" onclick="on_query()">数据库查询服务</a>来访问信息中心数据库。
                 </p>
-                <p>您可以通过<a style="cursor: pointer;color: blue;" onclick="on_publish_information()">信息发布服务</a>申请在市局信息平台、分局网站、楼下大屏幕发布信息，
+                <p>您可以通过<a style="cursor: pointer;color: blue;" onclick="on_publish_information()">信息发布服务</a>申请在政府网站发布信息，
                     通过<a style="cursor: pointer;color: blue;" onclick="on_it_support()">IT技术支持</a>申请解决网络、计算机、软件、打印机等问题，如果因为网络故障无法使用此功能，请致电信息中心。
                 </p>
             </div>
@@ -84,9 +84,9 @@
 
     <script type="text/javascript">
 
-        //PyFun('exe.set_maxmize')
         PyFun('exe.set_size', 0, -1, 0, 0, 1)
-        PyFun('exe.set_title', '环翠国土信息平台')
+        PyFun('exe.set_maxmize')
+        PyFun('exe.set_title', '环翠自然资源信息平台')
         PyFun('login.do_login',0)
         _info= PyFun('login.get_user_info')
         user_name.innerHTML='用户名：'+_info[0] 
@@ -105,7 +105,7 @@
 //on_create_event(title,describe,deadline,priority,fn,to_)
         function on_manual_query()
         {
-            if(_info[0]==''){PyFun('msgbox','请先登录。','国土信息平台');return;}
+            if(_info[0]==''){PyFun('msgbox','请先登录。','信息平台');return;}
             if(arguments.length==0)
             {
                 itms=[['查询内容描述：','txt_s',[],''],
@@ -128,7 +128,7 @@
 
         function on_print_picture()
         {
-            if(_info[0]==''){PyFun('msgbox','请先登录。','国土信息平台');return;}
+            if(_info[0]==''){PyFun('msgbox','请先登录。','信息平台');return;}
             if(arguments.length==0)
             {
                 itms=[['图件打印需求：','txt_m',[],''],
@@ -152,7 +152,7 @@
 
         function on_make_picture()
         {
-            if(_info[0]==''){PyFun('msgbox','请先登录。','国土信息平台');return;}
+            if(_info[0]==''){PyFun('msgbox','请先登录。','信息平台');return;}
             if(arguments.length==0)
             {
                 itms=
@@ -183,7 +183,7 @@
 
         function on_publish_information()
         {
-            if(_info[0]==''){PyFun('msgbox','请先登录。','国土信息平台');return;}
+            if(_info[0]==''){PyFun('msgbox','请先登录。','自然资源信息平台');return;}
             if(arguments.length==0)//called by click.
             {
                 itms=[['发布内容描述：','txt_s',[],''],
@@ -205,7 +205,7 @@
         }
         function on_it_support()
         {
-            if(_info[0]==''){PyFun('msgbox','请先登录。','国土信息平台');return;}
+            if(_info[0]==''){PyFun('msgbox','请先登录。','自然资源信息平台');return;}
             if(arguments.length==0)//called by click.
             {
                 itms=[['问题描述：','txt_m',[],''],
@@ -243,7 +243,7 @@
         }
         function on_modify_password()
         {
-            if(_info[0]==''){PyFun('msgbox','请先登录。','国土信息平台');return;}
+            if(_info[0]==''){PyFun('msgbox','请先登录。','自然资源信息平台');return;}
             if(arguments.length==0)
             {
                 itms=[['原始密码：','txt_p',[],''],
