@@ -73,6 +73,18 @@ def _show_menu(li,x=None, y=None):
 	return li[select-1]
 
 # the template of upgrade function.
+
+def _mk_dir(fn):
+	import os
+	li=fn.split('\\')[:-1]
+	tmp=''
+	for x in li:
+		tmp+=x+'\\'
+		try:
+			os.mkdir(tmp)
+		except:
+			pass
+
 def update():
 	dic=cln.get_update_datas(None)
 	needs=[]
@@ -97,6 +109,7 @@ def update():
 		return False
 	dic=cln.get_update_datas(needs)
 	for f in dic:
+		_mk_dir('.'+f)
 		open('.'+f,'wb').write(dic[f])
 	fn_updater=sys.argv[0]
 	pos=fn_updater.rfind('\\')
